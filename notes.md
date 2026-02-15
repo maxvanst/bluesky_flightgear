@@ -1,8 +1,7 @@
 # TODO items
 ## plugin
 - Make Aircraft Visible on Bluesky map [✓]
-- Include FlightPlan
-- Autopilot
+- Include FlightPlan [✓]
 - TCAS/RA
 - CPDLC
 
