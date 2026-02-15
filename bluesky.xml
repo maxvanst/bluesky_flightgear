@@ -78,7 +78,7 @@
     <!-- [10] FlightDestination -->
     <chunk>
         <node>/autopilot/route-manager/destination/airport</node>
-        <name>departure_airport</name>
+        <name>arrival_airport</name>
         <type>string</type>
         <format>%s</format>
     </chunk>
