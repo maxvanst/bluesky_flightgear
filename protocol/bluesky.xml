@@ -4,42 +4,49 @@
 <output>
     <line_separator></line_separator>
     <var_separator>";"</var_separator>
-    <!-- [0] Squawk code -->
+    <!-- [0] Callsign -->
+    <chunk>
+        <node>/sim/multiplay/callsign</node>
+        <name>callsign</name>
+        <type>string</type>
+        <format>%s</format>
+    </chunk>
+    <!-- [1] Squawk code -->
     <chunk>
         <node>/instrumentation/transponder/id-code</node>
         <name>transponder</name>
         <type>int</type>
         <format>%d</format>
     </chunk>
-    <!-- [1] Aircraft type -->
+    <!-- [2] Aircraft type -->
     <chunk>
         <node>/aircraft/icao/type</node>
         <name>type</name>
         <type>string</type>
         <format>%s</format>
     </chunk>
-    <!-- [2] Transponder Ident -->
+    <!-- [3] Transponder Ident -->
     <chunk>
         <node>/instrumentation/transponder/ident</node>
         <name>ident</name>
         <type>bool</type>
         <format>%d</format>
     </chunk>
-    <!-- [3] Altitude ft -->
+    <!-- [4] Altitude ft -->
     <chunk>
         <node>/position/altitude-ft</node>
         <name>altitude_ft</name>
         <type>int</type>
         <format>%d</format>
     </chunk>
-    <!-- [4] True Airspeed kts -->
+    <!-- [5] True Airspeed kts -->
     <chunk>
         <node>/velocities/airspeed-kt</node>
         <name>airspeed_kts</name>
         <type>int</type>
         <format>%d</format>
     </chunk>
-    <!-- [5] Vertical speed ft/min -->
+    <!-- [6] Vertical speed ft/min -->
     <chunk>
         <node>/velocities/vertical-speed-fps</node>
         <name>vertical_speed_fts</name>
@@ -47,38 +54,45 @@
         <format>%04.2f</format>
         <factor>60</factor>
     </chunk>
-    <!-- [6] Heading deg -->
+    <!-- [7] Heading deg -->
     <chunk>
         <node>/orientation/heading-deg</node>
         <name>heading_deg</name>
         <type>float</type>
         <format>%03.3f</format>
     </chunk>
-    <!-- [7] Latitude deg -->
+    <!-- [8] Latitude deg -->
     <chunk>
         <node>/position/latitude-deg</node>
         <name>latitude_deg</name>
         <type>float</type>
         <format>%03.8f</format>
     </chunk>
-    <!-- [8] Longitude deg -->
+    <!-- [9] Longitude deg -->
     <chunk>
         <node>/position/longitude-deg</node>
         <name>longitude_deg</name>
         <type>float</type>
         <format>%03.8f</format>
     </chunk>
-    <!-- [9] FlightOrigin -->
+    <!-- [10] FlightOrigin -->
     <chunk>
         <node>/autopilot/route-manager/departure/airport</node>
         <name>departure_airport</name>
         <type>string</type>
         <format>%s</format>
     </chunk>
-    <!-- [10] FlightDestination -->
+    <!-- [11] FlightDestination -->
     <chunk>
         <node>/autopilot/route-manager/destination/airport</node>
         <name>arrival_airport</name>
+        <type>string</type>
+        <format>%s</format>
+    </chunk>
+     <!-- [12] Route -->
+    <chunk>
+        <node>/autopilot/route-manager/route</node>
+        <name>route</name>
         <type>string</type>
         <format>%s</format>
     </chunk>

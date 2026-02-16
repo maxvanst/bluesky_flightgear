@@ -1,9 +1,9 @@
 # TODO items
 ## plugin
-- Make Aircraft Visible on Bluesky map [✓]
+- Make Aircraft Visible on BlueSky map [✓]
 - Include FlightPlan [✓]
-- TCAS/RA
-- CPDLC
+- TCAS/RA warning
+- CPDLC messaging to FlightGear
 
 ## Docs
 - https://wiki.flightgear.org/

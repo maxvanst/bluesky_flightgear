@@ -10,19 +10,16 @@ M.J.vanStuijvenberg@student.tudelft.nl
 
 ==========================================================
 """
-# Copied and made small changes to TcpSocket /bluesky/tools/network.py
-# Copied aircraft loading and commands from /bluesky/plugins/adsbfeed.py
-
-import numpy as np
-from bluesky import core, settings, stack, traf
-from bluesky.tools import aero
-from plugins.flightgear.network import FG_UDP_Listener
+from bluesky import settings
+from plugins.flightgear.run import FlightGear
 
 def init_plugin():
     """
-    Initilisation of the BlueSky plugin
+    Initilisation of the BlueSky <---> FlightGear plugin
     """
-    flightgear = FG_UDP_Listener()
+    print("[FLIGHTGEAR] - FlightGear BlueSky plugin v0.0.0")
+
+    flightgear = FlightGear()
     config = {
         'plugin_name': 'flightgear',
         'plugin_type': 'sim',
@@ -35,7 +32,8 @@ def init_plugin():
             "FLIGHTGEAR [ON/OFF]",
             "[onoff]",
             flightgear.toggle,
-            "Start a FlightGear connection"]
+            "Start the FlightGear plugin"],
     }
 
     return config, stackfunctions
+
