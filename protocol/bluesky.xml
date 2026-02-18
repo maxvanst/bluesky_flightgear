@@ -75,24 +75,17 @@
         <type>float</type>
         <format>%03.8f</format>
     </chunk>
-    <!-- [10] FlightOrigin -->
+    <!-- [10] Departure Airport -->
     <chunk>
         <node>/autopilot/route-manager/departure/airport</node>
         <name>departure_airport</name>
         <type>string</type>
         <format>%s</format>
     </chunk>
-    <!-- [11] FlightDestination -->
+    <!-- [11] Arrival Airport -->
     <chunk>
         <node>/autopilot/route-manager/destination/airport</node>
         <name>arrival_airport</name>
-        <type>string</type>
-        <format>%s</format>
-    </chunk>
-     <!-- [12] Route -->
-    <chunk>
-        <node>/autopilot/route-manager/route</node>
-        <name>route</name>
         <type>string</type>
         <format>%s</format>
     </chunk>
