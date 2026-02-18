@@ -4,7 +4,13 @@ from bluesky.tools import aero
 class Aircraft():
     def __init__(self):
         pass
-    
+
+    # -------------- General ----------------- #
+    def exists(self, ac, existence=False):
+        if not traf.id2idx(ac["callsign"]) < 0:
+            existence = True
+        return existence
+
     # -------------- Movement ---------------- #
     def create(self, ac):
         cmdstr = "CRE %s, %s, %f, %f, %f, %d, %f" % (
