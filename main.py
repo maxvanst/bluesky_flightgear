@@ -10,33 +10,23 @@ M.J.vanStuijvenberg@student.tudelft.nl
 
 ==========================================================
 """
-from bluesky import settings
+import json
+from bluesky import settings, stack
 from plugins.flightgear.network import Connection
 from plugins.flightgear.traffic import Traffic
 settings.set_variable_defaults(flightgear_host="127.0.0.1", flightgear_port=5501)
 
-class FlightGear():
-    def __init__(self):
-        self.connection = Connection()
-        self.traffic = Traffic()
-
-    def toggle(self, flag):
-        if flag:
-            self.connection.connect()
-        else:
-            self.connection.disconnect()
-
-    def update(self):
-        if self.connection.is_connected:
-            self.traffic.update(self.connection.buffer)
-
 def init_plugin():
     """
-    Initilisation of the BlueSky <---> FlightGear plugin
+    Initilisation of the BlueSky FlightGear Plugin
     """
-    
+    author = "Max van Stuijvenberg"
+    name = "BlueSky FlightGear Plugin"
+    with open('./plugins/flightgear/version.json', 'r') as file:
+        version = json.load(file).get('version')
+    print(f"[FLIGHTGEAR] - {name} | v{version} | Author: {author}")
+
     flightgear = FlightGear()
-    print("[FLIGHTGEAR] - FlightGear BlueSky plugin v0.0.0")
     config = {
         'plugin_name': 'flightgear',
         'plugin_type': 'sim',
@@ -53,3 +43,19 @@ def init_plugin():
     }
 
     return config, stackfunctions
+
+class FlightGear():
+    def __init__(self):
+        self.UDP = Connection()
+        self.traffic = Traffic()
+
+    def toggle(self, flag):
+        if flag:
+            self.UDP.connect()
+            stack.stack("OP")
+        else:
+            self.UDP.disconnect()
+
+    def update(self):
+        if self.UDP.is_connected:
+            self.traffic.update(self.UDP.buffer)
