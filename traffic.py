@@ -11,11 +11,13 @@ class Traffic():
             for address, flight in list(buffer.items()):
                 callsign = flight["callsign"]
                 if traf.id2idx(callsign) < 0:
+                    # Aircraft is not existing [BlueSky] -> create
                     aircraft = Aircraft()
                     aircraft.set_state(flight)
                     aircraft.create()
                     self.flights[callsign] = aircraft
                 else:
+                    # Aircraft already exists [BlueSky]
                     aircraft = self.flights[callsign]
                     aircraft.set_state(flight)
                     aircraft.check_update_state()
