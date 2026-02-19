@@ -15,26 +15,26 @@ from plugins.flightgear.network import Connection
 from plugins.flightgear.traffic import Traffic
 settings.set_variable_defaults(flightgear_host="127.0.0.1", flightgear_port=5501)
 
+class FlightGear():
+    def __init__(self):
+        self.connection = Connection()
+        self.traffic = Traffic()
+
+    def toggle(self, flag):
+        if flag:
+            self.connection.connect()
+        else:
+            self.connection.disconnect()
+
+    def update(self):
+        if self.connection.is_connected:
+            self.traffic.update(self.connection.buffer)
+
 def init_plugin():
     """
     Initilisation of the BlueSky <---> FlightGear plugin
     """
     
-    class FlightGear():
-        def __init__(self):
-            self.connection = Connection()
-            self.traffic = Traffic()
-
-        def toggle(self, flag):
-            if flag:
-                self.connection.connect()
-            else:
-                self.connection.disconnect()
-
-        def update(self):
-            if self.connection.is_connected:
-                self.traffic.update(self.connection.buffer)
-
     flightgear = FlightGear()
     print("[FLIGHTGEAR] - FlightGear BlueSky plugin v0.0.0")
     config = {
