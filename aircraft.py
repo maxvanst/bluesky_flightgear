@@ -1,26 +1,16 @@
-import time
 from bluesky import stack
 from bluesky.tools import aero
 
 class Aircraft():
-    def __init__(self):
-        self.ts: float
-        self.state = {}
-        self.state_prev = {}
-        self.address: str
-        self.address: str
-        self.squawk: int
-        self.actype: str
-        self.ident: int
-        self.altitude: int
-        self.airspeed: int
-        self.vertical: float
-        self.heading: float
-        self.latitude: float
-        self.longitude: float
-        self.origin: str
-        self.destination: str
-
+    def __init__(self, callsign: str, param: dict):
+        self.callsign = callsign
+        self.actype = param["actype"]
+        self.latitude = param["latitude"]
+        self.longitude = param["longitude"]
+        self.heading = param["heading"]
+        self.altitude = param["altitude"]
+        self.airspeed = param["airspeed"]
+        self.vertical_speed = param["vertical_speed"]
     # -------------- General ----------------- #    
     def create(self):
         cmdstr = "CRE %s, %s, %f, %f, %f, %d, %f" % (
@@ -50,44 +40,3 @@ class Aircraft():
             self.vertical_speed
         )
         stack.stack(cmdstr)
-
-    # --------------- State ----------------- #
-    def set_state(self, state):
-        self.ts = time.time()
-        self.state = state
-        self.callsign = state["callsign"]
-        self.squawk = state["squawk"]
-        self.actype = state["actype"]
-        self.ident = state["ident"]
-        self.altitude = state["altitude"]
-        self.airspeed = state["airspeed"]
-        self.vertical_speed = state["vertical_speed"]
-        self.heading = state["heading"]
-        self.latitude = state["latitude"]
-        self.longitude = state["longitude"]
-        self.origin = state["origin"]
-        self.destination = state["destination"]
-
-    def set_prev_state(self, state):
-        self.state_prev = state
-
-    def check_update_state(self):
-        if len(self.state_prev) != 0: 
-            for state_name in ["ident", "squawk", "origin", "destination"]:
-                if self.state[state_name] != self.state_prev[state_name]:
-                    # ------------------------ ATC ------------------------ #
-                    if state_name == "ident" and self.state[state_name] == True:
-                        cmdstr = f"COLOR {self.callsign},251,3,255"
-                        stack.stack(cmdstr)
-                    if state_name == "ident" and self.state[state_name] == False:
-                        cmdstr = f"COLOR {self.callsign},0,255,0"
-                        stack.stack(cmdstr)
-                    if state_name == "squawk":
-                        pass
-                    # --------------------- Flightplan -------------------- #
-                    if state_name == "origin" and self.state[state_name] != "":
-                        cmdstr = "ORIG %s, %s" % (self.callsign, self.origin)
-                        stack.stack(cmdstr)
-                    if state_name == "destination" and self.state[state_name] != "":
-                        cmdstr = "DEST %s, %s" % (self.callsign, self.destination)
-                        stack.stack(cmdstr)

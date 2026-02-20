@@ -1,10 +1,12 @@
 ## Installation
+- Download FlightGear v2024.1.4
+- Install python flightgear API using "pip install flightgear-python"
 - Place the BlueSky Flightgear plugin inside ./plugin directory inside BlueSky installation
 - Place ./protocol/bluesky.xml inside $FLIGHTGEAR_ROOT/Protocol/ 
 
 ## Running 
 - Start FlightGear Linux: ./flightgear-2024.1.4-linux-amd64.AppImage --launcher 
-- Additional settings of FlightGear --generic=socket,out,1,localhost,5501,udp,bluesky --disable-ai-traffic
+- Additional settings of FlightGear --generic=socket,out,1,localhost,5501,udp,bluesky --telnet=5502 --callsign=PH-LAB
 - Add: "flightgear_host = "127.0.0.1" flightgear_port = 5501" to settings.cfg, according to own setup:
     *flightgear_host = '127.0.0.1'
     *flightgear_port = 5501
