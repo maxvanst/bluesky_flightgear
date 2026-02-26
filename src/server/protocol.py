@@ -56,6 +56,10 @@ def bluesky2ecef(alt: float, lat_deg: float, lon_deg: float, phi_deg: float, the
                                  [sin(-psi + math.pi/2),  cos(-psi + math.pi/2), 0],
                                  [0, 0, 1]])
     
+    rot = rot @ np.array([[cos(theta) , 0, sin(theta)],
+                          [0          , 1, 0         ],
+                          [-sin(theta), 0, cos(theta)]])
+    
     rot = rot @ np.array([[1, 0, 0],
                           [0, cos(phi + math.pi), -sin(phi + math.pi)],
                           [0, sin(phi + math.pi), cos(phi + math.pi)]])
