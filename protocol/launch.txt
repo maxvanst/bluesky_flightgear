@@ -1,1 +1,0 @@
---generic=socket,out,1,localhost,5501,udp,bluesky --telnet=5502 --callsign=PH-LAB

@@ -27,7 +27,6 @@ class Aircraft():
     def delete(self):
         cmdstr = "DEL %s" % (self.callsign)
         stack.stack(cmdstr)
-        
     # -------------- Movement ---------------- #
     def move(self):
         cmdstr = "MOVE %s, %f, %f, %d, %f, %f, %f" % (
