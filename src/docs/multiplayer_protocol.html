@@ -1,0 +1,4304 @@
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8"/>
+<title>Multiplayer protocol - FlightGear wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":false,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"03819785e58bf30371f9ae6c","wgCSPNonce":false,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":false,"wgNamespaceNumber":0,"wgPageName":"Multiplayer_protocol","wgTitle":"Multiplayer protocol","wgCurRevisionId":135766,"wgRevisionId":135766,"wgArticleId":5590,"wgIsArticle":true,"wgIsRedirect":false,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":["Articles containing Instant-Cquotes","Affected by HLA","Multiplayer"],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"Multiplayer_protocol","wgRelevantArticleId":5590,"wgIsProbablyEditable":false,"wgRelevantPageIsProbablyEditable":false,"wgRestrictionEdit":[],
+"wgRestrictionMove":[],"wgMFDisplayWikibaseDescriptions":{"search":false,"nearby":false,"watchlist":false,"tagline":false},"wgVisualEditor":{"pageLanguageCode":"en","pageLanguageDir":"ltr","pageVariantFallbacks":"en"},"wgVector2022PreviewPages":[],"wgPopupsFlags":4,"wgULSAcceptLanguageList":["en-us","en"],"wgULSCurrentAutonym":"English","wgEditSubmitButtonLabelPublish":false,"wgULSPosition":"personal","wgULSisCompactLinksEnabled":true};RLSTATE={"site.styles":"ready","user.styles":"ready","user":"ready","user.options":"loading","ext.cite.styles":"ready","skins.vector.styles.legacy":"ready","ext.visualEditor.desktopArticleTarget.noscript":"ready","ext.uls.pt":"ready"};RLPAGEMODULES=["ext.cite.ux-enhancements","site","mediawiki.page.ready","mediawiki.toc","skins.vector.legacy.js","ext.visualEditor.desktopArticleTarget.init","ext.visualEditor.targetLoader","ext.popups","ext.uls.compactlinks","ext.uls.interface"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@12s5i",function($,jQuery,require,module){mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});});});</script>
+<link rel="stylesheet" href="/w/load.php?lang=en&amp;modules=ext.cite.styles%7Cext.uls.pt%7Cext.visualEditor.desktopArticleTarget.noscript%7Cskins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="/w/load.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="ResourceLoaderDynamicStyles" content=""/>
+<link rel="stylesheet" href="/w/load.php?lang=en&amp;modules=site.styles&amp;only=styles&amp;skin=vector"/>
+<meta name="generator" content="MediaWiki 1.39.6"/>
+<meta name="format-detection" content="telephone=no"/>
+<meta name="viewport" content="width=1000"/>
+<link rel="icon" href="/w/resources/assets/f72.png"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/w/opensearch_desc.php" title="FlightGear wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="https://wiki.flightgear.org/w/api.php?action=rsd"/>
+<link rel="license" href="http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt"/>
+<link rel="alternate" type="application/atom+xml" title="FlightGear wiki Atom feed" href="/w/index.php?title=Special:RecentChanges&amp;feed=atom"/>
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-Multiplayer_protocol rootpage-Multiplayer_protocol skin-vector action-view skin-vector-legacy vector-feature-language-in-header-enabled vector-feature-language-in-main-page-header-disabled vector-feature-language-alert-in-sidebar-disabled vector-feature-sticky-header-disabled vector-feature-sticky-header-edit-disabled vector-feature-table-of-contents-disabled vector-feature-visual-enhancement-next-disabled"><div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice"></div>
+	<div class="mw-indicators">
+	</div>
+	<h1 id="firstHeading" class="firstHeading mw-first-heading"><span class="mw-page-title-main">Multiplayer protocol</span></h1>
+	<div id="bodyContent" class="vector-body">
+		<div id="siteSub" class="noprint">From FlightGear wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" class="mw-body-content mw-content-ltr" lang="en" dir="ltr"><div class="mw-parser-output"><table cellspacing="0" style="border: 1px solid #FC2; border-left-width: 10px; margin: 1em auto; width: 90%; background-color: #fdf8d8; padding: 2px;">
+<tbody><tr>
+<td style="padding-left:5px;"><b><span class="smallcaps" style="font-variant:small-caps;">Caution</span></b>&#8194;  Developer information:
+<p>Some, and possibly most, of the details below are likely to be affected, or even deprecated, by the ongoing work on implementing and improving <a href="/HLA" class="mw-redirect" title="HLA">HLA</a> support in FlightGear. For recent updates, please refer to <a href="/HLA_Timeline" title="HLA Timeline">HLA Timeline</a>. <br /> 
+Please see: <a href="/High-Level_Architecture" title="High-Level Architecture">High-Level Architecture</a> for further information<b><br /></b>
+<i>To avoid conflicting efforts, you are advised not to start working on anything directly related to this without first coordinating your ideas with FlightGear core developers using the FlightGear developers mailing list. <a href="/Talk:Multiplayer_protocol" title="Talk:Multiplayer protocol">talk page</a>.</i>.
+</p>
+</td></tr></tbody></table>
+<p>The <b>multiplayer protocol</b> is the way FlightGear communicates between instances and the <a href="/Howto:Multiplayer" title="Howto:Multiplayer">multiplayer</a> servers.
+</p>
+<table cellspacing="0" style="border: 1px solid #FC2; border-left-width: 10px; margin: 1em auto; width: 90%; background-color: #fdf8d8; padding: 2px;">
+<tbody><tr>
+<td style="padding-left:5px;"><b><span class="smallcaps" style="font-variant:small-caps;">Caution</span></b>&#8194; Since FlightGear 2020.3 the option to select protocols other than 2017.2 have been removed from the GUI and only Version 2 (2017.2) of the property encoding is currently supported, older versions are obsolete and may be removed at some point FlightGear 2020.3.
+</td></tr></tbody></table>
+<p>The multiplayer protocol uses XDR encoded messages that are sent via UDP. All messages are composed of XDR (eXternal Data Representation) encoded data as per RFC 1832.
+</p><p>XDR basically means that all data is in network byte order and aligned to the nearest multiple of 4 bytes. Strings are encoded in Pascal format (length followed by char(length)) and are not zero terminated. Floating point numbers (32 or 64 bit) must be encoded as per the IEEE standard.
+</p><p>For the record, strings are limited to 128 characters and packets are limited to 1200 bytes; these limits are hardcoded in fgfs and represent the commonly accepted transmission size of a UDP packet .<sup id="cite_ref-1" class="reference"><a href="#cite_note-1">&#91;1&#93;</a></sup>
+</p>
+<div id="toc" class="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#Future_Development"><span class="tocnumber">1</span> <span class="toctext">Future Development</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="#2017.3_Changes"><span class="tocnumber">2</span> <span class="toctext">2017.3 Changes</span></a></li>
+<li class="toclevel-1 tocsection-3"><a href="#2017.2_Changes"><span class="tocnumber">3</span> <span class="toctext">2017.2 Changes</span></a></li>
+<li class="toclevel-1 tocsection-4"><a href="#2017.2_debugging_aids"><span class="tocnumber">4</span> <span class="toctext">2017.2 debugging aids</span></a>
+<ul>
+<li class="toclevel-2 tocsection-5"><a href="#Visibility_range"><span class="tocnumber">4.1</span> <span class="toctext">Visibility range</span></a></li>
+<li class="toclevel-2 tocsection-6"><a href="#Loopback"><span class="tocnumber">4.2</span> <span class="toctext">Loopback</span></a></li>
+<li class="toclevel-2 tocsection-7"><a href="#Multiplay_debug-level"><span class="tocnumber">4.3</span> <span class="toctext">Multiplay debug-level</span></a></li>
+<li class="toclevel-2 tocsection-8"><a href="#Outgoing_packet_size"><span class="tocnumber">4.4</span> <span class="toctext">Outgoing packet size</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1 tocsection-9"><a href="#Data_types"><span class="tocnumber">5</span> <span class="toctext">Data types</span></a>
+<ul>
+<li class="toclevel-2 tocsection-10"><a href="#Compatible_encoding"><span class="tocnumber">5.1</span> <span class="toctext">Compatible encoding</span></a></li>
+<li class="toclevel-2 tocsection-11"><a href="#2017.2_encoding"><span class="tocnumber">5.2</span> <span class="toctext">2017.2 encoding</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1 tocsection-12"><a href="#Messages"><span class="tocnumber">6</span> <span class="toctext">Messages</span></a>
+<ul>
+<li class="toclevel-2 tocsection-13"><a href="#Messages_header"><span class="tocnumber">6.1</span> <span class="toctext">Messages header</span></a></li>
+<li class="toclevel-2 tocsection-14"><a href="#Chat_messages"><span class="tocnumber">6.2</span> <span class="toctext">Chat messages</span></a></li>
+<li class="toclevel-2 tocsection-15"><a href="#Position_messages"><span class="tocnumber">6.3</span> <span class="toctext">Position messages</span></a>
+<ul>
+<li class="toclevel-3 tocsection-16"><a href="#First_part"><span class="tocnumber">6.3.1</span> <span class="toctext">First part</span></a></li>
+</ul>
+</li>
+<li class="toclevel-2 tocsection-17"><a href="#Properties_transmitted_over_MP"><span class="tocnumber">6.4</span> <span class="toctext">Properties transmitted over MP</span></a></li>
+<li class="toclevel-2 tocsection-18"><a href="#Master_property_transmission_list"><span class="tocnumber">6.5</span> <span class="toctext">Master property transmission list</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1 tocsection-19"><a href="#Related_content"><span class="tocnumber">7</span> <span class="toctext">Related content</span></a>
+<ul>
+<li class="toclevel-2 tocsection-20"><a href="#Wiki_articles"><span class="tocnumber">7.1</span> <span class="toctext">Wiki articles</span></a></li>
+<li class="toclevel-2 tocsection-21"><a href="#Forum_topics"><span class="tocnumber">7.2</span> <span class="toctext">Forum topics</span></a></li>
+<li class="toclevel-2 tocsection-22"><a href="#Source_code"><span class="tocnumber">7.3</span> <span class="toctext">Source code</span></a>
+<ul>
+<li class="toclevel-3 tocsection-23"><a href="#XDR_handling"><span class="tocnumber">7.3.1</span> <span class="toctext">XDR handling</span></a></li>
+<li class="toclevel-3 tocsection-24"><a href="#Message_types"><span class="tocnumber">7.3.2</span> <span class="toctext">Message types</span></a></li>
+<li class="toclevel-3 tocsection-25"><a href="#Multiplayer_system"><span class="tocnumber">7.3.3</span> <span class="toctext">Multiplayer system</span></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toclevel-1 tocsection-26"><a href="#External_links"><span class="tocnumber">8</span> <span class="toctext">External links</span></a></li>
+</ul>
+</div>
+
+<h2><span class="mw-headline" id="Future_Development">Future Development</span></h2>
+<table cellpadding="10" style="border-collapse:collapse; background-color:transparent; border-style:none;">
+<tbody><tr>
+<td width="20" valign="top"><a href="/File:Cquote1.png" class="image"><img alt="Cquote1.png" src="/w/images/thumb/6/6b/Cquote1.png/20px-Cquote1.png" decoding="async" width="20" height="15" srcset="/w/images/thumb/6/6b/Cquote1.png/30px-Cquote1.png 1.5x, /w/images/6/6b/Cquote1.png 2x" /></a>
+</td>
+<td>note that Stuarts HLA efforts might render the MP protocol obsolete sooner or later - I think that's finally on the horion.<br /><div align="right"><small><b>— Thorsten&#160;(Dec 13th, 2015).&#160;<a rel="nofollow" class="external text" href="http://forum.flightgear.org/viewtopic.php?p=268376#p268376">Military simulation (from Su-15 Screenshots)</a>.</b><br />(powered by <a href="/FlightGear_wiki:Instant-Cquotes" class="mw-redirect" title="FlightGear wiki:Instant-Cquotes">Instant-Cquotes</a>)</small></div>
+</td>
+<td valign="bottom"><a href="/File:Cquote2.png" class="image"><img alt="Cquote2.png" src="/w/images/thumb/3/33/Cquote2.png/20px-Cquote2.png" decoding="async" width="20" height="15" srcset="/w/images/thumb/3/33/Cquote2.png/30px-Cquote2.png 1.5x, /w/images/3/33/Cquote2.png 2x" /></a>
+</td></tr></tbody></table>
+<h2><span class="mw-headline" id="2017.3_Changes">2017.3 Changes</span></h2>
+<p>New property /sim/multiplay/transmit-only-generics, when this is set only the position header, all of the sim/multiplay/generic/ and instrumentation/transponder/ are transmitted over MP. This is intended to allow models to use an alternative encoding (such as the Emesary PropertyNotification) to transmit a well known (to the model) list of properties packed into the generic properties.
+</p><p>The maximum size of a string was also increased to 768 bytes (from 128).
+</p>
+<h2><span class="mw-headline" id="2017.2_Changes">2017.2 Changes</span></h2>
+<p>The 2017.2 protocol allows for much better packing of strings, new types that are transmitted in 4bytes by transmitting
+with short int (sometimes scaled) for the values (a lot of the properties that are transmitted will pack nicely into 16bits).
+</p><p>The 2017.2 protocol also allows for properties to be transmitted automatically as a different type and the encode/decode will
+take this into consideration.
+</p><p>To allow for compatibility with older clients the pad magic is used to force older clients to call verifyProperties, which will result in an invalid result because the first property transmitted is made to ensure that this routine fails on earlier clients; causing the properties part of the packet to be discarded, the basic motion properties remain compatible, so the older client will see just the model, not chat, not animations etc.
+</p><p>The property transmission definition for 2017.2 has been reworked to take advantage of the more efficient packing options available.
+</p><p>A reduction of around 30% is achieved on a basic packet; with the new additional short int generics more properties can be transmitted in the remaining space than was previously possible.
+</p><p>The property /sim/multiplay/protocol-version (1 or 2) controls the protocol in use; 1 is compatible, 2 is 2017.2
+</p><p>The property /sim/multiplay/visibility-range-nm will be sent in the packet header - to allow the client to request larger visibility ranges from fgms. This has not been implemented in the fgms code.
+</p>
+<h2><span class="mw-headline" id="2017.2_debugging_aids">2017.2 debugging aids</span></h2>
+<p>With 2017.2 there are some properties (for the developer) that allow debug of the multiplayer.
+</p>
+<h3><span class="mw-headline" id="Visibility_range">Visibility range</span></h3>
+<p>/sim/multiplay/visibility-range-nm controls the visibility range. This requires connect to a multiplayer server running FGMS servers 0.13.1 or later (see <a rel="nofollow" class="external free" href="http://mpmap01.flightgear.org/mpstatus/">http://mpmap01.flightgear.org/mpstatus/</a>). Maximum (server defined value) of 2000nm.
+</p><p>This value is set to 100nm on startup and changes aren't persisted.
+</p><p>For models that wish to change this value; e.g. radar range, the recommendation is to only increase over 100nm when the Radar Range is also greater than 100nm. 
+</p><p>This property is designed to be controlled by the model, not the user; so take care to use wisely; for a realistic radar simulation this should be set to the radar range; however also setting below 20nm is not generally advised as it is a hard limit and will prevent any communication or visibility of models outside of this range.
+</p>
+<h3><span class="mw-headline" id="Loopback">Loopback</span></h3>
+<p>set /sim/multiplay/debug-level to 1 (bit 0) and your aircraft will be locally looped back (within the protocol) - thus aiding the development of multiplayer animations and general multiplayer debug.
+</p>
+<h3><span class="mw-headline" id="Multiplay_debug-level">Multiplay debug-level</span></h3>
+<ul><li>/sim/multiplay/debug-level bit 0&#160;: direct loopback (see above). Need to be connected to a multiplayer server, but no extra packets are sent as the loopback is within the MP code.</li>
+<li>/sim/multiplay/debug-level bit 1&#160;: trace (to the console at Network, Info) the properties being sent in the outgoing packet</li>
+<li>/sim/multiplay/debug-level bit 2&#160;: hexdump (to the console at Network, Info) outgoing packets</li>
+<li>/sim/multiplay/debug-level bit 3&#160;: trace (to the console at Network, Info) contents of incoming packets. Can result in a lot of debug.</li>
+<li>/sim/multiplay/debug-level bit 4&#160;: hexdump (to the console at Network, Info) incoming packets.</li></ul>
+<h3><span class="mw-headline" id="Outgoing_packet_size">Outgoing packet size</span></h3>
+<p>Property /sim/multiplay/last-xmit-packet-len contains the size (in bytes) of the last transmitted packet.
+</p>
+<h2><span class="mw-headline" id="Data_types">Data types</span></h2>
+<table cellspacing="0" style="border: 1px solid #f42; border-left-width: 10px; margin: 1em auto; width: 90%; background-color: #ffe0d0; padding: 2px;">
+<tbody><tr>
+<td style="padding-left:5px;"><b><span class="smallcaps" style="font-variant:small-caps;">Warning</span></b>&#8194; if an aircraft defines all possible properties in the protocol, it tries to send 14988 bytes per packet, almost 12.5 times the allowed limit. Until the protocol is fixed to handle this it is the responsibility of the aircraft modeler to resolve <b>Multiplayer packet truncated</b> errors. <sup id="cite_ref-2" class="reference"><a href="#cite_note-2">&#91;2&#93;</a></sup>
+</td></tr></tbody></table>
+<table cellspacing="0" style="border: 1px solid #FC2; border-left-width: 10px; margin: 1em auto; width: 90%; background-color: #fdf8d8; padding: 2px;">
+<tbody><tr>
+<td style="padding-left:5px;"><b><span class="smallcaps" style="font-variant:small-caps;">Caution</span></b>&#8194; Prior to V2017.2 all bytes in the <tt>STRING</tt> field are sent as <b>4-byte ints</b> (not in the header or the position message). So STR has length (LEN * 4) bytes and padding ((4 - LEN%4) * 4) bytes, if LEN%4 is not 0.
+</td></tr></tbody></table>
+<p>When running with 2017.2 there is a <b>Transmit As</b> mapping to allow more efficient usage of the limited space in the packet. This mapping is defined in the property map.
+</p><p>The data is XDR encoded in two different methods, compatible or 2017.2. This only affects the properties, with the impact that clients prior to 2017.2 will only be able to receive properties using compatible encoding, which can result in missing animations and no receipt of chat messages. 
+</p><p><br />
+</p>
+<h3><span class="mw-headline" id="Compatible_encoding">Compatible encoding</span></h3>
+<p>Prior to 2017.2 the following types are available.
+</p>
+<table class="wikitable">
+<tbody><tr>
+<th>Type</th>
+<th>Size</th>
+<th>Remarks
+</th></tr>
+<tr>
+<td>int
+</td>
+<td>4 bytes
+</td>
+<td>Send unconditionally
+</td></tr>
+<tr>
+<td>float
+</td>
+<td>4 bytes
+</td>
+<td>Send unconditionally
+</td></tr>
+<tr>
+<td>bool
+</td>
+<td>4 bytes
+</td>
+<td>Send unconditionally
+</td></tr>
+<tr>
+<td>string
+</td>
+<td>(LEN + STR + PAD) bytes
+</td>
+<td>
+<p>LEN: 4 bytes, length of the decoded string<br />
+STR: (LEN * 4) bytes, encoded string<br />
+PAD: (n * 4) bytes, padding<br />
+</p>
+</td></tr></tbody></table>
+<h3><span class="mw-headline" id="2017.2_encoding">2017.2 encoding</span></h3>
+<p>All properties are transmitted unconditionally in each frame at the rate specified. The size is the size of the encoding and the size of the index will be added to this so an int will take 6 bytes
+</p>
+<table class="wikitable">
+<tbody><tr>
+<th>Type</th>
+<th>Size</th>
+<th>Remarks
+</th></tr>
+<tr>
+<td>int
+</td>
+<td>4 bytes
+</td></tr>
+<tr>
+<td>short int
+</td>
+<td>2 bytes
+</td></tr>
+<tr>
+<td>float
+</td>
+<td>4 bytes
+</td></tr>
+<tr>
+<td>Short_float_norm
+</td>
+<td>2 bytes
+</td>
+<td>-1 .. 1 encoded into a short int
+</td></tr>
+<tr>
+<td>Short_float_1
+</td>
+<td>2 bytes
+</td>
+<td>range -3276.7 .. 3276.7  float encoded into a short int (16 bit)
+</td></tr>
+<tr>
+<td>Short_float_2
+</td>
+<td>2 bytes
+</td>
+<td>range -327.67 .. 327.67  float encoded into a short int (16 bit)
+</td></tr>
+<tr>
+<td>Short_float_3
+</td>
+<td>2 bytes
+</td>
+<td>range -32.767 .. 32.767  float encoded into a short int (16 bit)
+</td></tr>
+<tr>
+<td>Short_float_4
+</td>
+<td>2 bytes
+</td>
+<td>range -3.2767 .. 3.2767  float encoded into a short int (16 bit)
+</td></tr>
+<tr>
+<td>bool
+</td>
+<td>4 bytes
+</td>
+<td>Deprecated and retained for compatibility with the following properties
+<ul><li>sim/hitches/aerotow/tow/connected-to-property-node</li>
+<li>sim/hitches/aerotow/is-slave</li>
+<li>sim/hitches/aerotow/open</li></ul>
+<p>Generic bools are packed as 31 into 4 bytes
+</p>
+</td></tr>
+<tr>
+<td>string
+</td>
+<td>(ID:LEN) 4 bytes, LEN bytes follows
+</td>
+<td>
+<p>ID: 2 bytes
+LEN: 2 bytes, length of the string<br />
+STR: char[LEN] bytes<br />
+</p>
+</td></tr></tbody></table>
+<p>Also with 2017.2 the property ID for short int and strings is transmitted in 16bits.
+</p>
+<h2><span class="mw-headline" id="Messages">Messages</span></h2>
+<h3><span class="mw-headline" id="Messages_header">Messages header</span></h3>
+<p>The header is always 32 bytes long and contains the following fields in exactly that order:
+</p>
+<table class="wikitable">
+<tbody><tr>
+<th>Field</th>
+<th>Size</th>
+<th>Remarks
+</th></tr>
+<tr>
+<td>Magic
+</td>
+<td>4 bytes
+</td>
+<td>Always 0x46474653 ("FGFS")
+</td></tr>
+<tr>
+<td>Version
+</td>
+<td>4 bytes
+</td>
+<td>Protocol version, currently 0x00010001 (1.1)
+</td></tr>
+<tr>
+<td>MsgId
+</td>
+<td>4 bytes
+</td>
+<td>Defines what data is appended to the header. Can be 0x00000001 for chat messages (deprecated) or 0x00000007 for position data - all other values are outdated and ignored.
+</td></tr>
+<tr>
+<td>MsgLen
+</td>
+<td>4 bytes
+</td>
+<td>Length of the data.
+<table cellspacing="0" style="border: 1px solid #FC2; border-left-width: 10px; margin: 1em auto; width: 90%; background-color: #fdf8d8; padding: 2px;">
+<tbody><tr>
+<td style="padding-left:5px;"><b><span class="smallcaps" style="font-variant:small-caps;">Caution</span></b>&#8194; This is <b>not in bytes</b>, see the description of the STRING data type.
+</td></tr></tbody></table>
+</td></tr>
+<tr>
+<td>RequestedRangeNm
+</td>
+<td>4 bytes
+</td>
+<td>Requested visibility range in nm. The MP server can provide mp packets from any players within this range; but never over it.
+</td></tr>
+<tr>
+<td>ReplyPort
+</td>
+<td>4 bytes
+</td>
+<td>Deprecated and ignored
+</td></tr>
+<tr>
+<td>Callsign
+</td>
+<td>8 bytes
+</td>
+<td>Zero terminated array of characters representing the user callsign
+</td></tr></tbody></table>
+<h3><span class="mw-headline" id="Chat_messages">Chat messages</span></h3>
+<p>The data for chat messages is a zero terminated array of characters. The MsgLen field in the header represents its length. The maximum length is defined to be 256 bytes.
+</p>
+<h3><span class="mw-headline" id="Position_messages">Position messages</span></h3>
+<p>The data of position message is more complicated and is composed of a two parts.  The first part contain information needed to place an aircraft model in the right position and orientation.  The second part contain property values used for animating the model, provided the user on the receiving end would have that aircraft installed.
+</p>
+<h4><span class="mw-headline" id="First_part">First part</span></h4>
+<ul><li>Positions are in with respect to the Earth centered frame.</li>
+<li>Orientations are with respect to the X, Y and Z axis of the Earth centered frame, stored in the angle axis representation where the angle is coded into the axis length.</li>
+<li>Velocities are along the X, Y and Z directions of the Earth centered frame.</li>
+<li>Angular accelerations are in two parts of the three dimensional angular velocity vector with respect to the Earth centered frame measured in the Earth centered frame.</li>
+<li>Linear accelerations are in two parts of the three dimensional linear acceleration vector with respect to the Earth centered frame measured in the Earth centered frame.</li></ul>
+<p>The first part contain these fields in exactly that order:
+</p>
+<table class="wikitable">
+<tbody><tr>
+<th>Field</th>
+<th>Size</th>
+<th>Remarks
+</th></tr>
+<tr>
+<td>ModelName
+</td>
+<td>96 bytes
+</td>
+<td>Zero terminated array of characters representing the aircraft model (<code>/sim/model/path</code>) used by the user
+</td></tr>
+<tr>
+<td>time
+</td>
+<td>8 bytes
+</td>
+<td>Representing the time when this message was generated double
+</td></tr>
+<tr>
+<td>lag
+</td>
+<td>8 bytes
+</td>
+<td>Time offset for network lag double
+</td></tr>
+<tr>
+<td>PosX
+</td>
+<td>8 bytes
+</td>
+<td>XDR encoded double value, X-ccordinate of users position
+</td></tr>
+<tr>
+<td>PosY
+</td>
+<td>8 bytes
+</td>
+<td>XDR encoded double value, Y-ccordinate of users position
+</td></tr>
+<tr>
+<td>PosZ
+</td>
+<td>8 bytes
+</td>
+<td>XDR encoded double value, z-ccordinate of users position
+</td></tr>
+<tr>
+<td>OriX
+</td>
+<td>4 bytes
+</td>
+<td>XDR encoded float value, X-orientation of the user
+</td></tr>
+<tr>
+<td>OriY
+</td>
+<td>4 bytes
+</td>
+<td>XDR encoded float value, Y-orientation of the user
+</td></tr>
+<tr>
+<td>OriZ
+</td>
+<td>4 bytes
+</td>
+<td>XDR encoded float value, Z-orientation of the user
+</td></tr>
+<tr>
+<td>VelX
+</td>
+<td>4 bytes
+</td>
+<td>XDR encoded float value, velocity of the user in X direction
+</td></tr>
+<tr>
+<td>VelY
+</td>
+<td>4 bytes
+</td>
+<td>XDR encoded float value, velocity of the user in Y direction
+</td></tr>
+<tr>
+<td>VelZ
+</td>
+<td>4 bytes
+</td>
+<td>XDR encoded float value, velocity of the user in Z direction
+</td></tr>
+<tr>
+<td>AV1
+</td>
+<td>4 bytes
+</td>
+<td>XDR encoded float value, 1. part of the three dimensional angular velocity vector
+</td></tr>
+<tr>
+<td>AV2
+</td>
+<td>4 bytes
+</td>
+<td>XDR encoded float value, 2. part of the three dimensional angular velocity vector
+</td></tr>
+<tr>
+<td>AV3
+</td>
+<td>4 bytes
+</td>
+<td>XDR encoded float value, 3. part of the three dimensional angular velocity vector
+</td></tr>
+<tr>
+<td>LA1
+</td>
+<td>4 bytes
+</td>
+<td>XDR encoded float value, 1. part of the three dimensional linear accelaration vector
+</td></tr>
+<tr>
+<td>LA2
+</td>
+<td>4 bytes
+</td>
+<td>XDR encoded float value, 2. part of the three dimensional linear accelaration vector
+</td></tr>
+<tr>
+<td>LA3
+</td>
+<td>4 bytes
+</td>
+<td>XDR encoded float value, 3. part of the three dimensional linear accelaration vector
+</td></tr>
+<tr>
+<td>AA1
+</td>
+<td>4 bytes
+</td>
+<td>XDR encoded float value, 1. part of the three dimensional angular accelaration vector
+</td></tr>
+<tr>
+<td>AA2
+</td>
+<td>4 bytes
+</td>
+<td>XDR encoded float value, 2. part of the three dimensional angular accelaration vector
+</td></tr>
+<tr>
+<td>AA3
+</td>
+<td>4 bytes
+</td>
+<td>XDR encoded float value, 3. part of the three dimensional angular accelaration vector
+</td></tr>
+<tr>
+<td>pad
+</td>
+<td>up to 8 bytes
+</td>
+<td>For padding the data to a multiple of 8 bytes
+</td></tr></tbody></table>
+<h3><span class="mw-headline" id="Properties_transmitted_over_MP">Properties transmitted over MP</span></h3>
+<p>The fields of the second part are <b>property values</b> encoded in the form <b>ID</b>|<b>Value</b>.
+</p><p>A subset of the following properties are transmitted in the order below. Properties marked as V1_1_2_PROP_ID will only be sent when the 2017.2 protocol (or later) is selected. <b>Transmit As</b> is also only relevant for 2017.2 or later.
+</p><p>Although the MP protocol can transmit many different packets mostly a <b>T_PositionMsg</b> identified by MsgId of <b>POS_DATA_ID (7)</b> in the header. Refer to <a rel="nofollow" class="external text" href="http://sourceforge.net/p/flightgear/flightgear/ci/next/tree/src/MultiPlayer/mpmessages.hxx#l48">flightgear/src/MultiPlayer/mpmessages.hxx</a>&#160;(line&#160;48) for the PROTO_VER that is in use, currently this is <i>0x00010001</i> which is <b>1.1</b>
+</p><p>The <b>T_PositionMsg</b> contains the standard MsgHdr, with position and motion information next and then a set of properties. Within the protocol <i>1.1</i> there is a secondary version that applies to the way that the properties are encoded, and this secondary version is either 1 or 2 (2017.2)
+</p><p>Version 1 of the properties can be read by all versions of FlightGear; however version 2 properties can only be read by FlightGear 2017.2 (or later). Version 1 of the property encoding is not covered here as it is obsolete and deprecated.
+</p><p>Version 2 (2017.2) includes new ways of encoding and decoding properties which are designed to save space in the transmitted buffer.
+</p>
+<ol><li>ID Property ID (v1)</li>
+<li>Property String (v1)</li>
+<li>Type Property Type (v1)</li>
+<li>TransmitAs (v2) - this causes the property to be transmitted on the wire using the specified format on the wire but decoded back into the original format (sometimes with data loss).</li>
+<li>Protocol Ident - the minimum version of the protocol that is required to transmit a property. Does not apply to incoming properties - as these will be decoded correctly when received</li>
+<li>encode_for_transmit  - method that will convert from and to the packet for the value. This Allows specific conversion rules to be applied; such as conversion of a string to an integer for transmission.</li>
+<li>decode_received - decodes received data.</li></ol>
+<ul><li>NOTE: when using the encode/decode methods there should be both specified, however if the result of the encode is to transmit in a different property index the encode/decode will be on different elements in the property id list.</li>
+<li>You can see an example of the encode and decode methods with property ID 108 <i>gear/launchbar/state</i> which although it is a string in FlightGear it will be transmitted as a SHORT_INT based on the known values. When received the property 120 will act as an intermediary an set the decoded value into <i>gear/launchbar/state</i> as though it had been transmitted as a string.</li></ul>
+<p>Supported Transmission Types
+</p>
+<table class="wikitable">
+<tbody><tr>
+<th>Encoding</th>
+<th>Description
+</th></tr>
+<tr>
+<td>TT_ASIS = 0</td>
+<td>transmit as defined in the property. This is the default</td>
+<td>
+</td></tr>
+<tr>
+<td>TT_BOOL</td>
+<td>NOT USED</td>
+<td>
+</td></tr>
+<tr>
+<td>TT_INT</td>
+<td>32bit integer</td>
+<td>
+</td></tr>
+<tr>
+<td>TT_FLOAT</td>
+<td>32bit floating point value</td>
+<td>
+</td></tr>
+<tr>
+<td>TT_STRING</td>
+<td>string (deprecated)</td>
+<td>
+</td></tr>
+<tr>
+<td>TT_SHORTINT</td>
+<td>16bit integer (lower 16 bits of 32bit int)</td>
+<td>
+</td></tr>
+<tr>
+<td>TT_SHORT_FLOAT_NORM</td>
+<td>-1 .. 1 encoded into a short int (16 bit)</td>
+<td>
+</td></tr>
+<tr>
+<td>TT_SHORT_FLOAT_1</td>
+<td>range -3276.7 .. 3276.7  float encoded into a short int (16 bit)</td>
+<td>
+</td></tr>
+<tr>
+<td>TT_SHORT_FLOAT_2</td>
+<td>range -327.67 .. 327.67  float encoded into a short int (16 bit)</td>
+<td>
+</td></tr>
+<tr>
+<td>TT_SHORT_FLOAT_3</td>
+<td>range -32.767 .. 32.767  float encoded into a short int (16 bit)</td>
+<td>
+</td></tr>
+<tr>
+<td>TT_SHORT_FLOAT_4</td>
+<td>range -3.2767 .. 3.2767  float encoded into a short int (16 bit)</td>
+<td>
+</td></tr>
+<tr>
+<td>TT_BOOLARRAY</td>
+<td>31 boolean values mapped to a 32bit int</td>
+<td>
+</td></tr>
+<tr>
+<td>TT_CHAR</td>
+<td>NOT USED</td>
+<td>
+</td></tr>
+<tr>
+<td>TT_NOSEND</td>
+<td>Do not send this property - probably the receive element for a custom encoded property</td>
+<td>
+</td></tr>
+</tbody></table>
+<h3><span class="mw-headline" id="Master_property_transmission_list">Master property transmission list</span></h3>
+<p>The following table defines which properties can be transmitted with the position message, i.e. the normal MP use case (as of FG 2020.2).
+</p>
+<table cellspacing="0" style="border: 1px solid #1992ff; border-left-width: 10px; width: 90%; background-color: #e0f2ff; padding: 2px; margin: 1em auto;">
+<tbody><tr>
+<td style="padding-left: 5px"><b><span class="smallcaps" style="font-variant:small-caps;">Note</span></b>&#8194; Only properties present in the property tree will be transmitted.
+</td></tr></tbody></table>
+<table class="wikitable">
+<tbody><tr>
+<th>ID</th>
+<th>Property</th>
+<th>Type</th>
+<th>Transmit As</th>
+<th>Protocol Ident
+</th></tr>
+<tr>
+<td>10</td>
+<td>sim/multiplay/protocol-version</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V2_PROP_ID_PROTOCOL</td>
+<td>
+</td></tr>
+<tr>
+<td>100</td>
+<td>surface-positions/left-aileron-pos-norm</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_NORM</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>101</td>
+<td>surface-positions/right-aileron-pos-norm</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_NORM</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>102</td>
+<td>surface-positions/elevator-pos-norm</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_NORM</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>103</td>
+<td>surface-positions/rudder-pos-norm</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_NORM</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>104</td>
+<td>surface-positions/flap-pos-norm</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_NORM</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>105</td>
+<td>surface-positions/speedbrake-pos-norm</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_NORM</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>106</td>
+<td>gear/tailhook/position-norm</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_NORM</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>107</td>
+<td>gear/launchbar/position-norm</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_NORM</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>108</td>
+<td>gear/launchbar/state</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>109</td>
+<td>gear/launchbar/holdback-position-norm</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_NORM</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>110</td>
+<td>canopy/position-norm</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_NORM</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>111</td>
+<td>surface-positions/wing-pos-norm</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_NORM</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>112</td>
+<td>surface-positions/wing-fold-pos-norm</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_NORM</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>120</td>
+<td>gear/launchbar/state-value</td>
+<td>INT</td>
+<td>TT_NOSEND</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>200</td>
+<td>gear/gear[0]/compression-norm</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_NORM</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>201</td>
+<td>gear/gear[0]/position-norm</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_NORM</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>210</td>
+<td>gear/gear[1]/compression-norm</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_NORM</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>211</td>
+<td>gear/gear[1]/position-norm</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_NORM</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>220</td>
+<td>gear/gear[2]/compression-norm</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_NORM</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>221</td>
+<td>gear/gear[2]/position-norm</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_NORM</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>230</td>
+<td>gear/gear[3]/compression-norm</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_NORM</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>231</td>
+<td>gear/gear[3]/position-norm</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_NORM</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>240</td>
+<td>gear/gear[4]/compression-norm</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_NORM</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>241</td>
+<td>gear/gear[4]/position-norm</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_NORM</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>300</td>
+<td>engines/engine[0]/n1</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_1</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>301</td>
+<td>engines/engine[0]/n2</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_1</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>302</td>
+<td>engines/engine[0]/rpm</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_1</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>310</td>
+<td>engines/engine[1]/n1</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_1</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>311</td>
+<td>engines/engine[1]/n2</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_1</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>312</td>
+<td>engines/engine[1]/rpm</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_1</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>320</td>
+<td>engines/engine[2]/n1</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_1</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>321</td>
+<td>engines/engine[2]/n2</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_1</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>322</td>
+<td>engines/engine[2]/rpm</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_1</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>330</td>
+<td>engines/engine[3]/n1</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_1</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>331</td>
+<td>engines/engine[3]/n2</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_1</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>332</td>
+<td>engines/engine[3]/rpm</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_1</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>340</td>
+<td>engines/engine[4]/n1</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_1</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>341</td>
+<td>engines/engine[4]/n2</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_1</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>342</td>
+<td>engines/engine[4]/rpm</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_1</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>350</td>
+<td>engines/engine[5]/n1</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_1</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>351</td>
+<td>engines/engine[5]/n2</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_1</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>352</td>
+<td>engines/engine[5]/rpm</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_1</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>360</td>
+<td>engines/engine[6]/n1</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_1</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>361</td>
+<td>engines/engine[6]/n2</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_1</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>362</td>
+<td>engines/engine[6]/rpm</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_1</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>370</td>
+<td>engines/engine[7]/n1</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_1</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>371</td>
+<td>engines/engine[7]/n2</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_1</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>372</td>
+<td>engines/engine[7]/rpm</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_1</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>380</td>
+<td>engines/engine[8]/n1</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_1</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>381</td>
+<td>engines/engine[8]/n2</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_1</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>382</td>
+<td>engines/engine[8]/rpm</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_1</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>390</td>
+<td>engines/engine[9]/n1</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_1</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>391</td>
+<td>engines/engine[9]/n2</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_1</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>392</td>
+<td>engines/engine[9]/rpm</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_1</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>800</td>
+<td>rotors/main/rpm</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_1</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>801</td>
+<td>rotors/tail/rpm</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_1</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>810</td>
+<td>rotors/main/blade[0]/position-deg</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_3</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>811</td>
+<td>rotors/main/blade[1]/position-deg</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_3</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>812</td>
+<td>rotors/main/blade[2]/position-deg</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_3</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>813</td>
+<td>rotors/main/blade[3]/position-deg</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_3</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>820</td>
+<td>rotors/main/blade[0]/flap-deg</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_3</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>821</td>
+<td>rotors/main/blade[1]/flap-deg</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_3</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>822</td>
+<td>rotors/main/blade[2]/flap-deg</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_3</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>823</td>
+<td>rotors/main/blade[3]/flap-deg</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_3</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>830</td>
+<td>rotors/tail/blade[0]/position-deg</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_3</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>831</td>
+<td>rotors/tail/blade[1]/position-deg</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_3</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>900</td>
+<td>sim/hitches/aerotow/tow/length</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>901</td>
+<td>sim/hitches/aerotow/tow/elastic-constant</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>902</td>
+<td>sim/hitches/aerotow/tow/weight-per-m-kg-m</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>903</td>
+<td>sim/hitches/aerotow/tow/dist</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>904</td>
+<td>sim/hitches/aerotow/tow/connected-to-property-node</td>
+<td>BOOL</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>905</td>
+<td>sim/hitches/aerotow/tow/connected-to-ai-or-mp-callsign</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>906</td>
+<td>sim/hitches/aerotow/tow/brake-force</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>907</td>
+<td>sim/hitches/aerotow/tow/end-force-x</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>908</td>
+<td>sim/hitches/aerotow/tow/end-force-y</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>909</td>
+<td>sim/hitches/aerotow/tow/end-force-z</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>930</td>
+<td>sim/hitches/aerotow/is-slave</td>
+<td>BOOL</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>931</td>
+<td>sim/hitches/aerotow/speed-in-tow-direction</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>932</td>
+<td>sim/hitches/aerotow/open</td>
+<td>BOOL</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>933</td>
+<td>sim/hitches/aerotow/local-pos-x</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>934</td>
+<td>sim/hitches/aerotow/local-pos-y</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>935</td>
+<td>sim/hitches/aerotow/local-pos-z</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>1001</td>
+<td>controls/flight/slats</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_4</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>1002</td>
+<td>controls/flight/speedbrake</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_4</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>1003</td>
+<td>controls/flight/spoilers</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_4</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>1004</td>
+<td>controls/gear/gear-down</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_4</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>1005</td>
+<td>controls/lighting/nav-lights</td>
+<td>FLOAT</td>
+<td>TT_SHORT_FLOAT_3</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>1006</td>
+<td>controls/armament/station[0]/jettison-all</td>
+<td>BOOL</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>1100</td>
+<td>sim/model/variant</td>
+<td>INT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>1101</td>
+<td>sim/model/livery/file</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>1200</td>
+<td>environment/wildfire/data</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>1201</td>
+<td>environment/contrail</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>1300</td>
+<td>tanker</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>1400</td>
+<td>scenery/events</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>1500</td>
+<td>instrumentation/transponder/transmitted-id</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>1501</td>
+<td>instrumentation/transponder/altitude</td>
+<td>INT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>1502</td>
+<td>instrumentation/transponder/ident</td>
+<td>BOOL</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>1503</td>
+<td>instrumentation/transponder/inputs/mode</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>1504</td>
+<td>instrumentation/transponder/ground-bit</td>
+<td>BOOL</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>1505</td>
+<td>instrumentation/transponder/airspeed-kt</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10001</td>
+<td>sim/multiplay/transmission-freq-hz</td>
+<td>STRING</td>
+<td>TT_NOSEND</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10002</td>
+<td>sim/multiplay/chat</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10100</td>
+<td>sim/multiplay/generic/string[0]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10101</td>
+<td>sim/multiplay/generic/string[1]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10102</td>
+<td>sim/multiplay/generic/string[2]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10103</td>
+<td>sim/multiplay/generic/string[3]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10104</td>
+<td>sim/multiplay/generic/string[4]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10105</td>
+<td>sim/multiplay/generic/string[5]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10106</td>
+<td>sim/multiplay/generic/string[6]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10107</td>
+<td>sim/multiplay/generic/string[7]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10108</td>
+<td>sim/multiplay/generic/string[8]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10109</td>
+<td>sim/multiplay/generic/string[9]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10110</td>
+<td>sim/multiplay/generic/string[10]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10111</td>
+<td>sim/multiplay/generic/string[11]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10112</td>
+<td>sim/multiplay/generic/string[12]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10113</td>
+<td>sim/multiplay/generic/string[13]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10114</td>
+<td>sim/multiplay/generic/string[14]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10115</td>
+<td>sim/multiplay/generic/string[15]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10116</td>
+<td>sim/multiplay/generic/string[16]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10117</td>
+<td>sim/multiplay/generic/string[17]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10118</td>
+<td>sim/multiplay/generic/string[18]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10119</td>
+<td>sim/multiplay/generic/string[19]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10200</td>
+<td>sim/multiplay/generic/float[0]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10201</td>
+<td>sim/multiplay/generic/float[1]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10202</td>
+<td>sim/multiplay/generic/float[2]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10203</td>
+<td>sim/multiplay/generic/float[3]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10204</td>
+<td>sim/multiplay/generic/float[4]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10205</td>
+<td>sim/multiplay/generic/float[5]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10206</td>
+<td>sim/multiplay/generic/float[6]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10207</td>
+<td>sim/multiplay/generic/float[7]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10208</td>
+<td>sim/multiplay/generic/float[8]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10209</td>
+<td>sim/multiplay/generic/float[9]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10210</td>
+<td>sim/multiplay/generic/float[10]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10211</td>
+<td>sim/multiplay/generic/float[11]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10212</td>
+<td>sim/multiplay/generic/float[12]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10213</td>
+<td>sim/multiplay/generic/float[13]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10214</td>
+<td>sim/multiplay/generic/float[14]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10215</td>
+<td>sim/multiplay/generic/float[15]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10216</td>
+<td>sim/multiplay/generic/float[16]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10217</td>
+<td>sim/multiplay/generic/float[17]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10218</td>
+<td>sim/multiplay/generic/float[18]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10219</td>
+<td>sim/multiplay/generic/float[19]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10220</td>
+<td>sim/multiplay/generic/float[20]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10221</td>
+<td>sim/multiplay/generic/float[21]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10222</td>
+<td>sim/multiplay/generic/float[22]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10223</td>
+<td>sim/multiplay/generic/float[23]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10224</td>
+<td>sim/multiplay/generic/float[24]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10225</td>
+<td>sim/multiplay/generic/float[25]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10226</td>
+<td>sim/multiplay/generic/float[26]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10227</td>
+<td>sim/multiplay/generic/float[27]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10228</td>
+<td>sim/multiplay/generic/float[28]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10229</td>
+<td>sim/multiplay/generic/float[29]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10230</td>
+<td>sim/multiplay/generic/float[30]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10231</td>
+<td>sim/multiplay/generic/float[31]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10232</td>
+<td>sim/multiplay/generic/float[32]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10233</td>
+<td>sim/multiplay/generic/float[33]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10234</td>
+<td>sim/multiplay/generic/float[34]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10235</td>
+<td>sim/multiplay/generic/float[35]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10236</td>
+<td>sim/multiplay/generic/float[36]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10237</td>
+<td>sim/multiplay/generic/float[37]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10238</td>
+<td>sim/multiplay/generic/float[38]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10239</td>
+<td>sim/multiplay/generic/float[39]</td>
+<td>FLOAT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10300</td>
+<td>sim/multiplay/generic/int[0]</td>
+<td>INT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10301</td>
+<td>sim/multiplay/generic/int[1]</td>
+<td>INT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10302</td>
+<td>sim/multiplay/generic/int[2]</td>
+<td>INT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10303</td>
+<td>sim/multiplay/generic/int[3]</td>
+<td>INT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10304</td>
+<td>sim/multiplay/generic/int[4]</td>
+<td>INT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10305</td>
+<td>sim/multiplay/generic/int[5]</td>
+<td>INT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10306</td>
+<td>sim/multiplay/generic/int[6]</td>
+<td>INT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10307</td>
+<td>sim/multiplay/generic/int[7]</td>
+<td>INT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10308</td>
+<td>sim/multiplay/generic/int[8]</td>
+<td>INT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10309</td>
+<td>sim/multiplay/generic/int[9]</td>
+<td>INT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10310</td>
+<td>sim/multiplay/generic/int[10]</td>
+<td>INT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10311</td>
+<td>sim/multiplay/generic/int[11]</td>
+<td>INT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10312</td>
+<td>sim/multiplay/generic/int[12]</td>
+<td>INT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10313</td>
+<td>sim/multiplay/generic/int[13]</td>
+<td>INT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10314</td>
+<td>sim/multiplay/generic/int[14]</td>
+<td>INT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10315</td>
+<td>sim/multiplay/generic/int[15]</td>
+<td>INT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10316</td>
+<td>sim/multiplay/generic/int[16]</td>
+<td>INT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10317</td>
+<td>sim/multiplay/generic/int[17]</td>
+<td>INT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10318</td>
+<td>sim/multiplay/generic/int[18]</td>
+<td>INT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10319</td>
+<td>sim/multiplay/generic/int[19]</td>
+<td>INT</td>
+<td>TT_ASIS</td>
+<td>V1_1_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10500</td>
+<td>sim/multiplay/generic/short[0]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10501</td>
+<td>sim/multiplay/generic/short[1]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10502</td>
+<td>sim/multiplay/generic/short[2]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10503</td>
+<td>sim/multiplay/generic/short[3]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10504</td>
+<td>sim/multiplay/generic/short[4]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10505</td>
+<td>sim/multiplay/generic/short[5]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10506</td>
+<td>sim/multiplay/generic/short[6]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10507</td>
+<td>sim/multiplay/generic/short[7]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10508</td>
+<td>sim/multiplay/generic/short[8]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10509</td>
+<td>sim/multiplay/generic/short[9]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10510</td>
+<td>sim/multiplay/generic/short[10]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10511</td>
+<td>sim/multiplay/generic/short[11]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10512</td>
+<td>sim/multiplay/generic/short[12]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10513</td>
+<td>sim/multiplay/generic/short[13]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10514</td>
+<td>sim/multiplay/generic/short[14]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10515</td>
+<td>sim/multiplay/generic/short[15]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10516</td>
+<td>sim/multiplay/generic/short[16]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10517</td>
+<td>sim/multiplay/generic/short[17]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10518</td>
+<td>sim/multiplay/generic/short[18]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10519</td>
+<td>sim/multiplay/generic/short[19]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10520</td>
+<td>sim/multiplay/generic/short[20]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10521</td>
+<td>sim/multiplay/generic/short[21]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10522</td>
+<td>sim/multiplay/generic/short[22]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10523</td>
+<td>sim/multiplay/generic/short[23]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10524</td>
+<td>sim/multiplay/generic/short[24]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10525</td>
+<td>sim/multiplay/generic/short[25]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10526</td>
+<td>sim/multiplay/generic/short[26]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10527</td>
+<td>sim/multiplay/generic/short[27]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10528</td>
+<td>sim/multiplay/generic/short[28]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10529</td>
+<td>sim/multiplay/generic/short[29]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10530</td>
+<td>sim/multiplay/generic/short[30]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10531</td>
+<td>sim/multiplay/generic/short[31]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10532</td>
+<td>sim/multiplay/generic/short[32]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10533</td>
+<td>sim/multiplay/generic/short[33]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10534</td>
+<td>sim/multiplay/generic/short[34]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10535</td>
+<td>sim/multiplay/generic/short[35]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10536</td>
+<td>sim/multiplay/generic/short[36]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10537</td>
+<td>sim/multiplay/generic/short[37]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10538</td>
+<td>sim/multiplay/generic/short[38]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10539</td>
+<td>sim/multiplay/generic/short[39]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10540</td>
+<td>sim/multiplay/generic/short[40]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10541</td>
+<td>sim/multiplay/generic/short[41]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10542</td>
+<td>sim/multiplay/generic/short[42]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10543</td>
+<td>sim/multiplay/generic/short[43]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10544</td>
+<td>sim/multiplay/generic/short[44]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10545</td>
+<td>sim/multiplay/generic/short[45]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10546</td>
+<td>sim/multiplay/generic/short[46]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10547</td>
+<td>sim/multiplay/generic/short[47]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10548</td>
+<td>sim/multiplay/generic/short[48]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10549</td>
+<td>sim/multiplay/generic/short[49]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10550</td>
+<td>sim/multiplay/generic/short[50]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10551</td>
+<td>sim/multiplay/generic/short[51]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10552</td>
+<td>sim/multiplay/generic/short[52]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10553</td>
+<td>sim/multiplay/generic/short[53]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10554</td>
+<td>sim/multiplay/generic/short[54]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10555</td>
+<td>sim/multiplay/generic/short[55]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10556</td>
+<td>sim/multiplay/generic/short[56]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10557</td>
+<td>sim/multiplay/generic/short[57]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10558</td>
+<td>sim/multiplay/generic/short[58]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10559</td>
+<td>sim/multiplay/generic/short[59]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10560</td>
+<td>sim/multiplay/generic/short[60]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10561</td>
+<td>sim/multiplay/generic/short[61]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10562</td>
+<td>sim/multiplay/generic/short[62]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10563</td>
+<td>sim/multiplay/generic/short[63]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10564</td>
+<td>sim/multiplay/generic/short[64]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10565</td>
+<td>sim/multiplay/generic/short[65]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10566</td>
+<td>sim/multiplay/generic/short[66]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10567</td>
+<td>sim/multiplay/generic/short[67]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10568</td>
+<td>sim/multiplay/generic/short[68]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10569</td>
+<td>sim/multiplay/generic/short[69]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10570</td>
+<td>sim/multiplay/generic/short[70]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10571</td>
+<td>sim/multiplay/generic/short[71]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10572</td>
+<td>sim/multiplay/generic/short[72]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10573</td>
+<td>sim/multiplay/generic/short[73]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10574</td>
+<td>sim/multiplay/generic/short[74]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10575</td>
+<td>sim/multiplay/generic/short[75]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10576</td>
+<td>sim/multiplay/generic/short[76]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10577</td>
+<td>sim/multiplay/generic/short[77]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10578</td>
+<td>sim/multiplay/generic/short[78]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>10579</td>
+<td>sim/multiplay/generic/short[79]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11000</td>
+<td>sim/multiplay/generic/bool[0]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11001</td>
+<td>sim/multiplay/generic/bool[1]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11002</td>
+<td>sim/multiplay/generic/bool[2]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11003</td>
+<td>sim/multiplay/generic/bool[3]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11004</td>
+<td>sim/multiplay/generic/bool[4]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11005</td>
+<td>sim/multiplay/generic/bool[5]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11006</td>
+<td>sim/multiplay/generic/bool[6]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11007</td>
+<td>sim/multiplay/generic/bool[7]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11008</td>
+<td>sim/multiplay/generic/bool[8]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11009</td>
+<td>sim/multiplay/generic/bool[9]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11010</td>
+<td>sim/multiplay/generic/bool[10]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11011</td>
+<td>sim/multiplay/generic/bool[11]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11012</td>
+<td>sim/multiplay/generic/bool[12]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11013</td>
+<td>sim/multiplay/generic/bool[13]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11014</td>
+<td>sim/multiplay/generic/bool[14]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11015</td>
+<td>sim/multiplay/generic/bool[15]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11016</td>
+<td>sim/multiplay/generic/bool[16]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11017</td>
+<td>sim/multiplay/generic/bool[17]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11018</td>
+<td>sim/multiplay/generic/bool[18]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11019</td>
+<td>sim/multiplay/generic/bool[19]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11020</td>
+<td>sim/multiplay/generic/bool[20]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11021</td>
+<td>sim/multiplay/generic/bool[21]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11022</td>
+<td>sim/multiplay/generic/bool[22]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11023</td>
+<td>sim/multiplay/generic/bool[23]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11024</td>
+<td>sim/multiplay/generic/bool[24]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11025</td>
+<td>sim/multiplay/generic/bool[25]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11026</td>
+<td>sim/multiplay/generic/bool[26]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11027</td>
+<td>sim/multiplay/generic/bool[27]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11028</td>
+<td>sim/multiplay/generic/bool[28]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11029</td>
+<td>sim/multiplay/generic/bool[29]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11030</td>
+<td>sim/multiplay/generic/bool[30]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11040</td>
+<td>sim/multiplay/generic/bool[31]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11041</td>
+<td>sim/multiplay/generic/bool[32]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11042</td>
+<td>sim/multiplay/generic/bool[33]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11043</td>
+<td>sim/multiplay/generic/bool[34]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11044</td>
+<td>sim/multiplay/generic/bool[35]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11045</td>
+<td>sim/multiplay/generic/bool[36]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11046</td>
+<td>sim/multiplay/generic/bool[37]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11047</td>
+<td>sim/multiplay/generic/bool[38]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11048</td>
+<td>sim/multiplay/generic/bool[39]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11049</td>
+<td>sim/multiplay/generic/bool[40]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11050</td>
+<td>sim/multiplay/generic/bool[41]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11051</td>
+<td>sim/multiplay/generic/bool[91]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11052</td>
+<td>sim/multiplay/generic/bool[42]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11053</td>
+<td>sim/multiplay/generic/bool[43]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11054</td>
+<td>sim/multiplay/generic/bool[44]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11055</td>
+<td>sim/multiplay/generic/bool[45]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11056</td>
+<td>sim/multiplay/generic/bool[46]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11057</td>
+<td>sim/multiplay/generic/bool[47]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11058</td>
+<td>sim/multiplay/generic/bool[48]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11059</td>
+<td>sim/multiplay/generic/bool[49]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11060</td>
+<td>sim/multiplay/generic/bool[50]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11061</td>
+<td>sim/multiplay/generic/bool[51]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11062</td>
+<td>sim/multiplay/generic/bool[52]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11063</td>
+<td>sim/multiplay/generic/bool[53]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11064</td>
+<td>sim/multiplay/generic/bool[54]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11065</td>
+<td>sim/multiplay/generic/bool[55]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11066</td>
+<td>sim/multiplay/generic/bool[56]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11067</td>
+<td>sim/multiplay/generic/bool[57]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11068</td>
+<td>sim/multiplay/generic/bool[58]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11069</td>
+<td>sim/multiplay/generic/bool[59]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11070</td>
+<td>sim/multiplay/generic/bool[60]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11080</td>
+<td>sim/multiplay/generic/bool[61]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11081</td>
+<td>sim/multiplay/generic/bool[62]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11082</td>
+<td>sim/multiplay/generic/bool[63]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11083</td>
+<td>sim/multiplay/generic/bool[64]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11084</td>
+<td>sim/multiplay/generic/bool[65]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11085</td>
+<td>sim/multiplay/generic/bool[66]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11086</td>
+<td>sim/multiplay/generic/bool[67]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11087</td>
+<td>sim/multiplay/generic/bool[68]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11088</td>
+<td>sim/multiplay/generic/bool[69]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11089</td>
+<td>sim/multiplay/generic/bool[70]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11090</td>
+<td>sim/multiplay/generic/bool[71]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11091</td>
+<td>sim/multiplay/generic/bool[92]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11092</td>
+<td>sim/multiplay/generic/bool[72]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11093</td>
+<td>sim/multiplay/generic/bool[73]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11094</td>
+<td>sim/multiplay/generic/bool[74]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11095</td>
+<td>sim/multiplay/generic/bool[75]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11096</td>
+<td>sim/multiplay/generic/bool[76]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11097</td>
+<td>sim/multiplay/generic/bool[77]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11098</td>
+<td>sim/multiplay/generic/bool[78]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11099</td>
+<td>sim/multiplay/generic/bool[79]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11100</td>
+<td>sim/multiplay/generic/bool[80]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11101</td>
+<td>sim/multiplay/generic/bool[81]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11102</td>
+<td>sim/multiplay/generic/bool[82]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11103</td>
+<td>sim/multiplay/generic/bool[83]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11104</td>
+<td>sim/multiplay/generic/bool[84]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11105</td>
+<td>sim/multiplay/generic/bool[85]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11106</td>
+<td>sim/multiplay/generic/bool[86]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11107</td>
+<td>sim/multiplay/generic/bool[87]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11108</td>
+<td>sim/multiplay/generic/bool[88]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11109</td>
+<td>sim/multiplay/generic/bool[89]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11110</td>
+<td>sim/multiplay/generic/bool[90]</td>
+<td>BOOL</td>
+<td>TT_BOOLARRAY</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>11990</td>
+<td>sim/multiplay/mp-clock-mode</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12000</td>
+<td>sim/multiplay/emesary/bridge[0]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12001</td>
+<td>sim/multiplay/emesary/bridge[1]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12002</td>
+<td>sim/multiplay/emesary/bridge[2]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12003</td>
+<td>sim/multiplay/emesary/bridge[3]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12004</td>
+<td>sim/multiplay/emesary/bridge[4]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12005</td>
+<td>sim/multiplay/emesary/bridge[5]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12006</td>
+<td>sim/multiplay/emesary/bridge[6]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12007</td>
+<td>sim/multiplay/emesary/bridge[7]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12008</td>
+<td>sim/multiplay/emesary/bridge[8]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12009</td>
+<td>sim/multiplay/emesary/bridge[9]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12010</td>
+<td>sim/multiplay/emesary/bridge[10]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12011</td>
+<td>sim/multiplay/emesary/bridge[11]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12012</td>
+<td>sim/multiplay/emesary/bridge[12]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12013</td>
+<td>sim/multiplay/emesary/bridge[13]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12014</td>
+<td>sim/multiplay/emesary/bridge[14]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12015</td>
+<td>sim/multiplay/emesary/bridge[15]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12016</td>
+<td>sim/multiplay/emesary/bridge[16]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12017</td>
+<td>sim/multiplay/emesary/bridge[17]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12018</td>
+<td>sim/multiplay/emesary/bridge[18]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12019</td>
+<td>sim/multiplay/emesary/bridge[19]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12020</td>
+<td>sim/multiplay/emesary/bridge[20]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12021</td>
+<td>sim/multiplay/emesary/bridge[21]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12022</td>
+<td>sim/multiplay/emesary/bridge[22]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12023</td>
+<td>sim/multiplay/emesary/bridge[23]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12024</td>
+<td>sim/multiplay/emesary/bridge[24]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12025</td>
+<td>sim/multiplay/emesary/bridge[25]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12026</td>
+<td>sim/multiplay/emesary/bridge[26]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12027</td>
+<td>sim/multiplay/emesary/bridge[27]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12028</td>
+<td>sim/multiplay/emesary/bridge[28]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12029</td>
+<td>sim/multiplay/emesary/bridge[29]</td>
+<td>STRING</td>
+<td>TT_ASIS</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12200</td>
+<td>sim/multiplay/emesary/bridge-type[0]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12201</td>
+<td>sim/multiplay/emesary/bridge-type[1]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12202</td>
+<td>sim/multiplay/emesary/bridge-type[2]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12203</td>
+<td>sim/multiplay/emesary/bridge-type[3]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12204</td>
+<td>sim/multiplay/emesary/bridge-type[4]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12205</td>
+<td>sim/multiplay/emesary/bridge-type[5]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12206</td>
+<td>sim/multiplay/emesary/bridge-type[6]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12207</td>
+<td>sim/multiplay/emesary/bridge-type[7]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12208</td>
+<td>sim/multiplay/emesary/bridge-type[8]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12209</td>
+<td>sim/multiplay/emesary/bridge-type[9]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12210</td>
+<td>sim/multiplay/emesary/bridge-type[10]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12211</td>
+<td>sim/multiplay/emesary/bridge-type[11]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12212</td>
+<td>sim/multiplay/emesary/bridge-type[12]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12213</td>
+<td>sim/multiplay/emesary/bridge-type[13]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12214</td>
+<td>sim/multiplay/emesary/bridge-type[14]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12215</td>
+<td>sim/multiplay/emesary/bridge-type[15]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12216</td>
+<td>sim/multiplay/emesary/bridge-type[16]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12217</td>
+<td>sim/multiplay/emesary/bridge-type[17]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12218</td>
+<td>sim/multiplay/emesary/bridge-type[18]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12219</td>
+<td>sim/multiplay/emesary/bridge-type[19]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12220</td>
+<td>sim/multiplay/emesary/bridge-type[20]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12221</td>
+<td>sim/multiplay/emesary/bridge-type[21]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12222</td>
+<td>sim/multiplay/emesary/bridge-type[22]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12223</td>
+<td>sim/multiplay/emesary/bridge-type[23]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12224</td>
+<td>sim/multiplay/emesary/bridge-type[24]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12225</td>
+<td>sim/multiplay/emesary/bridge-type[25]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12226</td>
+<td>sim/multiplay/emesary/bridge-type[26]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12227</td>
+<td>sim/multiplay/emesary/bridge-type[27]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12228</td>
+<td>sim/multiplay/emesary/bridge-type[28]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>12229</td>
+<td>sim/multiplay/emesary/bridge-type[29]</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>13000</td>
+<td>sim/model/fallback-model-index</td>
+<td>INT</td>
+<td>TT_SHORTINT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>13001</td>
+<td>sim/multiplay/comm-transmit-frequency-hz</td>
+<td>INT</td>
+<td>TT_INT</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr>
+<tr>
+<td>13002</td>
+<td>sim/multiplay/comm-transmit-power-norm</td>
+<td>INT</td>
+<td>TT_SHORT_FLOAT_NORM</td>
+<td>V1_1_2_PROP_ID</td>
+<td>
+</td></tr></tbody></table>
+<p><br />
+</p>
+<table cellspacing="0" style="border: 1px solid #1992ff; border-left-width: 10px; width: 90%; background-color: #e0f2ff; padding: 2px; margin: 1em auto;">
+<tbody><tr>
+<td style="padding-left: 5px"><b><span class="smallcaps" style="font-variant:small-caps;">Note</span></b>&#8194; This table is is current for FlightGear 2020.3; but may have been changed. Refer to <a rel="nofollow" class="external text" href="http://sourceforge.net/p/flightgear/flightgear/ci/next/tree/src/MultiPlayer/multiplaymgr.cxx#l129">flightgear/src/MultiPlayer/multiplaymgr.cxx</a>&#160;(line&#160;129).
+</td></tr></tbody></table>
+<table cellspacing="0" style="border: 1px solid #1992ff; border-left-width: 10px; width: 90%; background-color: #e0f2ff; padding: 2px; margin: 1em auto;">
+<tbody><tr>
+<td style="padding-left: 5px"><b><span class="smallcaps" style="font-variant:small-caps;">Note</span></b>&#8194; Properties related to the Emesary MP Bridge are separated to allow possible future improvements to the MP code to have better handling and therefore these string properties should not be used for anything else. The emesary/bridge-type is not currently used - however in the future it will be to identify a specific type of bridge and/or notification that are being used from a predefined set of bridge-types (not yet implemented).
+</td></tr></tbody></table>
+<h2><span class="mw-headline" id="Related_content">Related content</span></h2>
+<h3><span class="mw-headline" id="Wiki_articles">Wiki articles</span></h3>
+<ul><li><a href="/Aircraft_properties_reference" title="Aircraft properties reference">Aircraft properties reference</a></li>
+<li><a href="/Howto:Multiplayer" title="Howto:Multiplayer">Howto:Multiplayer</a></li>
+<li><a href="/Howto:Record,_analyze_and_replay_multiplayer_flights_with_network_tools" title="Howto:Record, analyze and replay multiplayer flights with network tools">Howto:Record, analyze and replay multiplayer flights with network tools</a></li>
+<li><a href="/Howto:Transmit_properties_over_MP" title="Howto:Transmit properties over MP">Howto:Transmit properties over MP</a></li>
+<li><a href="/Howto:Using_mp_broadcast.nas" title="Howto:Using mp broadcast.nas">Howto:Using mp broadcast.nas</a></li>
+<li><a href="/Real_Time_manual" title="Real Time manual">Real Time manual</a></li></ul>
+<h3><span class="mw-headline" id="Forum_topics">Forum topics</span></h3>
+<ul><li><a rel="nofollow" class="external text" href="http://forum.flightgear.org/viewtopic.php?p=136501&amp;sid=38acd29e73affe2a085eef43f0a184c9#p136501">Re: Development Help</a></li></ul>
+<h3><span class="mw-headline" id="Source_code">Source code</span></h3>
+<h4><span class="mw-headline" id="XDR_handling">XDR handling</span></h4>
+<ul><li><a rel="nofollow" class="external text" href="http://sourceforge.net/p/flightgear/flightgear/ci/next/tree/src/MultiPlayer/tiny_xdr.hxx">flightgear/src/MultiPlayer/tiny_xdr.hxx</a></li>
+<li><a rel="nofollow" class="external text" href="http://sourceforge.net/p/flightgear/flightgear/ci/next/tree/src/MultiPlayer/tiny_xdr.cxx">flightgear/src/MultiPlayer/tiny_xdr.cxx</a></li></ul>
+<h4><span class="mw-headline" id="Message_types">Message types</span></h4>
+<ul><li><a rel="nofollow" class="external text" href="http://sourceforge.net/p/flightgear/flightgear/ci/next/tree/src/MultiPlayer/mpmessages.hxx">flightgear/src/MultiPlayer/mpmessages.hxx</a></li></ul>
+<h4><span class="mw-headline" id="Multiplayer_system">Multiplayer system</span></h4>
+<ul><li><a rel="nofollow" class="external text" href="http://sourceforge.net/p/flightgear/flightgear/ci/next/tree/src/MultiPlayer/multiplaymgr.hxx">flightgear/src/MultiPlayer/multiplaymgr.hxx</a></li>
+<li><a rel="nofollow" class="external text" href="http://sourceforge.net/p/flightgear/flightgear/ci/next/tree/src/MultiPlayer/multiplaymgr.cxx">flightgear/src/MultiPlayer/multiplaymgr.cxx</a></li></ul>
+<h2><span class="mw-headline" id="External_links">External links</span></h2>
+<ul><li><span class="plainlinks"><a rel="nofollow" class="external text" href="https://en.wikipedia.org/wiki/External_Data_Representation">External Data Representation</a></span>&#32;<a href="/Template:Wikipedia" title="This is a link to a Wikipedia article"><img alt="This is a link to a Wikipedia article" src="/w/images/f/fa/Wikipedia_icon_15px.png" decoding="async" width="15" height="15" /></a> (XDR)</li>
+<li>R. Srinivasan&#160;(August 1995).&#160;<a rel="nofollow" class="external text" href="https://tools.ietf.org/html/rfc1832">RFC 1832 – XDR: External Data Representation Standard</a>.&#160;Published by Internet Engineering Task Force (IETF).</li></ul>
+<div class="mw-references-wrap"><ol class="references">
+<li id="cite_note-1"><span class="mw-cite-backlink"><a href="#cite_ref-1">↑</a></span> <span class="reference-text"> Ludovic Brenta &#160;(May 3rd, 2016).&#160;<a rel="nofollow" class="external text" href="https://sourceforge.net/p/flightgear/mailman/message/35059961/"> Re: [Flightgear-devel] dual-control-tools and the limit on packet
+	size </a>.</span>
+</li>
+<li id="cite_note-2"><span class="mw-cite-backlink"><a href="#cite_ref-2">↑</a></span> <span class="reference-text"> Ludovic Brenta &#160;(Oct 21st, 2016).&#160;<a rel="nofollow" class="external text" href="https://sourceforge.net/p/flightgear/mailman/message/35441502/"> Re: [Flightgear-devel] C172 MP alert on console </a>.</span>
+</li>
+</ol></div>
+<!-- 
+NewPP limit report
+Cached time: 20260227141906
+Cache expiry: 86400
+Reduced expiry: false
+Complications: [show‐toc]
+CPU time usage: 0.169 seconds
+Real time usage: 0.176 seconds
+Preprocessor visited node count: 872/1000000
+Post‐expand include size: 14126/2097152 bytes
+Template argument size: 5360/2097152 bytes
+Highest expansion depth: 11/100
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 372/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%   73.427      1 -total
+ 13.37%    9.819      1 Template:Affected_by_HLA
+  4.67%    3.431      4 Template:Caution
+  4.08%    2.999      4 Template:Cite_web
+  3.61%    2.651      9 Template:LangSwitch
+  3.29%    2.415      1 Template:FGCquote
+  2.63%    1.935      3 Template:Note
+  2.59%    1.905      7 Template:Flightgear_file
+  1.95%    1.433      1 Template:Warning
+  1.09%    0.801      1 Template:Wikipedia
+-->
+
+<!-- Saved in parser cache with key fg_wiki-mw_:pcache:idhash:5590-0!canonical and timestamp 20260227141906 and revision id 135766.
+ -->
+</div>
+<div class="printfooter" data-nosnippet="">Retrieved from "<a dir="ltr" href="https://wiki.flightgear.org/w/index.php?title=Multiplayer_protocol&amp;oldid=135766">https://wiki.flightgear.org/w/index.php?title=Multiplayer_protocol&amp;oldid=135766</a>"</div></div>
+		<div id="catlinks" class="catlinks" data-mw="interface"><div id="mw-normal-catlinks" class="mw-normal-catlinks"><a href="/Special:Categories" title="Special:Categories">Categories</a>: <ul><li><a href="/Category:Affected_by_HLA" title="Category:Affected by HLA">Affected by HLA</a></li><li><a href="/Category:Multiplayer" title="Category:Multiplayer">Multiplayer</a></li></ul></div><div id="mw-hidden-catlinks" class="mw-hidden-catlinks mw-hidden-cats-hidden">Hidden category: <ul><li><a href="/Category:Articles_containing_Instant-Cquotes" title="Category:Articles containing Instant-Cquotes">Articles containing Instant-Cquotes</a></li></ul></div></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		
+
+<nav id="p-personal" class="vector-menu mw-portlet mw-portlet-personal vector-user-menu-legacy" aria-labelledby="p-personal-label" role="navigation"  >
+	<h3
+		id="p-personal-label"
+		
+		class="vector-menu-heading "
+	>
+		<span class="vector-menu-heading-label">Personal tools</span>
+	</h3>
+	<div class="vector-menu-content">
+		
+		<ul class="vector-menu-content-list"><li id="pt-uls" class="mw-list-item active"><a class="uls-trigger" href="#"><span>English</span></a></li><li id="pt-createaccount" class="mw-list-item"><a href="/w/index.php?title=Special:CreateAccount&amp;returnto=Multiplayer+protocol" title="You are encouraged to create an account and log in; however, it is not mandatory"><span>Create account</span></a></li><li id="pt-login" class="mw-list-item"><a href="/w/index.php?title=Special:UserLogin&amp;returnto=Multiplayer+protocol" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o"><span>Log in</span></a></li></ul>
+		
+	</div>
+</nav>
+
+		<div id="left-navigation">
+			
+
+<nav id="p-namespaces" class="vector-menu mw-portlet mw-portlet-namespaces vector-menu-tabs vector-menu-tabs-legacy" aria-labelledby="p-namespaces-label" role="navigation"  >
+	<h3
+		id="p-namespaces-label"
+		
+		class="vector-menu-heading "
+	>
+		<span class="vector-menu-heading-label">Namespaces</span>
+	</h3>
+	<div class="vector-menu-content">
+		
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected mw-list-item"><a href="/Multiplayer_protocol" title="View the content page [c]" accesskey="c"><span>Page</span></a></li><li id="ca-talk" class="mw-list-item"><a href="/Talk:Multiplayer_protocol" rel="discussion" title="Discussion about the content page [t]" accesskey="t"><span>Discussion</span></a></li></ul>
+		
+	</div>
+</nav>
+
+			
+
+<nav id="p-variants" class="vector-menu mw-portlet mw-portlet-variants emptyPortlet vector-menu-dropdown" aria-labelledby="p-variants-label" role="navigation"  >
+	<input type="checkbox"
+		id="p-variants-checkbox"
+		role="button"
+		aria-haspopup="true"
+		data-event-name="ui.dropdown-p-variants"
+		class="vector-menu-checkbox"
+		aria-labelledby="p-variants-label"
+	/>
+	<label
+		id="p-variants-label"
+		 aria-label="Change language variant"
+		class="vector-menu-heading "
+	>
+		<span class="vector-menu-heading-label">English</span>
+	</label>
+	<div class="vector-menu-content">
+		
+		<ul class="vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+		</div>
+		<div id="right-navigation">
+			
+
+<nav id="p-views" class="vector-menu mw-portlet mw-portlet-views vector-menu-tabs vector-menu-tabs-legacy" aria-labelledby="p-views-label" role="navigation"  >
+	<h3
+		id="p-views-label"
+		
+		class="vector-menu-heading "
+	>
+		<span class="vector-menu-heading-label">Views</span>
+	</h3>
+	<div class="vector-menu-content">
+		
+		<ul class="vector-menu-content-list"><li id="ca-view" class="selected mw-list-item"><a href="/Multiplayer_protocol"><span>Read</span></a></li><li id="ca-viewsource" class="mw-list-item"><a href="/w/index.php?title=Multiplayer_protocol&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e"><span>View source</span></a></li><li id="ca-history" class="mw-list-item"><a href="/w/index.php?title=Multiplayer_protocol&amp;action=history" title="Past revisions of this page [h]" accesskey="h"><span>View history</span></a></li></ul>
+		
+	</div>
+</nav>
+
+			
+
+<nav id="p-cactions" class="vector-menu mw-portlet mw-portlet-cactions emptyPortlet vector-menu-dropdown" aria-labelledby="p-cactions-label" role="navigation"  title="More options" >
+	<input type="checkbox"
+		id="p-cactions-checkbox"
+		role="button"
+		aria-haspopup="true"
+		data-event-name="ui.dropdown-p-cactions"
+		class="vector-menu-checkbox"
+		aria-labelledby="p-cactions-label"
+	/>
+	<label
+		id="p-cactions-label"
+		
+		class="vector-menu-heading "
+	>
+		<span class="vector-menu-heading-label">More</span>
+	</label>
+	<div class="vector-menu-content">
+		
+		<ul class="vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+			
+<div id="p-search" role="search" class="vector-search-box-vue  vector-search-box-show-thumbnail vector-search-box-auto-expand-width vector-search-box">
+	<div>
+			<h3 >
+				<label for="searchInput">Search</label>
+			</h3>
+		<form action="/w/index.php" id="searchform"
+			class="vector-search-box-form">
+			<div id="simpleSearch"
+				class="vector-search-box-inner"
+				 data-search-loc="header-navigation">
+				<input class="vector-search-box-input"
+					 type="search" name="search" placeholder="Search FlightGear wiki" aria-label="Search FlightGear wiki" autocapitalize="sentences" title="Search FlightGear wiki [f]" accesskey="f" id="searchInput"
+				>
+				<input type="hidden" name="title" value="Special:Search">
+				<input id="mw-searchButton"
+					 class="searchButton mw-fallbackSearchButton" type="submit" name="fulltext" title="Search the pages for this text" value="Search">
+				<input id="searchButton"
+					 class="searchButton" type="submit" name="go" title="Go to a page with this exact name if it exists" value="Go">
+			</div>
+		</form>
+	</div>
+</div>
+
+		</div>
+	</div>
+	
+
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a class="mw-wiki-logo" href="/Main_Page"
+			title="Visit the main page"></a>
+	</div>
+	
+
+<nav id="p-navigation" class="vector-menu mw-portlet mw-portlet-navigation vector-menu-portal portal" aria-labelledby="p-navigation-label" role="navigation"  >
+	<h3
+		id="p-navigation-label"
+		
+		class="vector-menu-heading "
+	>
+		<span class="vector-menu-heading-label">Navigation</span>
+	</h3>
+	<div class="vector-menu-content">
+		
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description" class="mw-list-item"><a href="/Main_Page" title="Visit the main page [z]" accesskey="z"><span>Main page</span></a></li><li id="n-recentchanges" class="mw-list-item"><a href="/Special:RecentChanges" title="A list of recent changes in the wiki [r]" accesskey="r"><span>Recent changes</span></a></li><li id="n-Village-pump" class="mw-list-item"><a href="/FlightGear_wiki:Village_pump"><span>Village pump</span></a></li><li id="n-Help" class="mw-list-item"><a href="/Help:Contents" title="The place to find out"><span>Help</span></a></li></ul>
+		
+	</div>
+</nav>
+
+	
+
+<nav id="p-Portals" class="vector-menu mw-portlet mw-portlet-Portals vector-menu-portal portal" aria-labelledby="p-Portals-label" role="navigation"  >
+	<h3
+		id="p-Portals-label"
+		
+		class="vector-menu-heading "
+	>
+		<span class="vector-menu-heading-label">Portals</span>
+	</h3>
+	<div class="vector-menu-content">
+		
+		<ul class="vector-menu-content-list"><li id="n-User" class="mw-list-item"><a href="/Portal:User"><span>User</span></a></li><li id="n-Developer" class="mw-list-item"><a href="/Portal:Developer"><span>Developer</span></a></li><li id="n-Wiki" class="mw-list-item"><a href="/Portal:Wiki"><span>Wiki</span></a></li></ul>
+		
+	</div>
+</nav>
+
+
+<nav id="p-FlightGear" class="vector-menu mw-portlet mw-portlet-FlightGear vector-menu-portal portal" aria-labelledby="p-FlightGear-label" role="navigation"  >
+	<h3
+		id="p-FlightGear-label"
+		
+		class="vector-menu-heading "
+	>
+		<span class="vector-menu-heading-label">FlightGear</span>
+	</h3>
+	<div class="vector-menu-content">
+		
+		<ul class="vector-menu-content-list"><li id="n-Website" class="mw-list-item"><a href="https://www.flightgear.org/" rel="nofollow"><span>Website</span></a></li><li id="n-Forum" class="mw-list-item"><a href="https://forum.flightgear.org/" rel="nofollow"><span>Forum</span></a></li><li id="n-Mailing lists" class="mw-list-item"><a href="/Mailing_lists"><span>Mailing lists</span></a></li><li id="n-Bug tracker" class="mw-list-item"><a href="https://gitlab.com/groups/flightgear/-/issues" rel="nofollow"><span>Bug tracker</span></a></li><li id="n-Source" class="mw-list-item"><a href="https://gitlab.com/flightgear" rel="nofollow"><span>Source</span></a></li><li id="n-Scenery" class="mw-list-item"><a href="https://scenery.flightgear.org/" rel="nofollow"><span>Scenery</span></a></li><li id="n-Liveries" class="mw-list-item"><a href="https://liveries.flightgear.org/" rel="nofollow"><span>Liveries</span></a></li></ul>
+		
+	</div>
+</nav>
+
+
+<nav id="p-tb" class="vector-menu mw-portlet mw-portlet-tb vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation"  >
+	<h3
+		id="p-tb-label"
+		
+		class="vector-menu-heading "
+	>
+		<span class="vector-menu-heading-label">Tools</span>
+	</h3>
+	<div class="vector-menu-content">
+		
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere" class="mw-list-item"><a href="/Special:WhatLinksHere/Multiplayer_protocol" title="A list of all wiki pages that link here [j]" accesskey="j"><span>What links here</span></a></li><li id="t-recentchangeslinked" class="mw-list-item"><a href="/Special:RecentChangesLinked/Multiplayer_protocol" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k"><span>Related changes</span></a></li><li id="t-upload" class="mw-list-item"><a href="/Special:UploadWizard" title="Upload files [u]" accesskey="u"><span>Upload file</span></a></li><li id="t-specialpages" class="mw-list-item"><a href="/Special:SpecialPages" title="A list of all special pages [q]" accesskey="q"><span>Special pages</span></a></li><li id="t-print" class="mw-list-item"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p"><span>Printable version</span></a></li><li id="t-permalink" class="mw-list-item"><a href="/w/index.php?title=Multiplayer_protocol&amp;oldid=135766" title="Permanent link to this revision of this page"><span>Permanent link</span></a></li><li id="t-info" class="mw-list-item"><a href="/w/index.php?title=Multiplayer_protocol&amp;action=info" title="More information about this page"><span>Page information</span></a></li></ul>
+		
+	</div>
+</nav>
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info">
+	<li id="footer-info-lastmod"> This page was last edited on 2 November 2022, at 23:06.</li>
+	<li id="footer-info-copyright">Text is available under the <a href="http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt">GNU GPL Version 2</a>; additional terms may apply. Please view the media description page for details about the license of specific media files. See <a href="http://wiki.flightgear.org/FlightGear_wiki:Terms_of_use">Terms of use</a> for details.</li>
+</ul>
+
+	<ul id="footer-places">
+	<li id="footer-places-privacy"><a href="/FlightGear_wiki:Privacy_policy">Privacy policy</a></li>
+	<li id="footer-places-about"><a href="/FlightGear_wiki:About">About FlightGear wiki</a></li>
+	<li id="footer-places-disclaimer"><a href="/FlightGear_wiki:General_disclaimer">Disclaimers</a></li>
+	<li id="footer-places-mobileview"><a href="https://wiki.flightgear.org/w/index.php?title=Multiplayer_protocol&amp;mobileaction=toggle_view_mobile" class="noprint stopMobileRedirectToggle">Mobile view</a></li>
+</ul>
+
+	<ul id="footer-icons" class="noprint">
+	<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="/w/resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/w/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /w/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a><a href="https://m.do.co/"><img src="/w/resources/assets/poweredby_digitalocean.svg" alt="Hosted by DigitalOcean" width="100" style="margin-left: 5px;" height="31" loading="lazy"/></a></li>
+</ul>
+
+</footer>
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.169","walltime":"0.176","ppvisitednodes":{"value":872,"limit":1000000},"postexpandincludesize":{"value":14126,"limit":2097152},"templateargumentsize":{"value":5360,"limit":2097152},"expansiondepth":{"value":11,"limit":100},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":372,"limit":5000000},"timingprofile":["100.00%   73.427      1 -total"," 13.37%    9.819      1 Template:Affected_by_HLA","  4.67%    3.431      4 Template:Caution","  4.08%    2.999      4 Template:Cite_web","  3.61%    2.651      9 Template:LangSwitch","  3.29%    2.415      1 Template:FGCquote","  2.63%    1.935      3 Template:Note","  2.59%    1.905      7 Template:Flightgear_file","  1.95%    1.433      1 Template:Warning","  1.09%    0.801      1 Template:Wikipedia"]},"cachereport":{"timestamp":"20260227141906","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":328});});</script>
+</body>
+</html>
