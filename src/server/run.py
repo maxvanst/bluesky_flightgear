@@ -1,6 +1,8 @@
 import socket
 import time
 import threading
+import numpy as np
+from math import degrees
 from bluesky import traf
 from plugins.flightgear.src.server.protocol import create_packet
 
@@ -67,13 +69,15 @@ class Server():
                 continue
             else:
                 for callsign in traf.id:
-                    idx = traf.id2idx(callsign)
-                    actype = traf.type[idx]
-                    latitude = traf.lat[idx]
-                    longitude = traf.lon[idx]
-                    altitude = traf.alt[idx]
-                    heading = traf.hdg[idx]
-                    vertical_speed = traf.vs[idx]
-                    accel_x = traf.ax[idx]
-                    packet = create_packet(callsign, actype, latitude, longitude, altitude, phi=0.0, theta=0.0, psi=heading)
-                    self.send_socket.sendto(packet, ("127.0.0.1", 5002))    
+                    if callsign != "PHLAB":
+                        idx = traf.id2idx(callsign)
+                        actype = traf.type[idx]
+                        latitude = traf.lat[idx]
+                        longitude = traf.lon[idx]
+                        altitude = traf.alt[idx]
+                        heading = traf.hdg[idx]
+                        bank = degrees(traf.perf.bank[idx]) * -np.sign((traf.aporasas.hdg - heading + 180) % 360 - 180)[1]
+                        vertical_speed = traf.vs[idx]
+                        accel_x = traf.ax[idx]
+                        packet = create_packet(callsign, actype, latitude, longitude, altitude, phi=-bank, theta=0.0, psi=heading)
+                        self.send_socket.sendto(packet, ("127.0.0.1", 5002))    
