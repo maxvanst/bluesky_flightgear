@@ -3,13 +3,18 @@ import math
 import time
 import numpy as np
 from plugins.flightgear.src.server.acmap import model_mapping
-from math import sqrt, radians, sin, cos, acos
+from math import sqrt, radians, sin, cos, acos, pi
 from scipy.spatial.transform import Rotation
 
 # Multiplayer Protocol Constants
+"""
+Message definitions for multiplayer communications (mpmessages.hxx)
+https://sourceforge.net/p/flightgear/flightgear/ci/next/tree/src/MultiPlayer/mpmessages.hxx#l48
+"""
 MSG_MAGIC = 0x46474653  
 PROTO_VER = 0x00010001
-POS_DATA_ID = 7
+CHAT_MSG_ID = 0x00000001
+POS_DATA_ID = 0x00000007
 
 def bluesky2ecef(alt: float, lat_deg: float, lon_deg: float, phi_deg: float, theta_deg: float, psi_deg: float):
     """
@@ -52,8 +57,8 @@ def bluesky2ecef(alt: float, lat_deg: float, lon_deg: float, phi_deg: float, the
                            [cos(lon) , -sin(lat)*sin(lon), cos(lat)*sin(lon)],  # N
                            [0        , cos(lat)          , sin(lat)         ]]) # U
 
-    rot = T_enu2ecef @ np.array([[cos(-psi + math.pi/2), -sin(-psi + math.pi/2), 0],
-                                 [sin(-psi + math.pi/2),  cos(-psi + math.pi/2), 0],
+    rot = T_enu2ecef @ np.array([[cos(-psi + pi/2), -sin(-psi + pi/2), 0],
+                                 [sin(-psi + pi/2),  cos(-psi + pi/2), 0],
                                  [0, 0, 1]])
     
     rot = rot @ np.array([[cos(theta) , 0, sin(theta)],
@@ -61,8 +66,8 @@ def bluesky2ecef(alt: float, lat_deg: float, lon_deg: float, phi_deg: float, the
                           [-sin(theta), 0, cos(theta)]])
     
     rot = rot @ np.array([[1, 0, 0],
-                          [0, cos(phi + math.pi), -sin(phi + math.pi)],
-                          [0, sin(phi + math.pi), cos(phi + math.pi)]])
+                          [0, cos(phi + pi), -sin(phi + pi)],
+                          [0, sin(phi + pi), cos(phi + pi)]])
 
     # ------------ Orientation inside ECEF Reference Frame ------------ #
     orientation = Rotation.from_matrix(rot).as_rotvec(degrees=False)
@@ -76,8 +81,7 @@ def create_message_header(callsign: str, msg_id: str, msg_len: int, requested_ra
     Construct the Flightgear Multiplayer Protocol message header
     Source: https://github.com/zayamatias/FGRandomMultiplayer/blob/main/mp.py 
     """
-    callsign_bytes = callsign.encode('ascii')[:8]
-    callsign_bytes = callsign_bytes.ljust(8, b'\0')
+    callsign_bytes = callsign.encode('ascii')[:8].ljust(8, b'\0')
 
     return struct.pack('!6I8s', MSG_MAGIC, PROTO_VER, msg_id, msg_len, requested_range_nm, reply_port, callsign_bytes)
 
@@ -96,15 +100,14 @@ def create_packet(callsign: str, actype: str, latitude: float, longitude: float,
     linearAccel = (0, 0, 0)
     angularAccel = (0, 0, 0)
     position, orientation = bluesky2ecef(altitude, latitude, longitude, phi, theta, psi)
-    v2_properties = [
-        (10, 2, 'short') # TODO: Add more properties that might be of interest to BlueSky/FlightGear
-    ]
-    model_str = model_mapping(actype)
-    model = model_str.encode('ascii')[:96]
-    model = model.ljust(96, b'\0')
+    model = model_mapping(actype).encode('ascii')[:96].ljust(96, b'\0')
     fmt = '!96s2d3d3f3f3f3f3f'
     payload = struct.pack(fmt, model, time_val, lag, *position, *orientation, *linearVel, *angularVel, *linearAccel, *angularAccel)
 
+    # Additional information  to be sent
+    v2_properties = [            # TODO: Add more properties that might be of interest to BlueSky/FlightGear
+        (10, 2, 'short')         # protocol version
+    ]
     v2_block = b''
     for prop_id, value, enc in v2_properties:
         if enc == 'short':
