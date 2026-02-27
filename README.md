@@ -10,7 +10,14 @@ In order to install the BlueSky FlightGear Plugin:
 
 ## Running 
 - Start FlightGear, For Linux: ./flightgear-2024.1.4-linux-amd64.AppImage --launcher 
-- Additional settings of FlightGear --generic=socket,out,1,localhost,5501,udp,bluesky --telnet=5502 --callsign=PHLAB
+- Additional settings of FlightGear:
+   * --generic=socket,out,1,localhost,5000,udp,bluesky 
+   * --multiplay=out,10,localhost,5001 
+   * --multiplay=in,10,localhost,5002 
+   * --telnet=socket,bi,60,localhost,5003,tcp 
+   * --disable-ai-traffic 
+   * --callsign=PHLAB
+
 - Ensure address and port of FlightGear are properly set in settings.cfg inside BlueSky if not using localhost
 - Start BlueSky: PLUGINS FLIGHTGEAR should load the plugin
 - Start the plugin: FLIGHTGEAR ON

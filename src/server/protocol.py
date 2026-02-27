@@ -33,7 +33,7 @@ def bluesky2ecef(alt: float, lat_deg: float, lon_deg: float, phi_deg: float, the
 
     Returns:
         (PosX, PosY, PosZ): tuple, position vector within ECEF reference frame
-        (orientation):      tuple, orientation vecotr within ECEF reference frame
+        (orientation):      np.array, orientation vector within ECEF reference frame
     """
     # [deg] to [radians]
     lat, lon, phi, theta, psi = radians(lat_deg), radians(lon_deg), radians(phi_deg), radians(theta_deg), radians(psi_deg)
@@ -97,7 +97,7 @@ def create_packet(callsign: str, actype: str, latitude: float, longitude: float,
     angularAccel = (0, 0, 0)
     position, orientation = bluesky2ecef(altitude, latitude, longitude, phi, theta, psi)
     v2_properties = [
-        (10, 2, 'short')
+        (10, 2, 'short') # TODO: Add more properties that might be of interest to BlueSky/FlightGear
     ]
     model_str = model_mapping(actype)
     model = model_str.encode('ascii')[:96]
