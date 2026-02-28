@@ -1,12 +1,12 @@
 ## BlueSky FlightGear plugin
 This Python plugin is meant as an extension to the 'BlueSky - The Open Air Traffic Simulator'. [https://github.com/TUDelft-CNS-ATM/bluesky]
-The plugin creates a connection between BlueSky and the popular open source flight simulator FlightGear. 
+The plugin creates a connection between BlueSky and the popular open source flight simulator FlightGear [https://www.flightgear.org/]. 
 This includes showing the FlightGear simulated aircraft in BlueSky and sending BlueSky traffic to FlightGear.
 
 ## Prerequisites
 - Python 3.12.3 or later
-- FlightGear v2024.1.4 [https://www.flightgear.org/]
-- BlueSky v1.1.1 or later [https://github.com/TUDelft-CNS-ATM/bluesky]
+- FlightGear v2024.1.4
+- BlueSky v1.1.1 or later
 
 ## Installation
 In order to install the BlueSky FlightGear Plugin:
