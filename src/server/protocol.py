@@ -2,6 +2,7 @@ import struct
 import math
 import time
 import numpy as np
+from bluesky.tools import aero
 from plugins.flightgear.src.server.acmap import model_mapping
 from math import sqrt, radians, sin, cos, acos, pi
 from scipy.spatial.transform import Rotation
@@ -29,6 +30,7 @@ def bluesky2ecef(alt: float, lat_deg: float, lon_deg: float, phi_deg: float, the
     Source 3: https://en.wikipedia.org/wiki/Geographic_coordinate_conversion
 
     Input:
+        airspeed:   float, airspeed [m/s]
         alt:        float, altitude [m]
         lat_deg:    float, latitude [deg]
         lon_deg:    float, longitude [deg]
@@ -86,7 +88,7 @@ def create_message_header(callsign: str, msg_id: str, msg_len: int, requested_ra
     return struct.pack('!6I8s', MSG_MAGIC, PROTO_VER, msg_id, msg_len, requested_range_nm, reply_port, callsign_bytes)
 
 
-def create_packet(callsign: str, actype: str, latitude: float, longitude: float, altitude: float, phi: float, theta: float, psi: float):
+def create_packet(callsign: str, actype: str, latitude: float, longitude: float, airspeed: float, altitude: float, phi: float, theta: float, psi: float):
     """
     Create Flightgear Multiplayer Protocol UDP Packet
     * Positions, Orientations, Velocities and Accelerations are w.r.t. the Earth-Centered, Earth-Fixed frame.
@@ -104,29 +106,33 @@ def create_packet(callsign: str, actype: str, latitude: float, longitude: float,
     fmt = '!96s2d3d3f3f3f3f3f'
     payload = struct.pack(fmt, model, time_val, lag, *position, *orientation, *linearVel, *angularVel, *linearAccel, *angularAccel)
 
-    # Additional information  to be sent
-    v2_properties = [            # TODO: Add more properties that might be of interest to BlueSky/FlightGear
-        (10, 2, 'short')         # protocol version
-    ]
-    v2_block = b''
-    for prop_id, value, enc in v2_properties:
-        if enc == 'short':
-            v2_block += struct.pack('!HH', prop_id, 2)  # LEN=2 bytes
-            v2_block += struct.pack('!h', value)
-        elif enc == 'int':
-            v2_block += struct.pack('!HH', prop_id, 4)  # LEN=4 bytes
-            v2_block += struct.pack('!i', value)
-        elif enc == 'float':
-            v2_block += struct.pack('!HH', prop_id, 4)  # LEN=4 bytes
-            v2_block += struct.pack('!f', value)
-        elif enc == 'string':
-            if isinstance(value, str) and value:
-                s = value.encode('utf-8')
-                length = len(s)
-                v2_block += struct.pack('!HH', prop_id, length)
-                v2_block += s
+    protocol_version = struct.pack('!h', 10) + struct.pack('!h', 2)
+    squawk = struct.pack('!h', 1500) + struct.pack('!h', 2200)
+    transponder_altitude = struct.pack('!h', 1501) + struct.pack('!h', int(altitude / aero.ft))
+    transponder_mode = struct.pack('!h', 1503) + struct.pack('!h', 2) # set to TA/RA
+    transponder_airspeed = struct.pack('!h', 1505) + struct.pack('!h', int(airspeed / aero.kts))
 
-    pos_msg = payload + v2_block
+    # v2_properties = [
+    #         (10, "sim/multiplay/protocol-version", 2),
+    #         (1500, "instrumentation/transponder/transmitted-id", 2),
+    #         (1502, "instrumentation/transponder/ident", 2),
+    #         (1503, "instrumentation/transponder/inputs/mode", 2)
+    #     ]
+
+    # while len(data[offset:]) != 0:
+    #     unparsed = data[offset:offset+4]
+    #     parsed = struct.unpack('!hh', data[offset:offset+4])
+    #     prop_id = parsed[0]
+    #     for id, path, LEN in v2_properties: 
+    #         if prop_id == id:
+    #             generated = struct.pack('!h', 1503)
+    #             generated += struct.pack('!h', 2)
+    #             print(prop_id, path, parsed[1], unparsed, generated)
+    #     offset += 4
+
+                             # 4 bytes       
+    pos_msg = payload + b'\x1f\xac\xe0\x02' + protocol_version + squawk + transponder_altitude + transponder_mode + transponder_airspeed
+
     if len(pos_msg) % 4 != 0:
         pos_msg += b'\0' * (4 - (len(pos_msg) % 4))
     header_len = 32

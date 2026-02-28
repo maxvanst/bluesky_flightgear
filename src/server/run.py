@@ -44,17 +44,18 @@ class Server():
             else:
                 data, address = self.listen_socket.recvfrom(1024)
                 decoded = data.decode('utf-8').replace('"', '').split(";")
-                callsign = str(decoded[0])
+                client = str(decoded[0])
+                callsign = str(decoded[1])
                 flight = {'ts': time.time(),
-                          'squawk': str(decoded[1]),
-                          'actype': str(decoded[2]),
-                          'ident': bool(int(decoded[3])),
-                          'altitude': int(decoded[4]),
-                          'airspeed': int(decoded[5]),
-                          'vertical_speed': float(decoded[6]),
-                          'heading': float(decoded[7]),
-                          'latitude': float(decoded[8]),
-                          'longitude': float(decoded[9])}
+                          'squawk': str(decoded[2]),
+                          'actype': str(decoded[3]),
+                          'ident': bool(int(decoded[4])),
+                          'altitude': int(decoded[5]),
+                          'airspeed': int(decoded[6]),
+                          'vertical_speed': float(decoded[7]),
+                          'heading': float(decoded[8]),
+                          'latitude': float(decoded[9]),
+                          'longitude': float(decoded[10])}
                 
                 self.listen_buffer[callsign] = flight
 
@@ -74,10 +75,11 @@ class Server():
                         actype = traf.type[idx]
                         latitude = traf.lat[idx]
                         longitude = traf.lon[idx]
+                        airspeed = traf.tas[idx]
                         altitude = traf.alt[idx]
                         heading = traf.hdg[idx]
                         bank = degrees(traf.perf.bank[idx]) * -np.sign((traf.aporasas.hdg - heading + 180) % 360 - 180)[1]
                         vertical_speed = traf.vs[idx]
                         accel_x = traf.ax[idx]
-                        packet = create_packet(callsign, actype, latitude, longitude, altitude, phi=-bank, theta=0.0, psi=heading)
+                        packet = create_packet(callsign, actype, latitude, longitude, airspeed, altitude, phi=-bank, theta=0.0, psi=heading)
                         self.send_socket.sendto(packet, ("127.0.0.1", 5002))    
