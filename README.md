@@ -32,7 +32,7 @@ In order to install the BlueSky FlightGear Plugin:
    * --disable-ai-traffic 
    * --prop:/bluesky/client/name=[YOUR_CLIENT_NAME]
    * --callsign=PHLAB
-   * 
+     
 - Start BlueSky: PLUGINS FLIGHTGEAR should load the plugin
 - Start the plugin: FLIGHTGEAR ON
 - Start the BlueSky simulation by pressing 'Op'
