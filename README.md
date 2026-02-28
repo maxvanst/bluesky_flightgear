@@ -5,7 +5,7 @@ This includes showing the FlightGear simulated aircraft in BlueSky and sending B
 The following items are supported:
 - Transponder functionality, squawk, ident
 - Ident by flashing FlightGear aircraft label inside BlueSky traffic
-- BlueSky traffic can be shown using Aircraft tyoe and operator e.g. KLM B744 etc.
+- BlueSky traffic can be visually seen in FlightGear using aircraft type and operator e.g. KLM B744 etc.
 - TCAS TA/RA inside FlightGear with BlueSky traffic
 - Sending instructions to FlightGear aircraft via CPDLC
 - Retrieving FlightGear flightplan and inserting in BlueSky
