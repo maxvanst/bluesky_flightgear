@@ -2,6 +2,13 @@
 This Python plugin is meant as an extension to the 'BlueSky - The Open Air Traffic Simulator'. [https://github.com/TUDelft-CNS-ATM/bluesky]
 The plugin creates a connection between BlueSky and the popular open source flight simulator FlightGear [https://www.flightgear.org/]. 
 This includes showing the FlightGear simulated aircraft in BlueSky and sending BlueSky traffic to FlightGear.
+The following items are supported:
+- Transponder functionality, squawk, ident
+- Ident by flashing FlightGear aircraft label inside BlueSky traffic
+- BlueSky traffic can be shown using Aircraft tyoe and operator e.g. KLM B744 etc.
+- TCAS TA/RA inside FlightGear with BlueSky traffic
+- Sending instructions to FlightGear aircraft via CPDLC
+- Retrieving FlightGear flightplan and inserting in BlueSky
 
 ## Prerequisites
 - Python 3.12.3 or later
