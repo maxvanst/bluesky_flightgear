@@ -10,12 +10,13 @@ from scipy.spatial.transform import Rotation
 # Multiplayer Protocol Constants
 """
 Message definitions for multiplayer communications (mpmessages.hxx)
-https://sourceforge.net/p/flightgear/flightgear/ci/next/tree/src/MultiPlayer/mpmessages.hxx#l48
+https://gitlab.com/flightgear/flightgear/-/blob/next/src/MultiPlayer/mpmessages.hxx
 """
-MSG_MAGIC = 0x46474653  
-PROTO_VER = 0x00010001
-CHAT_MSG_ID = 0x00000001
-POS_DATA_ID = 0x00000007
+MSG_MAGIC = 0x46474653      # "FGFS"
+PROTO_VER = 0x00010001      # "1.1"
+CHAT_MSG_ID = 0x00000001    # "1"
+MAX_CHAT_MSG_LEN = 256
+POS_DATA_ID = 0x00000007    # "7"
 
 def bluesky2ecef(alt: float, lat_deg: float, lon_deg: float, phi_deg: float, theta_deg: float, psi_deg: float):
     """
@@ -50,10 +51,12 @@ def bluesky2ecef(alt: float, lat_deg: float, lon_deg: float, phi_deg: float, the
     e = sqrt(1 - (b**2)/(a**2))                                         # Eccentricity    [-]
     Rm = (a * (1 - (e**2))) / ((1 - (e**2) * (sin(lat)**2))**(3/2))     # Meridian radius of curvature
     Rp = a / sqrt(1 - (e**2) * (sin(lat)**2))                           # Prime radius of curvature
+                                                                    
     # ----------- Position XYZ inside ECEF Reference Frame ------------ #
     PosX = (Rp + alt) * cos(lat) * cos(lon)                             # X coordinate ECEF [m]
     PosY = (Rp + alt) * cos(lat) * sin(lon)                             # Y coordinate ECEF [m]
     PosZ = ((b**2/a**2) * Rp + alt) * sin(lat)                          # Z coordinate ECEF [m]
+    
     # ---------------- Reference Frame Transformations ---------------- #
     T_enu2ecef = np.array([[-sin(lon), -sin(lat)*cos(lon), cos(lat)*cos(lon)],  # E
                            [cos(lon) , -sin(lat)*sin(lon), cos(lat)*sin(lon)],  # N
@@ -82,6 +85,14 @@ def create_message_header(callsign: str, msg_id: str, msg_len: int, requested_ra
     """
     Construct the Flightgear Multiplayer Protocol message header
     Source: https://github.com/zayamatias/FGRandomMultiplayer/blob/main/mp.py 
+
+    Input:
+        callsign:   str, callsign
+        msg_id:     str, CHAT_MSG_ID or POS_DATA_ID
+        msg_len:    int, Length of message
+    
+    Returns:
+        header:     struct, header of FlightGear Multiplayer message
     """
     callsign_bytes = callsign.encode('ascii')[:8].ljust(8, b'\0')
 
@@ -94,6 +105,20 @@ def create_packet(callsign: str, actype: str, latitude: float, longitude: float,
     * Positions, Orientations, Velocities and Accelerations are w.r.t. the Earth-Centered, Earth-Fixed frame.
     Source 1: https://github.com/zayamatias/FGRandomMultiplayer/blob/main/mp.py  
     Source 2: https://wiki.flightgear.org/Multiplayer_protocol
+
+    Input:
+        callsign:   str, callsign
+        actype:     str, actype
+        latitude:   float, latitude [deg]
+        longitude:  float, longitude [deg]
+        airspeed:   float, airspeed [m/s]
+        altitude:   float, altitude [m]
+        phi:        float, roll angle [deg]
+        theta:      float, pitch angle [deg]
+        psi:        float, yaw angle [deg]
+
+    Returns:
+        packet
     """
     time_val = time.time()
     lag = 0
@@ -112,32 +137,27 @@ def create_packet(callsign: str, actype: str, latitude: float, longitude: float,
     transponder_mode = struct.pack('!h', 1503) + struct.pack('!h', 2) # set to TA/RA
     transponder_airspeed = struct.pack('!h', 1505) + struct.pack('!h', int(airspeed / aero.kts))
 
-    # v2_properties = [
-    #         (10, "sim/multiplay/protocol-version", 2),
-    #         (1500, "instrumentation/transponder/transmitted-id", 2),
-    #         (1502, "instrumentation/transponder/ident", 2),
-    #         (1503, "instrumentation/transponder/inputs/mode", 2)
-    #     ]
-
-    # while len(data[offset:]) != 0:
-    #     unparsed = data[offset:offset+4]
-    #     parsed = struct.unpack('!hh', data[offset:offset+4])
-    #     prop_id = parsed[0]
-    #     for id, path, LEN in v2_properties: 
-    #         if prop_id == id:
-    #             generated = struct.pack('!h', 1503)
-    #             generated += struct.pack('!h', 2)
-    #             print(prop_id, path, parsed[1], unparsed, generated)
-    #     offset += 4
-
+    chat_message = f"{callsign}: TEST MESSAGE"
+    chat = struct.pack('!HH', 10002, len(chat_message)) + chat_message.encode('utf-8')
                              # 4 bytes       
-    pos_msg = payload + b'\x1f\xac\xe0\x02' + protocol_version + squawk + transponder_altitude + transponder_mode + transponder_airspeed
+    pos_msg = payload + b'\x1f\xac\xe0\x02' + protocol_version 
+    pos_msg += squawk + transponder_altitude + transponder_mode + transponder_airspeed + chat
 
     if len(pos_msg) % 4 != 0:
         pos_msg += b'\0' * (4 - (len(pos_msg) % 4))
-    header_len = 32
-    msg_len = header_len + len(pos_msg)
+    msg_len = 32 + len(pos_msg)
     header = create_message_header(callsign, POS_DATA_ID, msg_len)
     packet = header + pos_msg
     
     return packet
+
+# def create_message_packet(callsign: str, chat_message: str):
+#     #
+#     # TODO: not working yet!!!
+#     #
+#     payload = struct.pack('!HH', 10002, len(chat_message)) + chat_message.encode('utf-8')
+#     msg_len = 32 + len(payload)
+#     header = create_message_header(callsign, CHAT_MSG_ID, msg_len)
+#     packet = header + payload
+
+#     return packet
