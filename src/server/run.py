@@ -13,6 +13,8 @@ class Server():
     * Outbound UDP protocol is the FlightGear Multiplayer Protocol
     """
     def __init__(self):
+        self.clients = {}
+        # ------------------------ #
         self.is_listening = False
         self.listen_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) 
         self.listen_thread = threading.Thread(target=self.listen)
@@ -46,7 +48,8 @@ class Server():
                 decoded = data.decode('utf-8').replace('"', '').split(";")
                 client = str(decoded[0])
                 callsign = str(decoded[1])
-                flight = {'ts': time.time(),
+                timestamp = time.time()
+                flight = {'ts': timestamp,
                           'squawk': str(decoded[2]),
                           'actype': str(decoded[3]),
                           'ident': bool(int(decoded[4])),
@@ -56,6 +59,9 @@ class Server():
                           'heading': float(decoded[8]),
                           'latitude': float(decoded[9]),
                           'longitude': float(decoded[10])}
+                
+                self.clients[client] = {'timestamp': timestamp, 
+                                        'callsign': callsign}
                 
                 self.listen_buffer[callsign] = flight
 

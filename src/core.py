@@ -14,6 +14,7 @@ class Core():
             self.server.start()
 
     def update(self):
+        print(f"Connected clients: {self.server.clients}")
         for callsign, param in list(self.server.listen_buffer.items()):
             aircraft = Aircraft(callsign, param)
             if traf.id2idx(callsign) < 0:
