@@ -137,7 +137,7 @@ def create_packet(callsign: str, actype: str, latitude: float, longitude: float,
     transponder_mode = struct.pack('!h', 1503) + struct.pack('!h', 2) # set to TA/RA
     transponder_airspeed = struct.pack('!h', 1505) + struct.pack('!h', int(airspeed / aero.kts))
 
-    chat_message = f"{callsign}: TEST MESSAGE"
+    chat_message = f"{callsign}: JOINED FROM BLUESKY"
     chat = struct.pack('!HH', 10002, len(chat_message)) + chat_message.encode('utf-8')
                              # 4 bytes       
     pos_msg = payload + b'\x1f\xac\xe0\x02' + protocol_version 
