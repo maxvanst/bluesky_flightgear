@@ -1,0 +1,75 @@
+import time
+import socket
+import threading
+import numpy as np
+
+from bluesky import stack, settings, traf
+from bluesky.core import Entity, timed_function
+
+class FlightGearListener(Entity):
+    def __init__(self):
+        super().__init__()
+        self.clients = {}
+        self.is_listening = False
+        self.listen_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) 
+        self.listen_thread = threading.Thread(target=self.listen)
+        self.listen_thread.daemon = True
+        self.listen_buffer = {}
+
+        with self.settrafarrays():
+            self.flightgear_ac = np.array([])
+
+    def start(self):
+        self.is_listening = True
+        self.listen_socket.bind(("localhost", 5000))
+        self.listen_thread.start()
+    
+    def listen(self):
+        while True:
+            if not self.is_listening:
+                time.sleep(1.0)
+                continue
+            else:
+                data, address = self.listen_socket.recvfrom(1024)
+                decoded = data.decode('utf-8').replace('"', '').split(";")
+                client = str(decoded[0])
+                address = str(decoded[1])
+                callsign = str(decoded[2])
+                timestamp = time.time()
+                flight = {'ts': timestamp,
+                          'squawk': str(decoded[3]),
+                          'actype': str(decoded[4]),
+                          'ident': bool(int(decoded[5])),
+                          'altitude': int(decoded[6]),
+                          'airspeed': int(decoded[7]),
+                          'vertical_speed': float(decoded[8]),
+                          'heading': float(decoded[9]),
+                          'latitude': float(decoded[10]),
+                          'longitude': float(decoded[11])}
+                
+                self.clients[client] = {'timestamp': timestamp, 
+                                        'address': address,
+                                        'callsign': callsign}
+                
+                self.listen_buffer[callsign] = flight
+
+    @timed_function(name='FGLISTENER', dt=1.0)
+    def update(self):
+        if not self.is_listening:
+            return
+        
+        for callsign, param in list(self.listen_buffer.items()):
+            idx = traf.id2idx(callsign)
+            actype = str(param["actype"])
+            latitude = float(param["latitude"])
+            longitude = float(param["longitude"])
+            heading = int(param["heading"])
+            altitude = int(param["altitude"])
+            airspeed = int(param["airspeed"])
+            vertical_speed = float(param["vertical_speed"])
+
+            if traf.id2idx(callsign) < 0:
+                traf.cre(callsign, actype, latitude, longitude, heading, altitude, airspeed)
+            else:
+                traf.move(idx, latitude, longitude, altitude, heading, airspeed, vertical_speed)
+        
