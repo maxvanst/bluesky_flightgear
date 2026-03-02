@@ -5,6 +5,7 @@ import numpy as np
 
 from bluesky import stack, settings, traf
 from bluesky.core import Entity, timed_function
+from bluesky.tools import aero
 
 class FlightGearListener(Entity):
     def __init__(self):
@@ -53,7 +54,7 @@ class FlightGearListener(Entity):
                 
                 self.listen_buffer[callsign] = flight
 
-    @timed_function(name='FGLISTENER', dt=1.0)
+    @timed_function(name='FGLISTENER', dt=0.0)
     def update(self):
         if not self.is_listening:
             return
@@ -64,8 +65,8 @@ class FlightGearListener(Entity):
             latitude = float(param["latitude"])
             longitude = float(param["longitude"])
             heading = int(param["heading"])
-            altitude = int(param["altitude"])
-            airspeed = int(param["airspeed"])
+            altitude = int(param["altitude"]) * aero.ft
+            airspeed =  aero.tas2cas(int(param["airspeed"]), altitude * aero.ft)
             vertical_speed = float(param["vertical_speed"])
 
             if traf.id2idx(callsign) < 0:
