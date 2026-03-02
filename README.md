@@ -30,7 +30,8 @@ In order to install the BlueSky FlightGear Plugin:
    * --multiplay=in,10,localhost,5002 
    * --telnet=socket,bi,60,localhost,5003,tcp 
    * --disable-ai-traffic 
-   * --prop:/bluesky/client/name=[YOUR_CLIENT_NAME]
+   * --prop:/bluesky/client/name=[YOUR_FLIGHTGEAR_CLIENT_NAME]
+   * --prop:/bluesky/client/address=[YOUR_FLIGHTGEAR_CLIENT_ADDRESS]
    * --callsign=PHLAB
      
 - Start BlueSky: PLUGINS FLIGHTGEAR should load the plugin

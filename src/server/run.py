@@ -47,20 +47,22 @@ class Server():
                 data, address = self.listen_socket.recvfrom(1024)
                 decoded = data.decode('utf-8').replace('"', '').split(";")
                 client = str(decoded[0])
-                callsign = str(decoded[1])
+                address = str(decoded[1])
+                callsign = str(decoded[2])
                 timestamp = time.time()
                 flight = {'ts': timestamp,
-                          'squawk': str(decoded[2]),
-                          'actype': str(decoded[3]),
-                          'ident': bool(int(decoded[4])),
-                          'altitude': int(decoded[5]),
-                          'airspeed': int(decoded[6]),
-                          'vertical_speed': float(decoded[7]),
-                          'heading': float(decoded[8]),
-                          'latitude': float(decoded[9]),
-                          'longitude': float(decoded[10])}
+                          'squawk': str(decoded[3]),
+                          'actype': str(decoded[4]),
+                          'ident': bool(int(decoded[5])),
+                          'altitude': int(decoded[6]),
+                          'airspeed': int(decoded[7]),
+                          'vertical_speed': float(decoded[8]),
+                          'heading': float(decoded[9]),
+                          'latitude': float(decoded[10]),
+                          'longitude': float(decoded[11])}
                 
                 self.clients[client] = {'timestamp': timestamp, 
+                                        'address': address,
                                         'callsign': callsign}
                 
                 self.listen_buffer[callsign] = flight
