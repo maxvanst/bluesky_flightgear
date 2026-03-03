@@ -1,6 +1,6 @@
 ## BlueSky FlightSim plugin
 
-This Python application is meant as an extension to 'BlueSky - The Open Air Traffic Simulator'. [https://github.com/TUDelft-CNS-ATM/bluesky] The application creates a connection between BlueSky and the popular open source flight simulator FlightGear [https://www.flightgear.org/] and the popular closed sourced payed flight simulator X-Plane. [https://www.x-plane.com/].
+This Python application is meant as an extension to 'BlueSky - The Open Air Traffic Simulator'. [https://github.com/TUDelft-CNS-ATM/bluesky] The application creates a connection between BlueSky and the popular open source flight simulator FlightGear [https://www.flightgear.org/] and the popular closed sourced commercial flight simulator X-Plane. [https://www.x-plane.com/].
 
 The following functionalities are present
 - Transponder functionality, squawk, ident
