@@ -150,14 +150,3 @@ def create_packet(callsign: str, actype: str, latitude: float, longitude: float,
     packet = header + pos_msg
     
     return packet
-
-# def create_message_packet(callsign: str, chat_message: str):
-#     #
-#     # TODO: not working yet!!!
-#     #
-#     payload = struct.pack('!HH', 10002, len(chat_message)) + chat_message.encode('utf-8')
-#     msg_len = 32 + len(payload)
-#     header = create_message_header(callsign, CHAT_MSG_ID, msg_len)
-#     packet = header + payload
-
-#     return packet
