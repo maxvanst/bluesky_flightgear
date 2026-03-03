@@ -1,7 +1,6 @@
 from bluesky import settings, stack, traf, sim
-from plugins.flightsim.src.server.server import FlightGearServer
-from plugins.flightsim.src.server.listener import FlightGearListener
-from plugins.flightsim.src.gui.window import GUI
+from plugins.flightsim.src.flightgear.server import FlightGearServer
+from plugins.flightsim.src.flightgear.listener import FlightGearListener
 
 class Core():
     """
@@ -10,7 +9,6 @@ class Core():
     def __init__(self, version):
         self.server = FlightGearServer()
         self.listener = FlightGearListener()
-        #self.gui = GUI(version)
 
     def toggle(self, flag):
         if flag:
