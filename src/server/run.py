@@ -40,8 +40,15 @@ class FlightGearServer():
                         airspeed = traf.tas[idx]
                         altitude = traf.alt[idx]
                         heading = traf.hdg[idx]
-                        bank = degrees(traf.perf.bank[idx]) * -np.sign((traf.aporasas.hdg - heading + 180) % 360 - 180)[1]
+                        bank = degrees(traf.perf.bank[idx]) * np.sign((traf.aporasas.hdg - heading + 180) % 360 - 180)[1]
+                        flightphase = traf.perf.phase[idx]
+                        fuelflow = traf.perf.fuelflow[idx]
+                        thrust = traf.perf.thrust[idx]
                         vertical_speed = traf.vs[idx]
                         accel_x = traf.ax[idx]
-                        packet = create_packet(callsign, actype, latitude, longitude, airspeed, altitude, phi=-bank, theta=0.0, psi=heading)
+                        gamma = 0.0
+                        if airspeed != 0:
+                            gamma = degrees(np.asin(vertical_speed / airspeed))
+
+                        packet = create_packet(callsign, actype, latitude, longitude, airspeed, altitude, phi=bank, theta=-gamma, psi=heading)
                         self.send_socket.sendto(packet, ("127.0.0.1", 5002))    
