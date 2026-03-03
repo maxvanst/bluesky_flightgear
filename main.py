@@ -17,7 +17,9 @@ def init_plugin():
     """
     Initilisation of the BlueSky FlightGear Plugin.
     """
-    core = Core()
+    version = json.load(open('./plugins/flightgear/version.json', 'r')).get('version')
+    print(f"[BlueSky FlightGear plugin] : v{version} | Author: Max van Stuijvenberg")
+    core = Core(version)
     config = {
         'plugin_name': 'flightgear',
         'plugin_type': 'sim',
@@ -32,9 +34,6 @@ def init_plugin():
             core.toggle,
             "Start the FlightGear plugin"]
     }
-
-    version = json.load(open('./plugins/flightgear/version.json', 'r')).get('version')
-    print(f"[FLIGHTGEAR] - BlueSky FlightGear plugin | v{version} | Author: Max van Stuijvenberg")
 
     return config, stackfunctions
 
