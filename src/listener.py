@@ -1,12 +1,13 @@
 import time
 import socket
+import struct
 import threading
 
 from bluesky import settings
 
 class FlightSimListener():
     def __init__(self):
-        self.interface = '192.168.1.204'
+        self.interface = '192.168.1.128'
         self.port = 10002
         self.is_listening = False
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) 
@@ -26,10 +27,7 @@ class FlightSimListener():
                 continue
             else:
                 data, address = self.socket.recvfrom(1024)
-                header = data[0]
-                print('yes')
-                print(data)
-                if header == 'FGFS':
-                    print('flightgear')
-                if header == 'XPlane':
-                    print('xplane12')
+                if (data[:4]).decode('utf-8') == 'DATA': # Message is from X-Plane 12 
+                    pass
+                else: # Assume message is from FlightGear
+                    pass
