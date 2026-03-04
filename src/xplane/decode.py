@@ -1,13 +1,9 @@
 import time
 import socket
 import struct
+from plugins.flightsim.src.aircraft import FlightSimAircraft
 
-from bluesky.tools import aero
-
-# sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) 
-# sock.bind(('192.168.1.128', 10002))
-
-def decode(msg):
+def decode(msg, address):
     """
     Decode X-Plane 12 UDP message
     """
@@ -20,7 +16,7 @@ def decode(msg):
         info = struct.unpack('8f', msg[offset+4:offset+36])
 
         if id == '3': # Speeds
-            airspeed_true = float(info[2]) * aero.kts   # [kts]
+            airspeed_true = float(info[2])  # [kts]
         
         if id == '17': # Pitch, Roll and heading
             pitch = float(info[0])
@@ -43,21 +39,6 @@ def decode(msg):
     
         offset += 36
 
-    timestamp = time.time()
-    flight = {'ts': timestamp,
-            'callsign': 'PHLAB',
-            'squawk': squawk,
-            'actype': 'B744',
-            'ident': False,
-            'altitude': altitude,
-            'airspeed': airspeed_true,
-            'vertical_speed': 0,
-            'heading': heading,
-            'latitude': latitude,
-            'longitude': longitude}
+    aircraft = FlightSimAircraft(address, simname="X-Plane 12", callsign='PHLAB')
 
-    return flight
-
-# while True:
-#     data, address = sock.recvfrom(1024)
-#     print(decode(data))
+    return aircraft
