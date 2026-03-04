@@ -11,29 +11,46 @@
 ============================================================
 """
 import json
-from plugins.flightsim.src.core import Core
+import numpy as np
+
+from bluesky.core import Entity
+from bluesky import core, stack, traf
+
+from plugins.flightsim.src.listener import FlightSimListener
 
 def init_plugin():
     """
     Initilisation of the BlueSky FlightSim Plugin.
     """
-    version = json.load(open('./plugins/flightsim/src/version.json', 'r')).get('version')
-    print(f"[BlueSky FlightSim plugin] : v{version} | Author: Max van Stuijvenberg")
-    core = Core(version)
+    version = json.load(open('./plugins/flightsim/version.json', 'r')).get('version')
+    plugin = FlightSim(version)
     config = {
         'plugin_name': 'FLIGHTSIM',
         'plugin_type': 'sim',
-        "update_interval": 0.0,
-        "preupdate": core.update
+        'update_interval': 0.0,
+        'preupdate': plugin.update
     }
+    return config
 
-    stackfunctions = {
-        "FLIGHTSIM": [
-            "FLIGHTSIM [ON/OFF]",
-            "[onoff]",
-            core.toggle,
-            "Start the FlightSim plugin"]
-    }
+class FlightSim(Entity):
+    """
+    FlightSim plugin Entity object for BlueSky
+    """
+    def __init__(self, version):
+        super().__init__()
+        self.version = version
+        self.clients = {}
+        self.listener = FlightSimListener()
 
-    return config, stackfunctions
+    @stack.command(name='FLIGHTSIM', type='[onoff]', brief='FLIGHTSIM [ON/OFF]', help='Toggle [ON/OFF] FlightSim plugin')
+    def toggle(self, flag):
+        if flag:
+            print('Listening...')
+            self.listener.start()
 
+    @stack.command(name='FSSTATUS', brief='FLIGHTSIM STATUS', help='Show connected Flightsim Clients')
+    def status(self):
+        stack.stack(f'ECHO Connected clients: {self.clients}')
+
+    def update(self):
+        pass

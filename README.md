@@ -13,8 +13,8 @@ The following functionalities are present
 ## Prerequisites
 - BlueSky v1.1.1 or later
 - Python 3.12.3 or later
-- FlightGear v2024.1.4
-- X-Plane 12
+- FlightGear v2024.1.4 or later
+- X-Plane 12.4.0 or later
 
 <pre><img width="50" height="50" alt="FlightGear_Logo" src="https://github.com/user-attachments/assets/335b5adc-dbf1-4dc5-a0c5-01ebd5ee78b7" />    <img width="200" height="100" alt="image" src="https://github.com/user-attachments/assets/9af8b3e3-3f34-4d0c-8c66-0097d20ffd33" />
 </pre>
