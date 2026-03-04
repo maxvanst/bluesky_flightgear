@@ -5,6 +5,8 @@ import threading
 
 from bluesky import settings
 
+from plugins.flightsim.src.xplane.decode import decode
+
 class FlightSimListener():
     def __init__(self):
         self.interface = '192.168.1.128'
@@ -26,8 +28,8 @@ class FlightSimListener():
                 time.sleep(1.0)
                 continue
             else:
-                data, address = self.socket.recvfrom(1024)
-                if (data[:4]).decode('utf-8') == 'DATA': # Message is from X-Plane 12 
-                    pass
+                msg, address = self.socket.recvfrom(1024)
+                if (msg[:4]).decode('utf-8') == 'DATA': # Message is from X-Plane 12 
+                    self.buffer[address] = decode(msg)
                 else: # Assume message is from FlightGear
                     pass

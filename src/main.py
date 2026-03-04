@@ -15,6 +15,7 @@ import numpy as np
 
 from bluesky.core import Entity
 from bluesky import core, stack, traf
+from bluesky.tools import aero
 
 from plugins.flightsim.src.listener import FlightSimListener
 
@@ -53,4 +54,18 @@ class FlightSim(Entity):
         stack.stack(f'ECHO Connected clients: {self.clients}')
 
     def update(self):
-        pass
+        for address, param in list(self.listener.buffer.items()):
+            callsign = 'PHLAB'
+            idx = traf.id2idx(callsign)
+            actype = str(param['actype'])
+            latitude = float(param['latitude'])
+            longitude = float(param['longitude'])
+            heading = int(param['heading'])
+            altitude = int(param["altitude"]) * aero.ft
+            airspeed =  aero.tas2cas(int(param['airspeed']), altitude * aero.ft)
+            vertical_speed = float(param['vertical_speed'])
+
+            if traf.id2idx(callsign) < 0:
+                traf.cre(callsign, actype, latitude, longitude, heading, altitude, airspeed)
+            else:
+                traf.move(idx, latitude, longitude, altitude, heading, airspeed, vertical_speed)
