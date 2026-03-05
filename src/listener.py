@@ -3,9 +3,12 @@ import socket
 import struct
 import threading
 
+from plugins.flightsim.src.flightgear.decode import decode as FlightGearDecoder
+from plugins.flightsim.src.xplane.decode import decode as XPlaneDecoder
+
 class FlightSimListener():
     def __init__(self):
-        self.interface = '192.168.1.128'
+        self.interface = '192.168.1.204'
         self.port = 10002
         self.is_listening = False
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) 
@@ -27,11 +30,9 @@ class FlightSimListener():
                 msg, address = self.socket.recvfrom(1024)
                 if (msg[:4]).decode('utf-8') == 'DATA': 
                     # ----------------------- X-Plane 12 ------------------------- #
-                    pass
+                    aircraft = XPlaneDecoder(msg, address)
                 else: 
                     # ----------------------- FlightGear ------------------------- #
-                    decoded = msg.decode('utf-8').replace('"', '').split(";")
+                    aircraft = FlightGearDecoder(msg, address)
 
-
-
-
+                self.buffer[address] = {'sim': aircraft.simname, 'aircraft': aircraft}

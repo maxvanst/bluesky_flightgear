@@ -4,7 +4,7 @@ import threading
 import numpy as np
 from math import degrees
 from bluesky import traf
-from plugins.flightsim.src.flightgear.protocol import create_packet
+from plugins.flightsim.src.old.protocol import create_packet
 
 class FlightGearServer():
     """

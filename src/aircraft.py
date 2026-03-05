@@ -1,7 +1,9 @@
 import time
 
 class FlightSimAircraft():
-    def __init__(self, address: str, simname: str, callsign: str, alpha: float, beta: float, gamma: float, phi: float, theta: float, psi: float, latitude:float, longitude: float, altitude: float, true_airspeed: float, vertical_speed: float):
+    def __init__(self, address: str, simname: str, callsign: str, alpha: float, beta: float, gamma: float, 
+                 phi: float, theta: float, psi: float, latitude:float, longitude: float, altitude: float, 
+                 tas: float, vs: float):
         """
         FlightSimAircraft class
 
@@ -27,16 +29,16 @@ class FlightSimAircraft():
             altitude:       Altitude [m]
 
             -------- Speed --------
-            true_airspeed:  True Airpseed [m/s]
-            vertical_speed: Verticial Speed [m/s]
+            tas:  True Airpseed [m/s]
+            vs: Verticial Speed [m/s]
         """
         # Network
         self.address = address
-        self.simtype = simname
+        self.simname = simname
         
         # General
         self.ts_created = time.time() # Creation timestamp
-        self.callsign = self.callsign
+        self.callsign = callsign
 
         # Angles
         self.alpha = alpha 
@@ -54,5 +56,5 @@ class FlightSimAircraft():
         self.altitude = altitude
         
         # Speed
-        self.true_airspeed = true_airspeed 
-        self.vertical_speed = vertical_speed 
+        self.tas = tas
+        self.vs = vs

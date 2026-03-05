@@ -33,6 +33,8 @@ def init_plugin():
     }
     return config
 
+
+
 class FlightSim(Entity):
     """
     FlightSim plugin Entity object for BlueSky
@@ -54,4 +56,4 @@ class FlightSim(Entity):
         stack.stack(f'ECHO Connected clients: {self.clients}')
 
     def update(self):
-        pass
+        print(self.listener.buffer)

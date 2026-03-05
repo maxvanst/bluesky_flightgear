@@ -1,13 +1,15 @@
 import time
 import socket
 import struct
+
+from bluesky.tools import aero
+
 from plugins.flightsim.src.aircraft import FlightSimAircraft
 
 def decode(msg, address):
     """
     Decode X-Plane 12 UDP message
     """
-    flight = {}
     header = msg[:5]
     nrow = (len(msg) - 5) // 36
     offset = 5
@@ -16,29 +18,29 @@ def decode(msg, address):
         info = struct.unpack('8f', msg[offset+4:offset+36])
 
         if id == '3': # Speeds
-            airspeed_true = float(info[2])  # [kts]
+            tas = float(info[2]) * aero.kts       # [m/s]
         
         if id == '17': # Pitch, Roll and heading
-            pitch = float(info[0])
-            roll = float(info[1])
-            heading = float(info[2])
+            pitch = float(info[0])                          # [deg]
+            roll = float(info[1])                           # [deg]
+            heading = float(info[2])                        # [deg]
 
         if id == '18': # AoA, sideslip, path
-            alpha = float(info[0])
-            beta = float(info[1])
-            gamma = float(info[3])
+            alpha = float(info[0])                          # [deg]
+            beta = float(info[1])                           # [deg]
+            gamma = float(info[3])                          # [deg]
 
         if id == '20': # Latitude, longitude & altitude
-            latitude = float(info[0])
-            longitude = float(info[1])
-            altitude = float(info[2])
+            latitude = float(info[0])                       # [deg]
+            longitude = float(info[1])                      # [deg]
+            altitude = float(info[2]) * aero.ft             # [m]
 
         if id == '104': # Transponder
-            mode = int(info[0])
-            squawk = int(info[1])
+            mode = int(info[0])                             # [-]
+            squawk = int(info[1])                           # [-]
     
         offset += 36
 
-    aircraft = FlightSimAircraft(address, simname="X-Plane 12", callsign='PHLAB')
-
-    return aircraft
+    return FlightSimAircraft(address, simname="X-Plane 12", callsign='PHLAB', alpha=alpha, beta=beta, gamma=gamma,
+                             phi=roll, theta=pitch, psi=heading, latitude=latitude, longitude=longitude, altitude=altitude, 
+                             tas=tas)
