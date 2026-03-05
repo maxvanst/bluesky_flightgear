@@ -93,10 +93,10 @@ class FlightSimulatorPlugin(Entity):
                         if callsign != callsign_own: # Only send traffic without own aircraft
                             if aircraft.simname == 'FlightGear': 
                                 packet = FlightGearPacket(callsign, actype, latitude, longitude, airspeed, altitude, phi=0.0, theta=0.0, psi=heading)
-                                self.send_socket.sendto(packet, (settings.flightgear_multiplay_recv_interface, settings.flightgear_multiplay_in_port))
+                                self.send_socket.sendto(packet, (address[0], settings.flightgear_multiplay_in_port))
   
     
-    @core.timed_function(name='BLUESKY FLIGHTSIM-TRAFFIC UPDATE', dt=1)
+    @core.timed_function(name='BLUESKY FLIGHTSIM-TRAFFIC UPDATE', dt=0.0)
     def update_bluesky_traffic(self):
         for address, aircraft in list(self.flights.items()):
             aircraft: object[FlightSimAircraft]
