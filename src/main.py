@@ -18,6 +18,7 @@ from bluesky import core, stack, traf
 from bluesky.tools import aero
 
 from plugins.flightsim.src.listener import FlightSimListener
+from plugins.flightsim.src.aircraft import FlightSimAircraft
 
 def init_plugin():
     """
@@ -56,4 +57,11 @@ class FlightSim(Entity):
         stack.stack(f'ECHO Connected clients: {self.clients}')
 
     def update(self):
-        print(self.listener.buffer)
+        for address, aircraft in list(self.listener.buffer.items()):
+            aircraft: object[FlightSimAircraft]
+
+            idx = traf.id2idx(aircraft.callsign)
+            if idx < 0:
+                traf.cre(aircraft.callsign, aircraft.type, aircraft.latitude, aircraft.longitude, aircraft.psi, aircraft.altitude, aircraft.tas)
+            else:
+                traf.move(idx, aircraft.latitude, aircraft.longitude, aircraft.altitude, aircraft.psi, aircraft.tas, aircraft.vs)

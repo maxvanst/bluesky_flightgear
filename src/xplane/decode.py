@@ -36,7 +36,7 @@ def decode(msg, address):
         if id == '20': # Latitude, longitude & altitude
             aircraft['latitude'] = float(info[0])                       # [deg]
             aircraft['longitude'] = float(info[1])                      # [deg]
-            aircraft['altitude'] = float(info[2]) * aero.ft             # [m]
+            aircraft['altitude'] = float(info[2] * aero.ft)             # [m]
 
         if id == '104': # Transponder
             aircraft['mode'] = int(info[0])                             # [-]
@@ -44,6 +44,6 @@ def decode(msg, address):
     
         offset += 36
 
-    return FlightSimAircraft(address, simname="X-Plane 12", callsign='PHLAB', alpha=aircraft.get('alpha'), beta=aircraft.get('beta'), gamma=aircraft.get('gamma'),
+    return FlightSimAircraft(address, simname="X-Plane 12", callsign='PHXPL', type='B744', alpha=aircraft.get('alpha'), beta=aircraft.get('beta'), gamma=aircraft.get('gamma'),
                              phi=aircraft.get('roll'), theta=aircraft.get('pitch'), psi=aircraft.get('yaw'), latitude=aircraft.get('latitude'), longitude=aircraft.get('longitude'),
                              altitude=aircraft.get('altitude'), tas=aircraft.get('tas'), vs=0.0)

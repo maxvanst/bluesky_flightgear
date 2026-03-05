@@ -1,9 +1,9 @@
 import time
 
 class FlightSimAircraft():
-    def __init__(self, address: str, simname: str, callsign: str, alpha: float, beta: float, gamma: float, 
-                 phi: float, theta: float, psi: float, latitude:float, longitude: float, altitude: float, 
-                 tas: float, vs: float):
+    def __init__(self, address: str, simname: str, callsign: str, type: str, 
+                 alpha: float, beta: float, gamma: float, phi: float, theta: float, psi: float, 
+                 latitude:float, longitude: float, altitude: float, tas: float, vs: float):
         """
         FlightSimAircraft class
 
@@ -14,6 +14,7 @@ class FlightSimAircraft():
 
             -------- General -------
             callsign:       Callsign of Aircraft
+            type:           Aircraft ICAO type
 
             -------- Angles --------
             alpha:          Angle of Attack [deg]
@@ -39,6 +40,7 @@ class FlightSimAircraft():
         # General
         self.ts_created = time.time() # Creation timestamp
         self.callsign = callsign
+        self.type = type
 
         # Angles
         self.alpha = alpha 

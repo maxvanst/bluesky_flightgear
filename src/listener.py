@@ -8,7 +8,7 @@ from plugins.flightsim.src.xplane.decode import decode as XPlaneDecoder
 
 class FlightSimListener():
     def __init__(self):
-        self.interface = '192.168.1.204'
+        self.interface = '192.168.1.128'
         self.port = 10002
         self.is_listening = False
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) 
@@ -35,4 +35,4 @@ class FlightSimListener():
                     # ----------------------- FlightGear ------------------------- #
                     aircraft = FlightGearDecoder(msg, address)
 
-                self.buffer[address] = {'sim': aircraft.simname, 'aircraft': aircraft}
+                self.buffer[address] = aircraft
