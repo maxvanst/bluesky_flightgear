@@ -27,7 +27,7 @@ The following functionalities are madeby the plugin
 2) Download source code with <pre>git clone https://github.com/maxvanst/bluesky-flightsim.git</pre> or use the ZIP download
 3) Add the following lines to settings.cfg inside your BlueSky installation:
 <pre>
-   flightsim_recv_port = [BLUESKY_FLIGHTSIM_RECV_PORT]
+   flightsim_recv_port = [YOUR_BLUESKY_FLIGHTSIM_RECV_PORT]
 </pre>
 
 ## Running with FlightGear
@@ -36,12 +36,12 @@ The following functionalities are madeby the plugin
 3) Start FlightGear
 4) Within the main launcher window scroll down to additional settings of FlightGear and add the following items:
 <pre>
-   --generic=socket,out,1,[BLUESKY_IP],[FLIGHTSIM_RECV_PORT],udp,bluesky 
+   --generic=socket,out,1,[YOUR_BLUESKY_IP],[YOUR_BLUESKY_FLIGHTSIM_RECV_PORT],udp,bluesky 
    --multiplay=in,10,localhost,5000 
    --disable-ai-traffic 
    --callsign=[YOUR_CALLSIGN]
 </pre>
-5) Ensure [BLUESKY_IP] and [FLIGHTSIM_RECV_PORT] are according to your BlueSky settings.cfg and network configuration
+5) Ensure [YOUR_BLUESKY_IP] and [YOUR_BLUESKY_FLIGHTSIM_RECV_PORT] are according to your BlueSky settings.cfg and network configuration
 7) Start BlueSky: PLUGINS FLIGHTSIM should load the plugin
 8) Start the plugin: FLIGHTSIM ON
 
@@ -49,5 +49,5 @@ The following functionalities are madeby the plugin
 1) Start X-Plane 12
 2) Navigate to Settings/Data Output
 3) Add the following indices to 'Network via UDP': 3, 18, 17, 20, 104
-4) On the right side of the screen a Network Configuration widget is present. Add [BLUESKY_IP] and [FLIGHTSIM_RECV_PORT].
+4) On the right side of the screen a Network Configuration widget is present. Add [YOUR_BLUESKY_IP] and [YOUR_BLUESKY_FLIGHTSIM_RECV_PORT].
 5) Change Output Rate of UDP to 1.0 packet/sec
