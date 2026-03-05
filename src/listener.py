@@ -10,7 +10,7 @@ from plugins.flightsim.src.xplane.decode import decode as XPlaneDecoder
 
 class FlightSimListener():
     def __init__(self):
-        self.interface = settings.flightsim_interface
+        self.interface = settings.flightsim_recv_interface
         self.port = settings.flightsim_recv_port
         self.is_listening = False
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) 
@@ -20,9 +20,9 @@ class FlightSimListener():
 
     def start(self):
         self.is_listening = True
-        print(f'Listening on {self.interface}:{self.port}')
         self.socket.bind((self.interface, self.port))
         self.thread.start()
+        print(f'Listening for Flight Simulators on {self.interface}:{self.port}')
 
     def listen(self):
         while True:

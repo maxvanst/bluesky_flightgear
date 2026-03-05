@@ -3,7 +3,7 @@ import math
 import time
 import numpy as np
 from bluesky.tools import aero
-from plugins.flightsim.src.old.acmap import model_mapping
+from plugins.flightsim.src.flightgear.acmap import model_mapping
 from math import sqrt, radians, sin, cos, acos, pi
 from scipy.spatial.transform import Rotation
 
