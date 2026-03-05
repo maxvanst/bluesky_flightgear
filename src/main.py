@@ -50,9 +50,10 @@ class FlightSim(Entity):
     @stack.command(name='FLIGHTSIM', type='[onoff]', brief='FLIGHTSIM [ON/OFF]', help='Toggle [ON/OFF] FlightSim plugin')
     def toggle(self, flag):
         if flag:
-            print('Listening...')
             self.listener.start()
-
+            self.sender.start()
+            stack.stack("OP")
+            
     @stack.command(name='FSSTATUS', brief='FLIGHTSIM STATUS', help='Show connected Flightsim Clients')
     def status(self):
         stack.stack(f'ECHO Connected clients: {self.clients}')
