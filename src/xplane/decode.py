@@ -13,34 +13,37 @@ def decode(msg, address):
     header = msg[:5]
     nrow = (len(msg) - 5) // 36
     offset = 5
+
+
+    aircraft = {}
     for i in range(nrow):
         id = str(struct.unpack('h', msg[offset:offset+2])).strip('(),')
         info = struct.unpack('8f', msg[offset+4:offset+36])
 
         if id == '3': # Speeds
-            tas = float(info[2]) * aero.kts       # [m/s]
+            aircraft['tas'] = float(info[2]) * aero.kts       # [m/s]
         
         if id == '17': # Pitch, Roll and heading
-            pitch = float(info[0])                          # [deg]
-            roll = float(info[1])                           # [deg]
-            heading = float(info[2])                        # [deg]
+            aircraft['pitch'] = float(info[0])                          # [deg]
+            aircraft['roll'] = float(info[1])                           # [deg]
+            aircraft['yaw'] = float(info[2])                            # [deg]
 
         if id == '18': # AoA, sideslip, path
-            alpha = float(info[0])                          # [deg]
-            beta = float(info[1])                           # [deg]
-            gamma = float(info[3])                          # [deg]
+            aircraft['alpha'] = float(info[0])                          # [deg]
+            aircraft['beta'] = float(info[1])                           # [deg]
+            aircraft['gamma'] = float(info[3])                          # [deg]
 
         if id == '20': # Latitude, longitude & altitude
-            latitude = float(info[0])                       # [deg]
-            longitude = float(info[1])                      # [deg]
-            altitude = float(info[2]) * aero.ft             # [m]
+            aircraft['latitude'] = float(info[0])                       # [deg]
+            aircraft['longitude'] = float(info[1])                      # [deg]
+            aircraft['altitude'] = float(info[2]) * aero.ft             # [m]
 
         if id == '104': # Transponder
-            mode = int(info[0])                             # [-]
-            squawk = int(info[1])                           # [-]
+            aircraft['mode'] = int(info[0])                             # [-]
+            aircraft['squawk'] = int(info[1])                           # [-]
     
         offset += 36
 
-    return FlightSimAircraft(address, simname="X-Plane 12", callsign='PHLAB', alpha=alpha, beta=beta, gamma=gamma,
-                             phi=roll, theta=pitch, psi=heading, latitude=latitude, longitude=longitude, altitude=altitude, 
-                             tas=tas)
+    return FlightSimAircraft(address, simname="X-Plane 12", callsign='PHLAB', alpha=aircraft.get('alpha'), beta=aircraft.get('beta'), gamma=aircraft.get('gamma'),
+                             phi=aircraft.get('roll'), theta=aircraft.get('pitch'), psi=aircraft.get('yaw'), latitude=aircraft.get('latitude'), longitude=aircraft.get('longitude'),
+                             altitude=aircraft.get('altitude'), tas=aircraft.get('tas'), vs=0.0)
