@@ -1,8 +1,12 @@
-## BlueSky FlightSim plugin
+## BlueSky Flight Simulator plugin
 
-This Python application is meant as an extension to 'BlueSky - The Open Air Traffic Simulator'. [https://github.com/TUDelft-CNS-ATM/bluesky] The application creates a connection between BlueSky and the popular open source flight simulator FlightGear [https://www.flightgear.org/] and the popular closed sourced commercial flight simulator X-Plane. [https://www.x-plane.com/].
+This project is meant as an extension to 'BlueSky - The Open Air Traffic Simulator'. [https://github.com/TUDelft-CNS-ATM/bluesky] 
+The Python BlueSky plugin creates a connection between BlueSky and a Flight Simulator.
+Currently two Flight Simulators are supported:
+- The open source flight simulator FlightGear [https://www.flightgear.org/]
+- The commercial flight simulator X-Plane. [https://www.x-plane.com/].
 
-The following functionalities are present
+The following functionalities are madeby the plugin
 - Transponder functionality, squawk, ident
 - Ident by flashing FlightGear aircraft label inside BlueSky traffic
 - BlueSky traffic can be visually seen in FlightGear using aircraft type and operator e.g. KLM B744 etc.
@@ -16,29 +20,34 @@ The following functionalities are present
 - FlightGear v2024.1.4 or later
 - X-Plane 12.4.0 or later
 
-<pre><img width="50" height="50" alt="FlightGear_Logo" src="https://github.com/user-attachments/assets/335b5adc-dbf1-4dc5-a0c5-01ebd5ee78b7" />    <img width="200" height="100" alt="image" src="https://github.com/user-attachments/assets/9af8b3e3-3f34-4d0c-8c66-0097d20ffd33" />
+<pre><img width="50" height="50" alt="FlightGear_Logo" src="https://github.com/user-attachments/assets/335b5adc-dbf1-4dc5-a0c5-01ebd5ee78b7" />    <img width="200" height="100" alt="image" src="https://github.com/user-attachments/assets/9af8b3e3-3f34-4d0c-8c66-0097d20ffd33" /></pre>
+
+## Installation
+1) Navigate to the plugin folder inside your BlueSky installation
+2) Download source code with <pre>git clone https://github.com/maxvanst/bluesky-flightsim.git</pre> or use the ZIP download
+3) Add the following lines to settings.cfg inside your BlueSky installation:
+<pre>
+   flightsim_recv_port = [BLUESKY_FLIGHTSIM_RECV_PORT]
 </pre>
 
-In order to install the BlueSky FlightGear Plugin:
-- Place the BlueSky Flightgear plugin inside the ./plugin directory within your BlueSky installation
-- Place ./protocol/bluesky.xml inside the $FLIGHTGEAR_ROOT/Protocol/ directory.
-
 ## Running with FlightGear
-- Start FlightGear
-- Within the main launcher window scroll down to: additional settings of FlightGear.
-- Add the following items:
+1) Navigate to your FLIGHTGEAR_ROOT directory.
+2) Place ./protocol/bluesky.xml inside the $FLIGHTGEAR_ROOT/Protocol/ directory.
+3) Start FlightGear
+4) Within the main launcher window scroll down to additional settings of FlightGear and add the following items:
 <pre>
-   --generic=socket,out,1,localhost,5000,udp,bluesky 
-   --multiplay=out,10,localhost,5001 
-   --multiplay=in,10,localhost,5002 
-   --telnet=socket,bi,60,localhost,5003,tcp 
+   --generic=socket,out,1,[BLUESKY_IP],[FLIGHTSIM_RECV_PORT],udp,bluesky 
+   --multiplay=in,10,localhost,5000 
    --disable-ai-traffic 
    --callsign=[YOUR_CALLSIGN]
 </pre>
-     
-- Start BlueSky: PLUGINS FLIGHTGEAR should load the plugin
-- Start the plugin: FLIGHTGEAR ON
-- Start the BlueSky simulation by pressing 'Op'
+5) Ensure [BLUESKY_IP] and [FLIGHTSIM_RECV_PORT] are according to your BlueSky settings.cfg and network configuration
+7) Start BlueSky: PLUGINS FLIGHTSIM should load the plugin
+8) Start the plugin: FLIGHTSIM ON
 
 ## Running with X-Plane 12
--
+1) Start X-Plane 12
+2) Navigate to Settings/Data Output
+3) Add the following indices to 'Network via UDP': 3, 18, 17, 20, 104
+4) On the right side of the screen a Network Configuration widget is present. Add [BLUESKY_IP] and [FLIGHTSIM_RECV_PORT].
+5) Change Output Rate of UDP to 1.0 packet/sec
