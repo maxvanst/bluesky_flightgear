@@ -18,6 +18,7 @@ from bluesky import core, stack, traf
 from bluesky.tools import aero
 
 from plugins.flightsim.src.listener import FlightSimListener
+from plugins.flightsim.src.sender import FlightSimSender
 from plugins.flightsim.src.aircraft import FlightSimAircraft
 
 def init_plugin():
@@ -35,7 +36,6 @@ def init_plugin():
     return config
 
 
-
 class FlightSim(Entity):
     """
     FlightSim plugin Entity object for BlueSky
@@ -45,6 +45,7 @@ class FlightSim(Entity):
         self.version = version
         self.clients = {}
         self.listener = FlightSimListener()
+        self.sender = FlightSimSender()
 
     @stack.command(name='FLIGHTSIM', type='[onoff]', brief='FLIGHTSIM [ON/OFF]', help='Toggle [ON/OFF] FlightSim plugin')
     def toggle(self, flag):
@@ -59,7 +60,6 @@ class FlightSim(Entity):
     def update(self):
         for address, aircraft in list(self.listener.buffer.items()):
             aircraft: object[FlightSimAircraft]
-
             idx = traf.id2idx(aircraft.callsign)
             if idx < 0:
                 traf.cre(aircraft.callsign, aircraft.type, aircraft.latitude, aircraft.longitude, aircraft.psi, aircraft.altitude, aircraft.tas)

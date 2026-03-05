@@ -1,8 +1,12 @@
 import socket
 import time
 import threading
+import numpy as np
+from math import degrees
 
-from bluesky import traf
+from bluesky import traf, settings
+
+from plugins.flightsim.src.flightgear.encode import create_packet
 
 class FlightSimSender():
     """
@@ -26,4 +30,16 @@ class FlightSimSender():
             else:
                 for callsign in traf.id:
                     # Send package w.r.t flightsim traffic protocol back to the simulator
-                    pass
+                    if callsign != 'PHLAB':
+                        idx = traf.id2idx(callsign)
+                        actype = traf.type[idx]
+                        latitude = traf.lat[idx]
+                        longitude = traf.lon[idx]
+                        airspeed = traf.tas[idx]
+                        altitude = traf.alt[idx]
+                        heading = traf.hdg[idx]
+                        bank = degrees(traf.perf.bank[idx]) * -np.sign((traf.aporasas.hdg - heading + 180) % 360 - 180)[1]
+                        vertical_speed = traf.vs[idx]
+                        accel_x = traf.ax[idx]
+                        packet = create_packet(callsign, actype, latitude, longitude, airspeed, altitude, phi=-bank, theta=0.0, psi=heading)
+                        self.send_socket.sendto(packet, ('ip', settings.flightgear_multiplay_in_port))

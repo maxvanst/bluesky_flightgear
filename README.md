@@ -29,6 +29,7 @@ The following functionalities are madeby the plugin
 <pre>
    flightsim_recv_interface = [YOUR_BLUESKY_FLIGHTSIM_RECV_INTERFACE] e.g. 'localhost' or '192.168...'
    flightsim_recv_port = [YOUR_BLUESKY_FLIGHTSIM_RECV_PORT]
+   flightgear_multiplay_in_port = [YOUR_FLIGHTGEAR_MULTIPLAY_IN_PORT]
 </pre>
 
 ## Running with FlightGear
@@ -38,7 +39,7 @@ The following functionalities are madeby the plugin
 4) Within the main launcher window scroll down to additional settings of FlightGear and add the following items:
 <pre>
    --generic=socket,out,1,[YOUR_BLUESKY_IP],[YOUR_BLUESKY_FLIGHTSIM_RECV_PORT],udp,bluesky 
-   --multiplay=in,10,localhost,5000 
+   --multiplay=in,10,[YOUR_FLIGHTGEAR_MULTIPLAY_LISTEN_INTERFACE],[YOUR_FLIGHTGEAR_MULTIPLAY_IN_PORT]
    --disable-ai-traffic 
    --callsign=[YOUR_CALLSIGN]
 </pre>

@@ -132,7 +132,7 @@ def create_packet(callsign: str, actype: str, latitude: float, longitude: float,
     payload = struct.pack(fmt, model, time_val, lag, *position, *orientation, *linearVel, *angularVel, *linearAccel, *angularAccel)
 
     protocol_version = struct.pack('!h', 10) + struct.pack('!h', 2)
-    squawk = struct.pack('!h', 1500) + struct.pack('!h', 2200)
+    squawk = struct.pack('!h', 1500) + struct.pack('!h', 1200)
     transponder_altitude = struct.pack('!h', 1501) + struct.pack('!h', int(altitude / aero.ft))
     transponder_mode = struct.pack('!h', 1503) + struct.pack('!h', 2) # set to TA/RA
     transponder_airspeed = struct.pack('!h', 1505) + struct.pack('!h', int(airspeed / aero.kts))
