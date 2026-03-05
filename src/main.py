@@ -95,7 +95,7 @@ class FlightSimulatorPlugin(Entity):
                         airspeed = traf.tas[idx]
                         altitude = traf.alt[idx]
                         heading = traf.hdg[idx]
-                        
+
                         vertical_speed = traf.vs[idx]
                         if airspeed != 0:
                             gamma = np.rad2deg(np.asin(vertical_speed / airspeed))
@@ -111,7 +111,7 @@ class FlightSimulatorPlugin(Entity):
     def update_bluesky_traffic(self):
         for address, aircraft in list(self.flights.items()):
             aircraft: object[FlightSimAircraft]
-            self.simulators[address] = {'callsign': aircraft.callsign, 'sim': aircraft.simname, 'last_contact': aircraft.ts}
+            self.simulators[address] = {'sim': aircraft.simname}
 
             idx = traf.id2idx(aircraft.callsign)
             if idx < 0:
@@ -128,3 +128,7 @@ class FlightSimulatorPlugin(Entity):
             self.is_listening = True
             self.is_sending = True
             stack.stack("OP")
+
+    @stack.command(name='SIMLIST')
+    def showsim(self):
+        stack.stack(f'ECHO {self.simulators}')
