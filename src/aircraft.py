@@ -38,7 +38,7 @@ class FlightSimAircraft():
         self.simname = simname
         
         # General
-        self.ts_created = time.time() # Creation timestamp
+        self.ts = time.strftime('%H:%M:%S') # Creation time
         self.callsign = callsign
         self.type = type
 

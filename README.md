@@ -49,6 +49,7 @@ The following functionalities are madeby the plugin
 8) Start the plugin: FLIGHTSIM ON
 
 ## Running with X-Plane 12
+<pre>Note: Currently X-Plane can only transmit traffic to BlueSky. BlueSky traffic is not sent to X-Plane simulator.</pre>
 1) Start X-Plane 12
 2) Navigate to Settings/Data Output
 3) Add the following indices to 'Network via UDP': 3, 18, 17, 20, 104
