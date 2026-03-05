@@ -95,10 +95,16 @@ class FlightSimulatorPlugin(Entity):
                         airspeed = traf.tas[idx]
                         altitude = traf.alt[idx]
                         heading = traf.hdg[idx]
+                        
                         vertical_speed = traf.vs[idx]
+                        if airspeed != 0:
+                            gamma = np.rad2deg(np.asin(vertical_speed / airspeed))
+                        else:
+                            gamma = 0
+
                         if callsign != callsign_own: # Only send traffic without own aircraft
                             if aircraft.simname == 'FlightGear': 
-                                packet = FlightGearPacket(callsign, actype, latitude, longitude, airspeed, altitude, phi=0.0, theta=0.0, psi=heading)
+                                packet = FlightGearPacket(callsign, actype, latitude, longitude, airspeed, altitude, phi=0.0, theta=-gamma, psi=heading)
                                 self.send_socket.sendto(packet, (address[0], settings.flightgear_multiplay_in_port))
   
     @core.timed_function(dt=0.0)
@@ -113,7 +119,6 @@ class FlightSimulatorPlugin(Entity):
                 stack.stack(f'ECHO New aircraft {aircraft.callsign} [{aircraft.type}] joined from {address} | {aircraft.simname}')
             else:
                 traf.move(idx, aircraft.latitude, aircraft.longitude, aircraft.altitude, aircraft.psi, aircraft.tas, aircraft.vs)
-
 
     # --------- COMMANDS --------- #
     @stack.command(name='FLIGHTSIM', type='[onoff]', brief='FLIGHTSIM [ON/OFF]', help='Toggle [ON/OFF] FlightSim plugin')
