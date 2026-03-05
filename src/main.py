@@ -65,12 +65,18 @@ class FlightSimulatorPlugin(Entity):
                 continue
             else:
                 msg, address = self.listen_socket.recvfrom(1024)
-                if (msg[:4]).decode('utf-8') == 'DATA': # X-Plane 12 
-                    aircraft = XPlaneDecoder(msg, address)
-                else: # FlightGear TODO: Make FlightGear header
-                    aircraft = FlightGearDecoder(msg, address)
+                header = (msg[:4]).decode('utf-8')
 
-                self.flights[address] = aircraft
+                if header == 'DATA': # X-Plane 12 
+                    aircraft = XPlaneDecoder(msg, address)
+                    self.flights[address] = aircraft
+
+                if header == 'FGFS': # FlightGear
+                    aircraft = FlightGearDecoder(msg, address)
+                    self.flights[address] = aircraft
+
+                else:
+                    pass
 
     def send(self):
         while True:
@@ -95,8 +101,7 @@ class FlightSimulatorPlugin(Entity):
                                 packet = FlightGearPacket(callsign, actype, latitude, longitude, airspeed, altitude, phi=0.0, theta=0.0, psi=heading)
                                 self.send_socket.sendto(packet, (address[0], settings.flightgear_multiplay_in_port))
   
-    
-    @core.timed_function(name='BLUESKY FLIGHTSIM-TRAFFIC UPDATE', dt=0.0)
+    @core.timed_function(dt=0.0)
     def update_bluesky_traffic(self):
         for address, aircraft in list(self.flights.items()):
             aircraft: object[FlightSimAircraft]

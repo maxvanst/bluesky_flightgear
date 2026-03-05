@@ -4,49 +4,53 @@
 <output>
     <line_separator></line_separator>
     <var_separator>";"</var_separator>
-    <!-- [0] Callsign -->
+    <!-- Header -->
+    <chunk>
+        <format>FGFS</format>
+    </chunk>
+    <!-- [1] Callsign -->
     <chunk>
         <node>/sim/multiplay/callsign</node>
         <name>callsign</name>
         <type>string</type>
         <format>%s</format>
     </chunk>
-    <!-- [1] Squawk code -->
+    <!-- [2] Squawk code -->
     <chunk>
         <node>/instrumentation/transponder/id-code</node>
         <name>transponder</name>
         <type>int</type>
         <format>%d</format>
     </chunk>
-    <!-- [2] Aircraft type -->
+    <!-- [3] Aircraft type -->
     <chunk>
         <node>/aircraft/icao/type</node>
         <name>type</name>
         <type>string</type>
         <format>%s</format>
     </chunk>
-    <!-- [3] Transponder Ident -->
+    <!-- [4] Transponder Ident -->
     <chunk>
         <node>/instrumentation/transponder/ident</node>
         <name>ident</name>
         <type>bool</type>
         <format>%d</format>
     </chunk>
-    <!-- [4] Altitude ft -->
+    <!-- [5] Altitude ft -->
     <chunk>
         <node>/position/altitude-ft</node>
         <name>altitude_ft</name>
         <type>int</type>
         <format>%d</format>
     </chunk>
-    <!-- [5] True Airspeed kts -->
+    <!-- [6] True Airspeed kts -->
     <chunk>
         <node>/velocities/airspeed-kt</node>
         <name>airspeed_kts</name>
         <type>int</type>
         <format>%d</format>
     </chunk>
-    <!-- [6] Vertical speed ft/min -->
+    <!-- [7] Vertical speed ft/min -->
     <chunk>
         <node>/velocities/vertical-speed-fps</node>
         <name>vertical_speed_fts</name>
@@ -54,21 +58,21 @@
         <format>%04.2f</format>
         <factor>60</factor>
     </chunk>
-    <!-- [7] Heading deg -->
+    <!-- [8] Heading deg -->
     <chunk>
         <node>/orientation/heading-deg</node>
         <name>heading_deg</name>
         <type>float</type>
         <format>%03.3f</format>
     </chunk>
-    <!-- [8] Latitude deg -->
+    <!-- [9] Latitude deg -->
     <chunk>
         <node>/position/latitude-deg</node>
         <name>latitude_deg</name>
         <type>float</type>
         <format>%03.8f</format>
     </chunk>
-    <!-- [9] Longitude deg -->
+    <!-- [10] Longitude deg -->
     <chunk>
         <node>/position/longitude-deg</node>
         <name>longitude_deg</name>
