@@ -22,6 +22,6 @@ def decode(msg, address):
                 'latitude': float(decoded[8]),
                 'longitude': float(decoded[9])}
 
-    return FlightSimAircraft(address, simname="FlightGear", callsign='PHFGS', type=aircraft.get('actype'), alpha=0.0, beta=0.0, gamma=0.0,
+    return FlightSimAircraft(address, simname="FlightGear", callsign=aircraft.get('callsign'), type=aircraft.get('actype'), alpha=0.0, beta=0.0, gamma=0.0,
                              phi=0.0, theta=0.0, psi=aircraft.get('yaw'), latitude=aircraft.get('latitude'), longitude=aircraft.get('longitude'),
                              altitude=aircraft.get('altitude'), tas=aircraft.get('tas'), vs=0.0)

@@ -30,6 +30,7 @@ The following functionalities are madeby the plugin
    flightsim_recv_interface = [YOUR_BLUESKY_FLIGHTSIM_RECV_INTERFACE] e.g. 'localhost' or '192.168...'
    flightsim_recv_port = [YOUR_BLUESKY_FLIGHTSIM_RECV_PORT]
    flightgear_multiplay_in_port = [YOUR_FLIGHTGEAR_MULTIPLAY_IN_PORT]
+   xplane_recv_port = 49000
 </pre>
 
 ## Running with FlightGear
