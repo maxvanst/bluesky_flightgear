@@ -3,13 +3,15 @@ import socket
 import struct
 import threading
 
+from bluesky import settings
+
 from plugins.flightsim.src.flightgear.decode import decode as FlightGearDecoder
 from plugins.flightsim.src.xplane.decode import decode as XPlaneDecoder
 
 class FlightSimListener():
     def __init__(self):
-        self.interface = '192.168.1.128'
-        self.port = 10002
+        self.interface = settings.flightsim_interface
+        self.port = settings.flightsim_recv_port
         self.is_listening = False
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) 
         self.thread = threading.Thread(target=self.listen)
@@ -18,6 +20,7 @@ class FlightSimListener():
 
     def start(self):
         self.is_listening = True
+        print(f'Listening on {self.interface}:{self.port}')
         self.socket.bind((self.interface, self.port))
         self.thread.start()
 

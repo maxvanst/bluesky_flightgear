@@ -27,6 +27,7 @@ The following functionalities are madeby the plugin
 2) Download source code with <pre>git clone https://github.com/maxvanst/bluesky-flightsim.git</pre> or use the ZIP download
 3) Add the following lines to settings.cfg inside your BlueSky installation:
 <pre>
+   flightsim_recv_interface = [YOUR_BLUESKY_FLIGHTSIM_RECV_INTERFACE] e.g. 'localhost' or '192.168...'
    flightsim_recv_port = [YOUR_BLUESKY_FLIGHTSIM_RECV_PORT]
 </pre>
 
