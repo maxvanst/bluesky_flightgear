@@ -143,5 +143,18 @@ def create_packet(callsign: str, actype: str, latitude: float, longitude: float,
     msg_len = 32 + len(pos_msg)
     header = create_message_header(callsign, POS_DATA_ID, msg_len)
     packet = header + pos_msg
-    
+
+    return packet
+
+def create_message_packet(callsign, chat_message):
+    """
+    https://sourceforge.net/p/flightgear/flightgear/ci/next/tree/src/MultiPlayer/multiplaymgr.cxx line 2582
+    """
+    chat = chat_message.encode('utf-8') + b'\0'
+    msg_len = 32 + len(chat)
+    header = create_message_header(callsign, CHAT_MSG_ID, msg_len)
+    packet = header + chat
+
+    print(packet)
+
     return packet

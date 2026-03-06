@@ -23,7 +23,7 @@ from bluesky.core import Entity
 from bluesky.tools import aero
 
 # Own plugin imports
-from plugins.bluesky_flightgear.src.server.protocol import create_packet
+from plugins.bluesky_flightgear.src.server.protocol import create_packet, create_message_packet
 
 # Default Settings
 settings.set_variable_defaults(flightgear_recv_interface='localhost', flightgear_recv_port=11002)
@@ -125,9 +125,19 @@ class FlightGearPlugin(Entity):
                         altitude = traf.alt[idx]
                         heading = traf.hdg[idx]
                         vertical_speed = traf.vs[idx]
+                        gamma = 0
+                        if airspeed != 0:
+                            gamma = np.rad2deg(np.asin(vertical_speed / airspeed))
+
                         if callsign != callsign_own: # Only send traffic without own aircraft
-                            packet = create_packet(callsign, actype, latitude, longitude, airspeed, altitude, phi=0.0, theta=0.0, psi=heading)
+                            packet = create_packet(callsign, actype, latitude, longitude, airspeed, altitude, phi=0.0, theta=-gamma, psi=heading)
                             self.send_socket.sendto(packet, (address[0], 5002))
+
+    def get_ipaddr_of_callsign(self, callsign):
+        for address, aircraft in list(self.listen_buffer.items()):
+            aircraft: dict
+            if aircraft.get('callsign') == callsign:
+                return address[0]
 
     @core.timed_function(dt=0.0)
     def update(self):
@@ -155,13 +165,14 @@ class FlightGearPlugin(Entity):
                           aircraft.get('vs'))
 
     # --------- COMMANDS --------- #
+    #TODO: @stack.commandgroup(name='FLIGHTGEAR')???
     @stack.command(name='FLIGHTGEAR', type='[onoff]', brief='FLIGHTGEAR [ON/OFF]', help='Toggle [ON/OFF] FlightGear plugin')
     def FLIGHTGEAR(self, flag):
         if flag == 'ON':
             self.is_running = True
             stack.stack(f'ECHO Listening for FlightGear simulators on {settings.flightgear_recv_interface}:{settings.flightgear_recv_port}')
             stack.stack('OP')
-
+    
     @stack.command(name='FGLIST')
     def FGLIST(self):
         stack.stack(f'ECHO {self.clients}')
