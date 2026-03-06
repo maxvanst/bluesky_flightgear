@@ -20,9 +20,9 @@ The following functionalities are madeby the plugin
 <pre><img width="50" height="50" alt="FlightGear_Logo" src="https://github.com/user-attachments/assets/335b5adc-dbf1-4dc5-a0c5-01ebd5ee78b7" /></pre>
 
 ## Installation
-1) Download source code with <pre>git clone https://github.com/maxvanst/bluesky-flightgear.git</pre> or use the ZIP download
-2) Navigate to the plugin folder inside your BlueSky installation
-3) Place flightgear.py from src directory inside the BlueSky plugin folder 
+1) Navigate to the plugin folder inside your BlueSky installation
+2) Download source code with <pre>git clone https://github.com/maxvanst/bluesky-flightgear.git</pre> or use the ZIP download
+3) Place entire bluesky-flightgear directory inside the BlueSky plugin folder 
 4) Add the following lines to settings.cfg inside your BlueSky installation:
 <pre>
       flightgear_recv_interface = [YOUR_RECV_FLIGHTGEAR_INTERFACE]
@@ -37,8 +37,9 @@ The following functionalities are madeby the plugin
 <pre>
    --generic=socket,out,1,[YOUR_RECV_FLIGHTGEAR_INTERFACE],[YOUR_BLUESKY_FLIGHTSIM_RECV_PORT],udp,bluesky 
    --multiplay=in,10,[YOUR_FLIGHTGEAR_MULTIPLAY_LISTEN_INTERFACE],[YOUR_FLIGHTGEAR_MULTIPLAY_IN_PORT]
-   --prop:/bluesky/simname=[YOUR_FLIGHTGEAR_SIMNAME]
-   --prop:/bluesky/recv_address=[YOUR_FLIGHTGEAR_TRAFFIC_RECV_PORT]
+   --prop:/bluesky/sim_name=[YOUR_FLIGHTGEAR_SIMNAME]
+   --prop:/bluesky/sim_ip=[YOUR_FLIGHTGEAR_IP_ADDRESS]
+   --prop:/bluesky/sim_traffic_recv_port=[YOUR_FLIGHTGEAR_TRAFFIC_RECV_PORT]
    --prop:/bluesky/telnet_port=[YOUR_FLIGHTGEAR_TELNET_PORT]
    --callsign=[YOUR_CALLSIGN]
    --disable-ai-traffic 

@@ -11,28 +11,28 @@
     <!-- =====================  GENERAL  ==================== -->
     <!-- [1] Simulator name -->
     <chunk>
-        <node>/bluesky/simname</node>
+        <node>/bluesky/sim_name</node>
         <name>bluesky name</name>
         <type>string</type>
         <format>%s</format>
     </chunk>
-    <!-- [2] Simulator IP -->
+    <!-- [2] FlightGear Simulator IP -->
     <chunk>
-        <node>/bluesky/recv_address</node>
+        <node>/bluesky/sim_ip</node>
         <name>simulator IP address</name>
         <type>string</type>
         <format>%s</format>
     </chunk>
-    <!-- [3] Simulator Traffic receive port -->
+    <!-- [3] FlightGear Traffic receive port -->
     <chunk>
-        <node>/bluesky/recv_port</node>
+        <node>/bluesky/sim_traffic_recv_port</node>
         <name>simulator traffic recv port</name>
         <type>string</type>
         <format>%s</format>
     </chunk>
     <!-- [4] Simulator Telnet port -->
     <chunk>
-        <node>/bluesky/telnet_port</node>
+        <node>/bluesky/sim_telnet_port</node>
         <name>simulator traffic telnet port</name>
         <type>string</type>
         <format>%s</format>
@@ -86,68 +86,81 @@
         <node>/position/longitude-deg</node>
         <name>longitude_deg</name>
         <type>float</type>
+        <format>%f</format>
+    </chunk>
+    <!-- [12] Altitude [ft] -->
+    <chunk>
+        <node>/position/altitude-ft</node>
+        <name>altitude </name>
+        <type>float</type>
+        <format>%f</format>
+    </chunk>
+    <!-- [13] Altitude AGL [ft] -->
+    <chunk>
+        <node>/position/altitude-agl-ft</node>
+        <name>altitude-agl-ft</name>
+        <type>float</type>
         <format>%03.8f</format>
     </chunk>
     <!-- =====================  SPEEDS  ===================== -->
-    <!-- [12] True Airspeed [kts] -->
+    <!-- [14] True Airspeed [kts] -->
     <chunk>
         <node>/velocities/airspeed-kt</node>
         <name>airspeed_kts</name>
         <type>int</type>
         <format>%d</format>
     </chunk>
-    <!-- [13] Vertical speed [ft/min] -->
+    <!-- [15] Vertical speed [ft/min] -->
     <chunk>
         <node>/velocities/vertical-speed-fps</node>
         <name>vertical_speed_fts</name>
         <type>float</type>
         <format>%04.2f</format>
-        <factor>60</factor>
     </chunk>
     <!-- ==================  ORIENTATION  =================== -->
-    <!-- [14] AoA [deg] -->
+    <!-- [16] AoA [deg] -->
     <chunk>
         <node>/orientation/alpha-deg</node>
         <name>alpha_deg</name>
         <type>float</type>
         <format>%03.3f</format>
     </chunk>
-    <!-- [15] Sideslip [deg] -->
+    <!-- [17] Sideslip [deg] -->
     <chunk>
         <node>/orientation/beta-deg</node>
         <name>beta_deg</name>
         <type>float</type>
         <format>%03.3f</format>
     </chunk>
-    <!-- [16] Path angle [deg] -->
+    <!-- [18] Path angle [deg] -->
     <chunk>
         <node>/orientation/path-deg</node>
         <name>path_deg</name>
         <type>float</type>
         <format>%03.3f</format>
     </chunk>
-    <!-- [17] Pitch [deg] -->
+    <!-- [19] Pitch [deg] -->
     <chunk>
         <node>/orientation/pitch-deg</node>
         <name>pitch_deg</name>
         <type>float</type>
         <format>%03.3f</format>
     </chunk>
-    <!-- [18] Roll [deg] -->
+    <!-- [20] Roll [deg] -->
     <chunk>
         <node>/orientation/roll-deg</node>
         <name>heading_deg</name>
         <type>float</type>
         <format>%03.3f</format>
     </chunk>
-    <!-- [19] Yaw [deg] -->
+    <!-- [21] Yaw [deg] -->
     <chunk>
         <node>/orientation/yaw-deg</node>
         <name>heading_deg</name>
         <type>float</type>
         <format>%03.3f</format>
     </chunk>
-    <!-- [20] True Heading [deg] -->
+    <!-- [22] True Heading [deg] -->
     <chunk>
         <node>/orientation/true-heading-deg</node>
         <name>heading_deg</name>
