@@ -3,6 +3,8 @@
 This project is meant as an extension to 'BlueSky - The Open Air Traffic Simulator'. [https://github.com/TUDelft-CNS-ATM/bluesky] 
 The Python BlueSky plugin creates a connection between BlueSky and the FlightGear Flight Simulator. [https://www.flightgear.org/]
 
+<pre><img width="50" height="50" alt="FlightGear_Logo" src="https://github.com/user-attachments/assets/335b5adc-dbf1-4dc5-a0c5-01ebd5ee78b7" /></pre>
+
 The following functionalities are madeby the plugin
 - Transponder functionality, squawk, ident
 - Ident by flashing FlightGear aircraft label inside BlueSky traffic
@@ -16,8 +18,6 @@ The following functionalities are madeby the plugin
 - BlueSky v1.1.1 or later
 - Python 3.12.3 or later
 - FlightGear v2024.1.4 or later
-
-<pre><img width="50" height="50" alt="FlightGear_Logo" src="https://github.com/user-attachments/assets/335b5adc-dbf1-4dc5-a0c5-01ebd5ee78b7" /></pre>
 
 ## Installation
 1) Navigate to the plugin folder inside your BlueSky installation
@@ -47,3 +47,8 @@ The following functionalities are madeby the plugin
 5) Ensure [YOUR_BLUESKY_IP] and [YOUR_BLUESKY_FLIGHTSIM_RECV_PORT] are according to your BlueSky settings.cfg and network configuration
 7) Start BlueSky: PLUGINS FLIGHTGEAR should load the plugin
 8) Start the plugin: FLIGHTGEAR ON
+
+## Command overview
+- FLIGHTGEAR [ON/OFF]
+- FGLIST
+- FGSHOW [ON/OFF]
