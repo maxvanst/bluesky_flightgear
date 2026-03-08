@@ -16,18 +16,17 @@ import socket
 import struct
 import numpy as np
 import threading
+from scipy.spatial.transform import Rotation
 
 # BlueSky imports
 from bluesky import core, stack, settings, traf, sim
 from bluesky.core import Entity
 from bluesky.tools import aero
 
-# Own plugin imports
-from plugins.bluesky_flightgear.src.server.protocol import create_packet, create_message_packet
-
 # Default Settings
 settings.set_variable_defaults(flightgear_recv_interface='localhost', flightgear_recv_port=11002)
 
+# BlueSky plugin initilisation
 def init_plugin():
     version = json.load(open('./plugins/bluesky_flightgear/version.json', 'r')).get('version')
     plugin = FlightGearPlugin(version)
@@ -36,6 +35,122 @@ def init_plugin():
         'plugin_type': 'sim'
     }
     return config
+
+# FlightGear multiplayer protocol constants
+MSG_MAGIC = 0x46474653      # "FGFS"
+PROTO_VER = 0x00010001      # "1.1"
+CHAT_MSG_ID = 0x00000001    # "1"
+MAX_CHAT_MSG_LEN = 256
+POS_DATA_ID = 0x00000007    # "7"
+
+def create_message_header(callsign: str, msg_id: str, msg_len: int, requested_range_nm=100, reply_port=0):
+    """
+    Construct the Flightgear Multiplayer Protocol message header
+    Source: https://github.com/zayamatias/FGRandomMultiplayer/blob/main/mp.py 
+
+    Input:
+        callsign:   str, callsign
+        msg_id:     str, CHAT_MSG_ID or POS_DATA_ID
+        msg_len:    int, length of message
+    
+    Returns:
+        header:     bytes, header of FlightGear Multiplayer message
+    """
+    callsign_bytes = callsign.encode('ascii')[:8].ljust(8, b'\0')
+
+    return struct.pack('!6I8s', MSG_MAGIC, PROTO_VER, msg_id, msg_len, requested_range_nm, reply_port, callsign_bytes)
+
+def bluesky2ecef(alt: float, lat_deg: float, lon_deg: float, phi_deg: float, theta_deg: float, psi_deg: float):
+    """
+    FlightGear Multiplayer protocol uses ECEF (Earth-Centered, Earth-Fixed).
+    This function converts Body reference frame => BlueSky geodetic reference frame => ECEF.
+
+    Input:
+        airspeed:   float, airspeed [m/s]
+        alt:        float, altitude [m]
+        lat_deg:    float, latitude [deg]
+        lon_deg:    float, longitude [deg]
+        phi_deg:    float, roll angle [deg]
+        theta_deg:  float, pitch angle [deg]
+        psi_deg     float, yaw angle [deg]
+
+    Returns:
+        (PosX, PosY, PosZ): tuple, position vector within ECEF reference frame
+        (orientation):      np.array, orientation vector within ECEF reference frame
+    """
+    # [deg] to [radians]
+    lat, lon, phi, theta, psi = np.deg2rad(lat_deg), np.deg2rad(lon_deg), np.deg2rad(phi_deg), np.deg2rad(theta_deg), np.deg2rad(psi_deg)
+    # ------------------ WGS84 ellipsoid parameters ------------------- #
+    a = 6378137.0                                                       # Semi-major axis [m]
+    b = 6356752.314245                                                  # Semi-minor axis [m]
+    e = np.sqrt(1 - (b**2)/(a**2))                                      # Eccentricity    [-]
+    Rm = (a * (1 - (e**2))) / ((1 - (e**2) * (np.sin(lat)**2))**(3/2))  # Meridian radius of curvature
+    Rp = a / np.sqrt(1 - (e**2) * (np.sin(lat)**2))                     # Prime radius of curvature
+                 
+    # ----------- Position XYZ inside ECEF Reference Frame ------------ #
+    PosX = (Rp + alt) * np.cos(lat) * np.cos(lon)                       # X coordinate ECEF [m]
+    PosY = (Rp + alt) * np.cos(lat) * np.sin(lon)                       # Y coordinate ECEF [m]
+    PosZ = ((b**2/a**2) * Rp + alt) * np.sin(lat)                       # Z coordinate ECEF [m]
+    
+    # ---------------- Reference Frame Transformations ---------------- #
+    T_ecef2ned = Rotation.from_euler('yz', [-(90 + lat_deg), lon_deg], degrees=True).as_matrix()
+    T_ned2body = Rotation.from_euler('xyz', [phi_deg, theta_deg, psi_deg], degrees=True).as_matrix()  
+
+    rotation = T_ecef2ned @ T_ned2body
+
+    orientation = Rotation.from_matrix(rotation).as_rotvec(degrees=False)
+
+    return (PosX, PosY, PosZ), orientation
+
+def create_packet(callsign: str, actype: str, latitude: float, longitude: float, airspeed: float, altitude: float, phi: float, theta: float, psi: float):
+    """
+    Create Flightgear Multiplayer Protocol UDP Packet
+    * Positions, Orientations, Velocities and Accelerations are w.r.t. the Earth-Centered, Earth-Fixed frame.
+    Source 1: https://github.com/zayamatias/FGRandomMultiplayer/blob/main/mp.py  
+    Source 2: https://wiki.flightgear.org/Multiplayer_protocol
+
+    Input:
+        callsign:   str, callsign
+        actype:     str, actype
+        latitude:   float, latitude [deg]
+        longitude:  float, longitude [deg]
+        airspeed:   float, airspeed [m/s]
+        altitude:   float, altitude [m]
+        phi:        float, roll angle [deg]
+        theta:      float, pitch angle [deg]
+        psi:        float, yaw angle [deg]
+
+    Returns:
+        packet
+    """
+    time_val = time.time()
+    lag = 0
+    linearVel, angularVel, linearAccel, angularAccel  = (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)
+    position, orientation = bluesky2ecef(altitude, latitude, longitude, phi, theta, psi)
+    model = ('AI/Aircraft/747/744-KLM}.xml').encode('ascii')[:96].ljust(96, b'\0')
+    fmt = '!96s2d3d3f3f3f3f3f'
+    payload = struct.pack(fmt, model, time_val, lag, *position, *orientation, *linearVel, *angularVel, *linearAccel, *angularAccel)
+
+    protocol_version = struct.pack('!h', 10) + struct.pack('!h', 2)
+    squawk = struct.pack('!h', 1500) + struct.pack('!h', 1200)
+    transponder_altitude = struct.pack('!h', 1501) + struct.pack('i', int(altitude / aero.ft))
+    transponder_mode = struct.pack('!h', 1503) + struct.pack('!h', 2) # set to TA/RA so TCAS works
+    transponder_airspeed = struct.pack('!h', 1505) + struct.pack('!h', int(airspeed / aero.kts))
+
+    chat_message = f"{callsign}: JOINED FROM BLUESKY"
+    chat = struct.pack('!HH', 10002, len(chat_message)) + chat_message.encode('utf-8')
+
+                             # 4 bytes       
+    pos_msg = payload + b'\x1f\xac\xe0\x02' + protocol_version 
+    pos_msg += squawk + transponder_altitude + transponder_mode + transponder_airspeed #+ chat
+
+    if len(pos_msg) % 4 != 0:
+        pos_msg += b'\0' * (4 - (len(pos_msg) % 4))
+    msg_len = 32 + len(pos_msg)
+    header = create_message_header(callsign, POS_DATA_ID, msg_len)
+    packet = header + pos_msg
+
+    return packet
 
 class FlightGearPlugin(Entity):
     def __init__(self, version):
@@ -65,6 +180,7 @@ class FlightGearPlugin(Entity):
     def create(self, n=1):
         super().create(n)
         self.is_flightgear[-n:] = False
+        self.squawk[-n:] = 1200
 
     def listen(self):
         while True:
@@ -79,10 +195,10 @@ class FlightGearPlugin(Entity):
                     # TODO: Dynamic XML reading based on bluesky.xml
                     simulator = {
                         'last_contact': time.strftime('%H:%M:%S'),      # [-]
-                        'sim_name': str(decoded[1]),                    # [-]
-                        'sim_ip': str(decoded[2]),                      # [-]
-                        'sim_tfc_recv_port': str(decoded[3]),           # [-]
-                        'sim_telnet_port': str(decoded[4]),             # [-]
+                        'name': str(decoded[1]),                        # [-]
+                        'ip': str(decoded[2]),                          # [-]
+                        'tfc_recv_port': str(decoded[3]),               # [-]
+                        'telnet_port': str(decoded[4]),                 # [-]
                         'callsign': str(decoded[5]),                    # [-]
                         'type': str(decoded[6]),                        # [-]
                         'squawk': int(decoded[7]),                      # [-]
@@ -117,20 +233,21 @@ class FlightGearPlugin(Entity):
                     aircraft: dict
                     callsign_own = aircraft.get('callsign')
                     for callsign in traf.id:
-                        idx = traf.id2idx(callsign)
-                        actype = traf.type[idx]
-                        latitude = traf.lat[idx]
-                        longitude = traf.lon[idx]
-                        airspeed = traf.tas[idx]
-                        altitude = traf.alt[idx]
-                        heading = traf.hdg[idx]
-                        vertical_speed = traf.vs[idx]
-                        gamma = 0
-                        if airspeed != 0:
-                            gamma = np.rad2deg(np.asin(vertical_speed / airspeed))
-
                         if callsign != callsign_own: # Only send traffic without own aircraft
-                            packet = create_packet(callsign, actype, latitude, longitude, airspeed, altitude, phi=0.0, theta=-gamma, psi=heading)
+                            idx = traf.id2idx(callsign)
+                            actype = traf.type[idx]
+                            latitude = traf.lat[idx]
+                            longitude = traf.lon[idx]
+                            airspeed = traf.tas[idx]
+                            altitude = traf.alt[idx]
+                            heading = traf.hdg[idx]
+                            bank = np.rad2deg(traf.perf.bank[idx])
+                            vertical_speed = traf.vs[idx]
+                            gamma = 0
+                            if airspeed != 0:
+                                gamma = np.rad2deg(np.asin(vertical_speed / airspeed))
+                                
+                            packet = create_packet(callsign, actype, latitude, longitude, airspeed, altitude, phi=bank, theta=gamma, psi=heading)
                             self.send_socket.sendto(packet, (address[0], 5002))
 
     def get_ipaddr_of_callsign(self, callsign):
@@ -149,7 +266,7 @@ class FlightGearPlugin(Entity):
                          aircraft.get('type'), 
                          aircraft.get('latitude'), 
                          aircraft.get('longitude'), 
-                         aircraft.get('psi'), 
+                         aircraft.get('true_heading'), 
                          aircraft.get('altitude'), 
                          aircraft.get('vtas'))
                 
@@ -160,9 +277,10 @@ class FlightGearPlugin(Entity):
                           aircraft.get('latitude'), 
                           aircraft.get('longitude'), 
                           aircraft.get('altitude'), 
-                          aircraft.get('psi'), 
+                          aircraft.get('true_heading'), 
                           aircraft.get('vtas'), 
                           aircraft.get('vs'))
+                traf.perf.bank[idx] = aircraft.get('roll_angle') # Set roll angle
 
     # --------- COMMANDS --------- #
     #TODO: @stack.commandgroup(name='FLIGHTGEAR')???
@@ -170,10 +288,11 @@ class FlightGearPlugin(Entity):
     def FLIGHTGEAR(self, flag):
         if flag == 'ON':
             self.is_running = True
+            stack.stack(f'ECHO FLIGHTGEAR PLUGIN v{self.version}')
             stack.stack(f'ECHO Listening for FlightGear simulators on {settings.flightgear_recv_interface}:{settings.flightgear_recv_port}')
             stack.stack('OP')
     
-    @stack.command(name='FGLIST')
+    @stack.command(name='FGLIST', help='Show connected FlightGear simulators')
     def FGLIST(self):
         stack.stack(f'ECHO {self.clients}')
 
@@ -186,3 +305,7 @@ class FlightGearPlugin(Entity):
                     stack.stack(f'COLOR {id} 0,0,255')
                 else:
                     stack.stack(f'COLOR {id} 0,255,0')
+
+    @stack.command(name='SETSQUAWK')
+    def SETSQUAWK(self, acid):
+        self.squawk[acid] = 2200 
