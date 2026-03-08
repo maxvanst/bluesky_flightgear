@@ -43,6 +43,8 @@ CHAT_MSG_ID = 0x00000001    # "1"
 MAX_CHAT_MSG_LEN = 256
 POS_DATA_ID = 0x00000007    # "7"
 
+
+
 def create_message_header(callsign: str, msg_id: str, msg_len: int, requested_range_nm=100, reply_port=0):
     """
     Construct the Flightgear Multiplayer Protocol message header
@@ -75,8 +77,8 @@ def bluesky2ecef(alt: float, lat_deg: float, lon_deg: float, phi_deg: float, the
         psi_deg     float, yaw angle [deg]
 
     Returns:
-        (PosX, PosY, PosZ): tuple, position vector within ECEF reference frame
-        (orientation):      np.array, orientation vector within ECEF reference frame
+        position:    tuple, position vector within ECEF reference frame
+        orientation: np.array, orientation vector within ECEF reference frame
     """
     # [deg] to [radians]
     lat, lon, phi, theta, psi = np.deg2rad(lat_deg), np.deg2rad(lon_deg), np.deg2rad(phi_deg), np.deg2rad(theta_deg), np.deg2rad(psi_deg)
@@ -91,7 +93,8 @@ def bluesky2ecef(alt: float, lat_deg: float, lon_deg: float, phi_deg: float, the
     PosX = (Rp + alt) * np.cos(lat) * np.cos(lon)                       # X coordinate ECEF [m]
     PosY = (Rp + alt) * np.cos(lat) * np.sin(lon)                       # Y coordinate ECEF [m]
     PosZ = ((b**2/a**2) * Rp + alt) * np.sin(lat)                       # Z coordinate ECEF [m]
-    
+    position = (PosX, PosY, PosZ)
+
     # ---------------- Reference Frame Transformations ---------------- #
     T_ecef2ned = Rotation.from_euler('yz', [-(90 + lat_deg), lon_deg], degrees=True).as_matrix()
     T_ned2body = Rotation.from_euler('xyz', [phi_deg, theta_deg, psi_deg], degrees=True).as_matrix()  
@@ -100,7 +103,7 @@ def bluesky2ecef(alt: float, lat_deg: float, lon_deg: float, phi_deg: float, the
 
     orientation = Rotation.from_matrix(rotation).as_rotvec(degrees=False)
 
-    return (PosX, PosY, PosZ), orientation
+    return position, orientation
 
 def create_packet(callsign: str, actype: str, latitude: float, longitude: float, airspeed: float, altitude: float, phi: float, theta: float, psi: float):
     """
@@ -133,7 +136,8 @@ def create_packet(callsign: str, actype: str, latitude: float, longitude: float,
 
     protocol_version = struct.pack('!h', 10) + struct.pack('!h', 2)
     squawk = struct.pack('!h', 1500) + struct.pack('!h', 1200)
-    transponder_altitude = struct.pack('!h', 1501) + struct.pack('i', int(altitude / aero.ft))
+
+    transponder_altitude = struct.pack('!h', 1501) + struct.pack('!h', int(altitude / aero.ft))
     transponder_mode = struct.pack('!h', 1503) + struct.pack('!h', 2) # set to TA/RA so TCAS works
     transponder_airspeed = struct.pack('!h', 1505) + struct.pack('!h', int(airspeed / aero.kts))
 
@@ -146,6 +150,7 @@ def create_packet(callsign: str, actype: str, latitude: float, longitude: float,
 
     if len(pos_msg) % 4 != 0:
         pos_msg += b'\0' * (4 - (len(pos_msg) % 4))
+
     msg_len = 32 + len(pos_msg)
     header = create_message_header(callsign, POS_DATA_ID, msg_len)
     packet = header + pos_msg
