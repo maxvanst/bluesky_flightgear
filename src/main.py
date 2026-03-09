@@ -46,7 +46,7 @@ class FlightGearPlugin(Entity):
         self.is_flightgear[-n:] = False
         self.squawk[-n:] = 1200
 
-    @core.timed_function(dt=0.0)
+    @core.timed_function(name='FLIGHTGEAR_TRAFFIC_UPDATER', dt=1.0)
     def update(self):
         for address, aircraft in list(self.server.listen_buffer.items()):
             aircraft: dict

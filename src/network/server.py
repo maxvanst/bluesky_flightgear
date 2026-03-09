@@ -5,8 +5,11 @@ import threading
 import numpy as np
 
 # BlueSky imports
-from bluesky import traf
+from bluesky import traf, sim
 from bluesky.tools import aero
+
+# External import
+from flightgear_python.fg_if import TelnetConnection
 
 # Plugin imports
 from .protocol import create_packet
@@ -15,6 +18,11 @@ class FlightGearMultiplayerServer():
     def __init__(self, flightgear_recv_interface: str, flightgear_recv_port: int):
         self.is_running = False
         self.connected_clients = {}
+
+        # BlueSky watcher
+        self.watch_thread = threading.Thread(target=self.watch)
+        self.watch_thread.daemon = True
+        self.watch_thread.start()
 
         # Listen
         self.listen_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) 
@@ -30,7 +38,18 @@ class FlightGearMultiplayerServer():
         self.send_thread.daemon = True
         self.send_thread.start()
 
-    def listen(self):
+    def watch(self) -> None:
+        while True:
+            if sim.state == 1:
+                for address, aircraft in list(self.listen_buffer.items()):
+                    aircraft: dict
+                    telnet_conn = TelnetConnection(address[0], int(aircraft.get('telnet_port')))
+                    telnet_conn.connect()
+                    telnet_conn.set_prop('/sim/freeze/clock', 'true')
+            
+            time.sleep(1.0)
+        
+    def listen(self) -> None:
         while True:
             if not self.is_running:
                 time.sleep(1.0)
@@ -71,7 +90,7 @@ class FlightGearMultiplayerServer():
                 else:
                     pass # Message was not from FlightGear so neglect message
     
-    def send(self):
+    def send(self) -> None:
         while True:
             if not self.is_running:
                 time.sleep(1.0)
