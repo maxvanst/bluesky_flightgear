@@ -71,6 +71,14 @@ class FlightGearMultiplayerServer():
             flightplan.append(telnet_conn.get_prop("/autopilot/route-manager/destination/airport"))
 
         return flightplan
+    
+    def send_cpdlc(self, callsign, message) -> None:
+        ip, aircraft = self.get_ipaddr_and_aircraft_of_callsign(callsign)
+        aircraft: dict
+        telnet_conn = TelnetConnection(ip, int(aircraft.get('telnet_port')))
+        telnet_conn.connect()
+        telnet_conn.set_prop("/network/cpdlc/rx/message", message)
+
 
     def listen(self) -> None:
         while True:

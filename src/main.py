@@ -87,7 +87,7 @@ class FlightGearPlugin(Entity):
                 pass
             
     @stack.commandgroup(name='FLIGHTGEAR')
-    def FLIGHTGEAR(self, function: str):
+    def FLIGHTGEAR(self, function: str, *args):
         if function == 'ON':
             self.server.is_running = True
             stack.stack(f'ECHO FLIGHTGEAR PLUGIN v{self.version}')
@@ -96,3 +96,7 @@ class FlightGearPlugin(Entity):
 
         if function == 'LIST':
             stack.stack(f'ECHO {self.version}')
+
+    @stack.command(name='CPDLC')
+    def CPDLC(self, acid, message):
+        self.server.send_cpdlc(acid, message)
