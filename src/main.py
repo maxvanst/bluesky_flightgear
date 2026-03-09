@@ -47,7 +47,7 @@ class FlightGearPlugin(Entity):
         self.squawk[-n:] = 1200
 
     @core.timed_function(name='FLIGHTGEAR_TRAFFIC_UPDATER', dt=1.0)
-    def update(self):
+    def update_traffic(self):
         for address, aircraft in list(self.server.listen_buffer.items()):
             aircraft: dict
             idx = traf.id2idx(aircraft.get('callsign'))
@@ -72,6 +72,20 @@ class FlightGearPlugin(Entity):
                           aircraft.get('vs'))
                 traf.perf.bank[idx] = aircraft.get('roll_angle') # Set roll angle
 
+    @core.timed_function(name='FLIGHTGEAR_FLIGHTPLAN_UPDATER', dt=5.0)
+    def update_flightplan(self):
+        for address, aircraft in list(self.server.listen_buffer.items()):
+            aircraft: dict
+            callsign = aircraft.get('callsign')
+            flightplan = self.server.get_flightplan(callsign)
+
+            if len(flightplan) != 0 and len(flightplan[0]) == 4 and len(flightplan[-1]) == 4:
+                stack.stack(f'DELRTE {callsign}')
+                for wp in flightplan:
+                    stack.stack(f"{callsign} ADDWPT {wp}")
+            else:
+                pass
+            
     @stack.commandgroup(name='FLIGHTGEAR')
     def FLIGHTGEAR(self, function: str):
         if function == 'ON':

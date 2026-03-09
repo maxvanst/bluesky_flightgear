@@ -48,7 +48,30 @@ class FlightGearMultiplayerServer():
                     telnet_conn.set_prop('/sim/freeze/clock', 'true')
             
             time.sleep(1.0)
-        
+
+    def get_ipaddr_and_aircraft_of_callsign(self, callsign: str):
+        for address, aircraft in list(self.listen_buffer.items()):
+            aircraft: dict
+            if aircraft.get('callsign') == callsign:
+                return address[0], aircraft
+
+    def get_flightplan(self, callsign):
+        flightplan = []
+        ip, aircraft = self.get_ipaddr_and_aircraft_of_callsign(callsign)
+        aircraft: dict
+        telnet_conn = TelnetConnection(ip, int(aircraft.get('telnet_port')))
+        telnet_conn.connect()
+
+        flightplan = []
+        if telnet_conn.get_prop("/autopilot/route-manager/active"):
+            flightplan.append(telnet_conn.get_prop("/autopilot/route-manager/departure/airport"))
+            for id in range(1, telnet_conn.get_prop("/autopilot/route-manager/route/num")-1):
+                    name = telnet_conn.get_prop(f"/autopilot/route-manager/route/wp[{id}]/id")
+                    flightplan.append(name)
+            flightplan.append(telnet_conn.get_prop("/autopilot/route-manager/destination/airport"))
+
+        return flightplan
+
     def listen(self) -> None:
         while True:
             if not self.is_running:
