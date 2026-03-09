@@ -15,7 +15,11 @@ The following functionalities are madeby the plugin
 - BlueSky v1.1.1 or later
 - Python 3.12.3 or later
 - FlightGear v2024.1.4 or later
+- flightgear-python by Julianne Swinoga [https://github.com/julianneswinoga/flightgear-python/tree/master]
 
+```sh
+pip install flightgear-python
+```
 <pre><img width="50" height="50" alt="FlightGear_Logo" src="https://github.com/user-attachments/assets/335b5adc-dbf1-4dc5-a0c5-01ebd5ee78b7" /></pre>
 
 ## Installation
