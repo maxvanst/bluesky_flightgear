@@ -25,6 +25,7 @@ pip install flightgear-python
 ## Installation
 1) Navigate to the plugin folder inside your BlueSky installation
 2) Download source code:
+   
    ```sh
    git clone https://github.com/maxvanst/bluesky-flightgear.git
    ```
