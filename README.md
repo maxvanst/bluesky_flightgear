@@ -1,9 +1,9 @@
 # BlueSky FlightGear plugin 
 This project is meant as an extension to <b>'BlueSky - The Open Air Traffic Simulator'</b>.
-The Python BlueSky plugin creates a connection between BlueSky and the FlightGear Flight Simulator.
+The plugin creates a connection between BlueSky and the FlightGear Flight Simulator.
 This connection is made using a custom UDP BlueSky protocol using the generic protocol from FlightGear.
 BlueSky traffic is injected using the FlightGear Multiplayer Protocol.
-Additionally, simulation parameters that do not require a constant UDP socket are changed using a Telnet connection madeby the flightgear-python package by <i>Julianne Swinoga</i>.
+Additionally, simulation parameters that do not require a constant UDP socket are changed using a Telnet connection made by the flightgear-python package by <i>Julianne Swinoga</i>.
 
 <pre><img width="50" height="50" alt="FlightGear_Logo" src="https://github.com/user-attachments/assets/335b5adc-dbf1-4dc5-a0c5-01ebd5ee78b7" /></pre>
 
