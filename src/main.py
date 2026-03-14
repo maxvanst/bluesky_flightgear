@@ -18,7 +18,7 @@ from bluesky import core, stack, settings, traf, sim
 from bluesky.core import Entity
 
 # Plugin imports
-from .network.server import FlightGearMultiplayerServer
+from .interface.server import FlightGearMultiplayerServer
 
 # Default Settings
 settings.set_variable_defaults(flightgear_recv_interface='localhost', flightgear_recv_port=11002)
