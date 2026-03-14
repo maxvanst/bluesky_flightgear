@@ -114,7 +114,7 @@ class FlightGearPlugin(Entity):
             stack.stack(f'ECHO Listening for FlightGear simulators on [{settings.flightgear_recv_interface}:{settings.flightgear_recv_port}]')
             stack.stack('OP')
 
-    @stack.command(name='FG_SETTIME', brief='FG_GETHOST', help='Show host IP of a FlightGear aircraft')
+    @stack.command(name='FG_SETTIME', brief='FG_SETTIME 18:00:00', help='Set FlightGear sim time')
     def FG_SETTIME(self, acid='acid', time=''):
         if self.is_flightgear[traf.id2idx(acid)]:
             self.server.set_time(acid, time)
