@@ -114,10 +114,6 @@ class FlightGearPlugin(Entity):
             stack.stack(f'ECHO Listening for FlightGear simulators on [{settings.flightgear_recv_interface}:{settings.flightgear_recv_port}]')
             stack.stack('OP')
 
-    @stack.command(name='FG_VERSION', brief='FG_VERSION', help='Show version of FlightGear plugin')
-    def FG_VERSION(self):
-        stack.stack(f'ECHO {self.version}')
-
     @stack.command(name='FG_SETTIME', brief='FG_GETHOST', help='Show host IP of a FlightGear aircraft')
     def FG_SETTIME(self, acid='acid', time=''):
         if self.is_flightgear[traf.id2idx(acid)]:
@@ -145,3 +141,7 @@ class FlightGearPlugin(Entity):
             self.server.send_atc_message(acid, message)
         else:
             stack.stack(f'ECHO {acid} is not a FlightGear aircraft!')
+
+    @stack.command(name='FG_VERSION', brief='FG_VERSION', help='Show version of FlightGear plugin')
+    def FG_VERSION(self):
+        stack.stack(f'ECHO {self.version}')
