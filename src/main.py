@@ -122,34 +122,34 @@ class FlightGearPlugin(Entity):
             stack.stack(f'ECHO Listening for FlightGear simulators on [{settings.flightgear_recv_interface}:{settings.flightgear_recv_port}]')
             stack.stack('OP')
 
-    @stack.command(name='FG_SETTIME', brief='FG_SETTIME acid 18:00:00', help='Set FlightGear sim time')
-    def FG_SETTIME(self, acid='acid', time=''):
+    @stack.command(name='FLIGHTGEAR_SETTIME', brief='FLIGHTGEAR_SETTIME acid 18:00:00', help='Set FlightGear sim time')
+    def FLIGHTGEAR_SETTIME(self, acid='acid', time=''):
         if self.is_flightgear[traf.id2idx(acid)]:
             self.server.set_time(acid, time)
         else:
             stack.stack(f'ECHO {acid} is not a FlightGear aircraft!')
 
-    @stack.command(name='FG_GETHOST', brief='FG_GETHOST acid', help='Show host IP of a FlightGear aircraft')
-    def FG_GETHOST(self, acid='acid'):
+    @stack.command(name='FLIGHTGEAR_GETHOST', brief='FLIGHTGEAR_GETHOST acid', help='Show host IP of a FlightGear aircraft')
+    def FLIGHTGEAR_GETHOST(self, acid='acid'):
         if self.is_flightgear[traf.id2idx(acid)]:
             stack.stack(f'ECHO {acid} | HOST:{self.server.get_ipaddr_and_aircraft_of_callsign(acid)[0]}')
         else:
             stack.stack(f'ECHO {acid} is not a FlightGear aircraft!')
 
-    @stack.command(name='FG_SENDCPDLC', brief='FG_CPDLC acid message', help='Send a CPDLC message')
-    def FG_SENDCPDLC(self, acid='acid', message=''):
+    @stack.command(name='FLIGHTGEAR_SENDCPDLC', brief='FLIGHTGEAR_CPDLC acid message', help='Send a CPDLC message')
+    def FLIGHTGEAR_SENDCPDLC(self, acid='acid', message=''):
         if self.is_flightgear[traf.id2idx(acid)]:
             self.server.send_cpdlc(acid, message)
         else:
             stack.stack(f'ECHO {acid} is not a FlightGear aircraft!')
 
-    @stack.command(name='FG_SENDATC', brief='FG_SENDATC acid "message"', help='Send a ATC message')
-    def FG_SENDATC(self, acid='acid', message=str):
+    @stack.command(name='FLIGHTGEAR_SENDATC', brief='FLIGHTGEAR_SENDATC acid "message"', help='Send a ATC message')
+    def FLIGHTGEAR_SENDATC(self, acid='acid', message=str):
         if self.is_flightgear[traf.id2idx(acid)]:
             self.server.send_atc_message(acid, message)
         else:
             stack.stack(f'ECHO {acid} is not a FlightGear aircraft!')
 
-    @stack.command(name='FG_VERSION', brief='FG_VERSION', help='Show version of FlightGear plugin')
-    def FG_VERSION(self):
+    @stack.command(name='FLIGHTGEAR_VERSION', brief='FLIGHTGEAR_VERSION', help='Show version of FlightGear plugin')
+    def FLIGHTGEAR_VERSION(self):
         stack.stack(f'ECHO {self.version}')
