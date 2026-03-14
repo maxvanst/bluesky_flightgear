@@ -70,6 +70,7 @@ class FlightGearPlugin(Entity):
                           aircraft.get('vtas'), 
                           aircraft.get('vs'))
                 traf.perf.bank[idx] = aircraft.get('roll_angle') # Set roll angle
+                self.squawk[idx] = aircraft.get('squawk')
 
     @core.timed_function(name='FLIGHTGEAR_FLIGHTPLAN_UPDATER', dt=10.0)
     def update_flightplan(self):
@@ -84,6 +85,25 @@ class FlightGearPlugin(Entity):
                     stack.stack(f"{callsign} ADDWPT {wp}")
             else:
                 pass
+
+    @core.timed_function(name='FLIGHTGEAR_CHECK_SQUAWK', dt=3.0)
+    def check_squawk(self):
+        for callsign in traf.id:
+            idx = traf.id2idx(callsign)
+            if self.squawk[idx] == 7500: # Hijack
+                stack.stack(f"COLOR {callsign},255,0,0")
+                stack.stack(f"ECHO HIJACK: {callsign} SQUAWK 7500")
+
+            elif self.squawk[idx] == 7600: # Radio failure
+                stack.stack(f"COLOR {callsign},255,0,0")
+                stack.stack(f"ECHO RADIO FAIL: {callsign} SQUAWK 7600")
+
+            elif self.squawk[idx] == 7700: # Emergency
+                stack.stack(f"COLOR {callsign},255,0,0")
+                stack.stack(f"ECHO EMERGENCY: {callsign} SQUAWK 7700")
+
+            else:
+                stack.stack(f"COLOR {callsign},0,255,0")
 
     # ========================== BLUESKY COMMANDS ============================= #
     @stack.command(name='FLIGHTGEAR', type='[onoff]', brief='FLIGHTGEAR [ON/OFF]', help='Switch FlightGear plugin [ON/OFF]')
