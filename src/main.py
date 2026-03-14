@@ -40,11 +40,13 @@ class FlightGearPlugin(Entity):
         with self.settrafarrays():
             self.is_flightgear = np.array([])
             self.squawk = np.array([])
+            self.ident = np.array([])
 
     def create(self, n=1):
         super().create(n)
         self.is_flightgear[-n:] = False
         self.squawk[-n:] = 1200
+        self.ident[-n:] = False
 
     @core.timed_function(name='FLIGHTGEAR_TRAFFIC_UPDATER', dt=0.0)
     def update_traffic(self):
@@ -71,6 +73,7 @@ class FlightGearPlugin(Entity):
                           aircraft.get('vs'))
                 traf.perf.bank[idx] = aircraft.get('roll_angle') # Set roll angle
                 self.squawk[idx] = aircraft.get('squawk')
+                self.ident[idx] = bool(aircraft.get('transponder_ident'))
 
     @core.timed_function(name='FLIGHTGEAR_FLIGHTPLAN_UPDATER', dt=10.0)
     def update_flightplan(self):
@@ -86,8 +89,8 @@ class FlightGearPlugin(Entity):
             else:
                 pass
 
-    @core.timed_function(name='FLIGHTGEAR_CHECK_SQUAWK', dt=3.0)
-    def check_squawk(self):
+    @core.timed_function(name='FLIGHTGEAR_CHECK_TRANSPONDER', dt=3.0)
+    def check_transponder(self):
         for callsign in traf.id:
             idx = traf.id2idx(callsign)
             if self.squawk[idx] == 7500: # Hijack
@@ -102,8 +105,13 @@ class FlightGearPlugin(Entity):
                 stack.stack(f"COLOR {callsign},255,0,0")
                 stack.stack(f"ECHO EMERGENCY: {callsign} SQUAWK 7700")
 
+            elif self.ident[idx]:
+                stack.stack(f"COLOR {callsign},255,255,0")
+
             else:
                 stack.stack(f"COLOR {callsign},0,255,0")
+
+            
 
     # ========================== BLUESKY COMMANDS ============================= #
     @stack.command(name='FLIGHTGEAR', type='[onoff]', brief='FLIGHTGEAR [ON/OFF]', help='Switch FlightGear plugin [ON/OFF]')
