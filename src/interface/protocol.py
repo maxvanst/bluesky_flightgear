@@ -51,7 +51,7 @@ def bluesky2ecef(alt: float, lat_deg: float, lon_deg: float, phi_deg: float, the
         orientation: np.array, orientation vector within ECEF reference frame
     """
     # [deg] to [radians]
-    lat, lon, phi, theta, psi = np.deg2rad(lat_deg), np.deg2rad(lon_deg), np.deg2rad(phi_deg), np.deg2rad(theta_deg), np.deg2rad(psi_deg)
+    lat, lon = np.deg2rad(lat_deg), np.deg2rad(lon_deg)
     # ------------------ WGS84 ellipsoid parameters ------------------- #
     a = 6378137.0                                                       # Semi-major axis [m]
     b = 6356752.314245                                                  # Semi-minor axis [m]
