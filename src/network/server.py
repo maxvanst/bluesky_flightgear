@@ -114,8 +114,16 @@ class FlightGearMultiplayerServer():
                     telnet_conn = TelnetConnection(address[0], int(aircraft.get('telnet_port')))
                     telnet_conn.connect()
                     telnet_conn.set_prop('/sim/freeze/clock', 'true') # Set FlightGear ingame clock to freeze / pause
-            
-            time.sleep(1.0)
+                    self.send_atc_message(aircraft.get('callsign'), message='BLUE SKY SIM IS PAUSED!')
+
+            else:
+                for address, aircraft in list(self.listen_buffer.items()):
+                    aircraft: dict
+                    telnet_conn = TelnetConnection(address[0], int(aircraft.get('telnet_port')))
+                    telnet_conn.connect()
+                    telnet_conn.set_prop('/sim/freeze/clock', 'false') 
+
+            time.sleep(5.0)
 
     def get_ipaddr_and_aircraft_of_callsign(self, callsign: str):
         for address, aircraft in list(self.listen_buffer.items()):
