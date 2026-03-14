@@ -155,3 +155,10 @@ class FlightGearMultiplayerServer():
         telnet_conn.connect()
         telnet_conn.set_prop("/sim/time/cur-time-override", '1')
         telnet_conn.set_prop("/sim/time/gmt", f'2026-01-01T{time}')
+
+    def send_atc_message(self, callsign, message) -> None:
+        ip, aircraft = self.get_ipaddr_and_aircraft_of_callsign(callsign)
+        aircraft: dict
+        telnet_conn = TelnetConnection(ip, int(aircraft.get('telnet_port')))
+        telnet_conn.connect()
+        telnet_conn.set_prop("/sim/messages/pilot", message)

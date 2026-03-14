@@ -119,19 +119,9 @@ class FlightGearPlugin(Entity):
         else:
             stack.stack(f'ECHO {acid} is not a FlightGear aircraft!')
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    @stack.command(name='CPDLC')
-    def CPDLC(self, acid, message):
-        self.server.send_cpdlc(acid, message)
+    @stack.command(name='FG_SENDATC', brief='FG_SENDATC', help='Send a ATC message')
+    def FG_SENDATC(self, acid='acid', message=str):
+        if self.is_flightgear[traf.id2idx(acid)]:
+            self.server.send_atc_message(acid, message)
+        else:
+            stack.stack(f'ECHO {acid} is not a FlightGear aircraft!')
