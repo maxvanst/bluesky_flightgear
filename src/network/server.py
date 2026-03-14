@@ -19,11 +19,6 @@ class FlightGearMultiplayerServer():
         self.is_running = False
         self.connected_clients = {}
 
-        # BlueSky watcher
-        self.watch_thread = threading.Thread(target=self.watch)
-        self.watch_thread.daemon = True
-        self.watch_thread.start()
-
         # Listen
         self.listen_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) 
         self.listen_socket.bind((flightgear_recv_interface, flightgear_recv_port))
@@ -38,47 +33,10 @@ class FlightGearMultiplayerServer():
         self.send_thread.daemon = True
         self.send_thread.start()
 
-    def watch(self) -> None:
-        while True:
-            if sim.state == 1:
-                for address, aircraft in list(self.listen_buffer.items()):
-                    aircraft: dict
-                    telnet_conn = TelnetConnection(address[0], int(aircraft.get('telnet_port')))
-                    telnet_conn.connect()
-                    telnet_conn.set_prop('/sim/freeze/clock', 'true')
-            
-            time.sleep(1.0)
-
-    def get_ipaddr_and_aircraft_of_callsign(self, callsign: str):
-        for address, aircraft in list(self.listen_buffer.items()):
-            aircraft: dict
-            if aircraft.get('callsign') == callsign:
-                return address[0], aircraft
-
-    def get_flightplan(self, callsign):
-        flightplan = []
-        ip, aircraft = self.get_ipaddr_and_aircraft_of_callsign(callsign)
-        aircraft: dict
-        telnet_conn = TelnetConnection(ip, int(aircraft.get('telnet_port')))
-        telnet_conn.connect()
-
-        flightplan = []
-        if telnet_conn.get_prop("/autopilot/route-manager/active"):
-            flightplan.append(telnet_conn.get_prop("/autopilot/route-manager/departure/airport"))
-            for id in range(1, telnet_conn.get_prop("/autopilot/route-manager/route/num")-1):
-                    name = telnet_conn.get_prop(f"/autopilot/route-manager/route/wp[{id}]/id")
-                    flightplan.append(name)
-            flightplan.append(telnet_conn.get_prop("/autopilot/route-manager/destination/airport"))
-
-        return flightplan
-    
-    def send_cpdlc(self, callsign, message) -> None:
-        ip, aircraft = self.get_ipaddr_and_aircraft_of_callsign(callsign)
-        aircraft: dict
-        telnet_conn = TelnetConnection(ip, int(aircraft.get('telnet_port')))
-        telnet_conn.connect()
-        telnet_conn.set_prop("/network/cpdlc/rx/message", message)
-
+        # BlueSky watcher
+        self.watch_thread = threading.Thread(target=self.watch)
+        self.watch_thread.daemon = True
+        self.watch_thread.start()
 
     def listen(self) -> None:
         while True:
@@ -147,3 +105,53 @@ class FlightGearMultiplayerServer():
                                 
                             packet = create_packet(callsign, actype, latitude, longitude, airspeed, altitude, phi=bank, theta=gamma, psi=heading, chat_message='JOINED FROM BLUESKY')
                             self.send_socket.sendto(packet, (address[0], aircraft.get('tfc_recv_port')))
+    
+    def watch(self) -> None:
+        while True:
+            if sim.state == 1: # If BlueSky sim is paused
+                for address, aircraft in list(self.listen_buffer.items()):
+                    aircraft: dict
+                    telnet_conn = TelnetConnection(address[0], int(aircraft.get('telnet_port')))
+                    telnet_conn.connect()
+                    telnet_conn.set_prop('/sim/freeze/clock', 'true') # Set FlightGear ingame clock to freeze / pause
+            
+            time.sleep(1.0)
+
+    def get_ipaddr_and_aircraft_of_callsign(self, callsign: str):
+        for address, aircraft in list(self.listen_buffer.items()):
+            aircraft: dict
+            if aircraft.get('callsign') == callsign:
+                return address[0], aircraft
+
+    def get_flightplan(self, callsign) -> list:
+        flightplan = []
+        ip, aircraft = self.get_ipaddr_and_aircraft_of_callsign(callsign)
+        aircraft: dict
+        telnet_conn = TelnetConnection(ip, int(aircraft.get('telnet_port')))
+        telnet_conn.connect()
+
+        flightplan = []
+        if telnet_conn.get_prop("/autopilot/route-manager/active"):
+            flightplan.append(telnet_conn.get_prop("/autopilot/route-manager/departure/airport"))
+            for id in range(1, telnet_conn.get_prop("/autopilot/route-manager/route/num")-1):
+                    name = telnet_conn.get_prop(f"/autopilot/route-manager/route/wp[{id}]/id")
+                    flightplan.append(name)
+            flightplan.append(telnet_conn.get_prop("/autopilot/route-manager/destination/airport"))
+
+        return flightplan
+    
+    def send_cpdlc(self, callsign, message) -> None:
+        ip, aircraft = self.get_ipaddr_and_aircraft_of_callsign(callsign)
+        aircraft: dict
+        telnet_conn = TelnetConnection(ip, int(aircraft.get('telnet_port')))
+        telnet_conn.connect()
+        telnet_conn.set_prop("/network/cpdlc/rx/message", message)
+        telnet_conn.set_prop("/network/cpdlc/rx/new-message", 'true')
+
+    def set_time(self, callsign, time) -> None:
+        ip, aircraft = self.get_ipaddr_and_aircraft_of_callsign(callsign)
+        aircraft: dict
+        telnet_conn = TelnetConnection(ip, int(aircraft.get('telnet_port')))
+        telnet_conn.connect()
+        telnet_conn.set_prop("/sim/time/cur-time-override", '1')
+        telnet_conn.set_prop("/sim/time/gmt", f'2026-01-01T{time}')
