@@ -115,7 +115,7 @@ def create_packet(callsign: str, actype: str, latitude: float, longitude: float,
 
                              # 4 bytes       
     pos_msg = payload + b'\x1f\xac\xe0\x02' + protocol_version 
-    pos_msg += squawk + transponder_altitude + transponder_mode + transponder_airspeed + chat
+    pos_msg += squawk + transponder_altitude + transponder_mode + transponder_airspeed #+ chat
 
     if len(pos_msg) % 4 != 0:
         pos_msg += b'\0' * (4 - (len(pos_msg) % 4))
