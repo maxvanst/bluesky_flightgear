@@ -7,6 +7,8 @@ from scipy.spatial.transform import Rotation
 # BlueSky imports
 from bluesky.tools import aero
 
+from .acmap import model_mapping
+
 # FlightGear multiplayer protocol constants
 MSG_MAGIC = 0x46474653      # "FGFS"
 PROTO_VER = 0x00010001      # "1.1"
@@ -98,7 +100,7 @@ def create_packet(callsign: str, actype: str, latitude: float, longitude: float,
     lag = 0
     linearVel, angularVel, linearAccel, angularAccel  = (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)
     position, orientation = bluesky2ecef(altitude, latitude, longitude, phi, theta, psi)
-    model = ('AI/Aircraft/747/744-KLM}.xml').encode('ascii')[:96].ljust(96, b'\0')
+    model = model_mapping(actype).encode('ascii')[:96].ljust(96, b'\0')
     fmt = '!96s2d3d3f3f3f3f3f'
     payload = struct.pack(fmt, model, time_val, lag, *position, *orientation, *linearVel, *angularVel, *linearAccel, *angularAccel)
 
