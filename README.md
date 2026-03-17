@@ -20,6 +20,13 @@ The FlightGear Multiplayer traffic protocol in Python was written with inspirati
 - Changing FlightGear sim time using BlueSky commands.
 - FlightGear simulator follows sim state of BlueSky [PAUSE]
 
+
+
+
+https://github.com/user-attachments/assets/0143ce12-a7cf-4dea-9214-58ebd9c2e65e
+
+
+
 ## Prerequisites
 - BlueSky v1.1.1 or later [https://github.com/TUDelft-CNS-ATM/bluesky]
 - Python 3.12.3 or later [https://www.python.org/]
