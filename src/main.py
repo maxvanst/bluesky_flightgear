@@ -109,8 +109,6 @@ class FlightGearPlugin(Entity):
             else:
                 stack.stack(f"COLOR {callsign},0,255,0")
 
-            
-
     # ========================== BLUESKY COMMANDS ============================= #
     @stack.command(name='FLIGHTGEAR', type='[onoff]', brief='FLIGHTGEAR [ON/OFF]', help='Switch FlightGear plugin [ON/OFF]')
     def FLIGHTGEAR(self, flag):
