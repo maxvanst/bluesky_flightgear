@@ -103,7 +103,7 @@ class FlightGearMultiplayerServer():
                             if airspeed != 0:
                                 gamma = np.rad2deg(np.asin(vertical_speed / airspeed))
                                 
-                            packet = create_packet(callsign, actype, latitude, longitude, airspeed, altitude, phi=bank, theta=gamma, psi=heading, chat_message='JOINED FROM BLUESKY')
+                            packet = create_packet(callsign, actype, latitude, longitude, airspeed, altitude, phi=bank, theta=gamma, psi=heading)
                             self.send_socket.sendto(packet, (address[0], aircraft.get('tfc_recv_port')))
     
     def watch(self) -> None:

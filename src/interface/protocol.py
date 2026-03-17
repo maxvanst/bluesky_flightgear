@@ -7,7 +7,7 @@ from scipy.spatial.transform import Rotation
 # BlueSky imports
 from bluesky.tools import aero
 
-from .acmap import model_mapping
+from .acmodel import model_mapping
 
 # FlightGear multiplayer protocol constants
 MSG_MAGIC = 0x46474653      # "FGFS"
@@ -75,7 +75,7 @@ def bluesky2ecef(alt: float, lat_deg: float, lon_deg: float, phi_deg: float, the
 
     return position, orientation
 
-def create_packet(callsign: str, actype: str, latitude: float, longitude: float, airspeed: float, altitude: float, phi: float, theta: float, psi: float, chat_message: str):
+def create_packet(callsign: str, actype: str, latitude: float, longitude: float, airspeed: float, altitude: float, phi: float, theta: float, psi: float):
     """
     Create Flightgear Multiplayer Protocol UDP Packet
     * Positions, Orientations, Velocities and Accelerations are w.r.t. the Earth-Centered, Earth-Fixed frame.
@@ -111,11 +111,9 @@ def create_packet(callsign: str, actype: str, latitude: float, longitude: float,
     transponder_mode = struct.pack('!h', 1503) + struct.pack('!h', 2) # set to TA/RA so TCAS works
     transponder_airspeed = struct.pack('!h', 1505) + struct.pack('!h', int(airspeed / aero.kts))
 
-    chat = struct.pack('!HH', 10002, len(chat_message)) + chat_message.encode('utf-8')
-
                              # 4 bytes       
     pos_msg = payload + b'\x1f\xac\xe0\x02' + protocol_version 
-    pos_msg += squawk + transponder_altitude + transponder_mode + transponder_airspeed #+ chat
+    pos_msg += squawk + transponder_altitude + transponder_mode + transponder_airspeed
 
     if len(pos_msg) % 4 != 0:
         pos_msg += b'\0' * (4 - (len(pos_msg) % 4))

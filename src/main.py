@@ -10,7 +10,6 @@
 ============================================================
 """
 # General imports
-import json
 import numpy as np
 
 # BlueSky imports
@@ -21,7 +20,7 @@ from bluesky.core import Entity
 from .interface.server import FlightGearMultiplayerServer
 
 # Default Settings
-settings.set_variable_defaults(flightgear_recv_interface='localhost', flightgear_recv_port=11002)
+settings.set_variable_defaults(flightgear_recv_interface='localhost', flightgear_recv_port=5500)
 
 def init_plugin():
     plugin = FlightGearPlugin()
@@ -34,8 +33,7 @@ def init_plugin():
 class FlightGearPlugin(Entity):
     def __init__(self):
         super().__init__()
-        self.version = json.load(open('./plugins/bluesky_flightgear/version.json', 'r')).get('version')
-        self.server = FlightGearMultiplayerServer(settings.flightgear_recv_interface, settings.flightgear_recv_port)
+        self.interface = FlightGearMultiplayerServer(settings.flightgear_recv_interface, settings.flightgear_recv_port)
 
         with self.settrafarrays():
             self.is_flightgear = np.array([])
@@ -50,7 +48,7 @@ class FlightGearPlugin(Entity):
 
     @core.timed_function(name='FLIGHTGEAR_TRAFFIC_UPDATER', dt=0.0)
     def update_traffic(self):
-        for address, aircraft in list(self.server.listen_buffer.items()):
+        for address, aircraft in list(self.interface.listen_buffer.items()):
             aircraft: dict
             idx = traf.id2idx(aircraft.get('callsign'))
             if idx < 0:
@@ -77,10 +75,10 @@ class FlightGearPlugin(Entity):
 
     @core.timed_function(name='FLIGHTGEAR_FLIGHTPLAN_UPDATER', dt=10.0)
     def update_flightplan(self):
-        for address, aircraft in list(self.server.listen_buffer.items()):
+        for address, aircraft in list(self.interface.listen_buffer.items()):
             aircraft: dict
             callsign = aircraft.get('callsign')
-            flightplan = self.server.get_flightplan(callsign)
+            flightplan = self.interface.get_flightplan(callsign)
 
             if len(flightplan) != 0 and len(flightplan[0]) == 4 and len(flightplan[-1]) == 4:
                 stack.stack(f'DELRTE {callsign}')
@@ -117,7 +115,7 @@ class FlightGearPlugin(Entity):
     @stack.command(name='FLIGHTGEAR', type='[onoff]', brief='FLIGHTGEAR [ON/OFF]', help='Switch FlightGear plugin [ON/OFF]')
     def FLIGHTGEAR(self, flag):
         if flag:
-            self.server.is_running = True
+            self.interface.is_running = True
             stack.stack(f'ECHO FLIGHTGEAR PLUGIN v{self.version}')
             stack.stack(f'ECHO Listening for FlightGear simulators on [{settings.flightgear_recv_interface}:{settings.flightgear_recv_port}]')
             stack.stack('OP')
@@ -125,31 +123,27 @@ class FlightGearPlugin(Entity):
     @stack.command(name='FLIGHTGEAR_SETTIME', brief='FLIGHTGEAR_SETTIME acid 18:00:00', help='Set FlightGear sim time')
     def FLIGHTGEAR_SETTIME(self, acid='acid', time=''):
         if self.is_flightgear[traf.id2idx(acid)]:
-            self.server.set_time(acid, time)
+            self.interface.set_time(acid, time)
         else:
             stack.stack(f'ECHO {acid} is not a FlightGear aircraft!')
 
     @stack.command(name='FLIGHTGEAR_GETHOST', brief='FLIGHTGEAR_GETHOST acid', help='Show host IP of a FlightGear aircraft')
     def FLIGHTGEAR_GETHOST(self, acid='acid'):
         if self.is_flightgear[traf.id2idx(acid)]:
-            stack.stack(f'ECHO {acid} | HOST:{self.server.get_ipaddr_and_aircraft_of_callsign(acid)[0]}')
+            stack.stack(f'ECHO {acid} | HOST:{self.interface.get_ipaddr_and_aircraft_of_callsign(acid)[0]}')
         else:
             stack.stack(f'ECHO {acid} is not a FlightGear aircraft!')
 
     @stack.command(name='FLIGHTGEAR_SENDCPDLC', brief='FLIGHTGEAR_CPDLC acid message', help='Send a CPDLC message')
     def FLIGHTGEAR_SENDCPDLC(self, acid='acid', message=''):
         if self.is_flightgear[traf.id2idx(acid)]:
-            self.server.send_cpdlc(acid, message)
+            self.interface.send_cpdlc(acid, message)
         else:
             stack.stack(f'ECHO {acid} is not a FlightGear aircraft!')
 
     @stack.command(name='FLIGHTGEAR_SENDATC', brief='FLIGHTGEAR_SENDATC acid "message"', help='Send a ATC message')
     def FLIGHTGEAR_SENDATC(self, acid='acid', message=str):
         if self.is_flightgear[traf.id2idx(acid)]:
-            self.server.send_atc_message(acid, message)
+            self.interface.send_atc_message(acid, message)
         else:
             stack.stack(f'ECHO {acid} is not a FlightGear aircraft!')
-
-    @stack.command(name='FLIGHTGEAR_VERSION', brief='FLIGHTGEAR_VERSION', help='Show version of FlightGear plugin')
-    def FLIGHTGEAR_VERSION(self):
-        stack.stack(f'ECHO {self.version}')
