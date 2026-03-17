@@ -6,6 +6,7 @@ BlueSky traffic is injected using the FlightGear Multiplayer Protocol.
 Additionally, simulation parameters that do not require a constant UDP socket are changed using a Telnet connection made by the flightgear-python package by <i>Julianne Swinoga</i>.
 
 <pre><img width="50" height="50" alt="FlightGear_Logo" src="https://github.com/user-attachments/assets/335b5adc-dbf1-4dc5-a0c5-01ebd5ee78b7" /></pre>
+<img width="3431" height="1345" alt="image" src="https://github.com/user-attachments/assets/0717db1b-722b-470c-ab02-f3b626d4b1be" />
 
 ## Functionalities of the plugin:
 - Transponder functionality, squawk, ident.
