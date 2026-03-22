@@ -33,9 +33,9 @@ https://github.com/user-attachments/assets/0143ce12-a7cf-4dea-9214-58ebd9c2e65e
 - FlightGear v2024.1.4 or later [https://www.flightgear.org/]
 - flightgear-python by Julianne Swinoga [https://github.com/julianneswinoga/flightgear-python/]
 
-```sh
-pip install flightgear-python
-```
+   ```sh
+   pip install flightgear-python
+   ```
 
 ## Installation
 1) Navigate to the plugin folder inside your BlueSky installation
@@ -47,6 +47,7 @@ pip install flightgear-python
    or use the ZIP download
 4) Place entire bluesky-flightgear directory inside the BlueSky plugin folder 
 5) Add the following lines to settings.cfg inside your BlueSky installation:
+
 ```sh
       flightgear_recv_interface = [RECV_FLIGHTGEAR_INTERFACE]
       flightgear_recv_port = [RECV_FLIGHTGEAR_PORT]
