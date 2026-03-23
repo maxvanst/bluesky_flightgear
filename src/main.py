@@ -82,7 +82,10 @@ class FlightGearPlugin(Entity):
 
             if len(flightplan) != 0 and len(flightplan[0]) == 4 and len(flightplan[-1]) == 4:
                 stack.stack(f'DELRTE {callsign}')
-                for wp in flightplan:
+                stack.stack(f"{callsign} ORIG {flightplan[0]}")
+                stack.stack(f"{callsign} DEST {flightplan[-1]}")
+
+                for wp in flightplan[1:-2]:
                     stack.stack(f"{callsign} ADDWPT {wp}")
             else:
                 pass
@@ -117,7 +120,7 @@ class FlightGearPlugin(Entity):
             stack.stack(f'ECHO Listening for FlightGear simulators on [{settings.flightgear_recv_interface}:{settings.flightgear_recv_port}]')
             stack.stack('OP')
 
-    @stack.command(name='FLIGHTGEAR_SETTIME', brief='FLIGHTGEAR_SETTIME acid 18:00:00', help='Set FlightGear sim time')
+    @stack.command(name='FLIGHTGEAR_SETTIME', brief='FLIGHTGEAR_SETTIME acid HH:MM:SS', help='Set FlightGear sim time')
     def FLIGHTGEAR_SETTIME(self, acid='acid', time=''):
         if self.is_flightgear[traf.id2idx(acid)]:
             self.interface.set_time(acid, time)
