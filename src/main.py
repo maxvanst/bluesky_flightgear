@@ -114,7 +114,6 @@ class FlightGearPlugin(Entity):
     def FLIGHTGEAR(self, flag):
         if flag:
             self.interface.is_running = True
-            stack.stack(f'ECHO FLIGHTGEAR PLUGIN v{self.version}')
             stack.stack(f'ECHO Listening for FlightGear simulators on [{settings.flightgear_recv_interface}:{settings.flightgear_recv_port}]')
             stack.stack('OP')
 
