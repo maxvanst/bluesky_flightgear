@@ -66,7 +66,7 @@ https://github.com/user-attachments/assets/0143ce12-a7cf-4dea-9214-58ebd9c2e65e
    --prop:/bluesky/sim_name=[SIM_NAME]
    --prop:/bluesky/sim_ip=[SIM_IP_ADDRESS]
    --prop:/bluesky/sim_traffic_recv_port=[TFC_RECV_PORT]
-   --prop:/bluesky/telnet_port=[TELNET_RECV_PORT]
+   --prop:/bluesky/sim_telnet_port=[TELNET_RECV_PORT]
    --callsign=[CALLSIGN]
    --prop:/aircraft/icao/type=[ICAO ACTYPE]
    --disable-ai-traffic 
@@ -80,7 +80,7 @@ Example when running on localhost interface:
    --prop:/bluesky/sim_name=FG_SIM_1
    --prop:/bluesky/sim_ip=127.0.0.1
    --prop:/bluesky/sim_traffic_recv_port=5502
-   --prop:/bluesky/telnet_port=5503
+   --prop:/bluesky/sim_telnet_port=5503
    --callsign=PHLAB
    --prop:/aircraft/icao/type=C550
    --disable-ai-traffic 
