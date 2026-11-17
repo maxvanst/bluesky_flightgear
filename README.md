@@ -25,8 +25,6 @@ This project is an extension plugin to <b>'BlueSky - The Open Air Traffic Simula
    ```sh
    flightgear_recv_interface = 'localhost'
    flightgear_recv_port = '5000'
-   flightgear_send_interface = 'localhost'
-   flightgear_send_port = '5001'
    ```
 
 ## Running with FlightGear

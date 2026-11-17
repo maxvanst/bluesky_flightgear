@@ -50,9 +50,7 @@ class FlightGearPlugin(Entity):
         # Setup of interface and ports for FlightGear Multiplayer Server e.g. localhost v.s. 0.0.0.0 and port 1-65535
         self.server = FlightGearMultiplayerServer(
             receive_interface=settings.flightgear_recv_interface,
-            receive_port=settings.flightgear_recv_port,
-            send_interface=settings.flightgear_send_interface,
-            send_port=settings.flightgear_send_port
+            receive_port=settings.flightgear_recv_port
             )
 
     @stack.command(name="FLIGHTGEAR", brief="FLIGHTGEAR [ON/OFF/VERSION/HELP]", help="Control the FlightGear interface")

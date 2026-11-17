@@ -10,7 +10,7 @@ from .protocol import FlightGearMultiplayerPacket
 
 class FlightGearMultiplayerServer:
     """FlightGear Multiplayer Server is responsible for receiving (decoding) and sending (encoding) FlightGear multiplayer UDP packets."""
-    def __init__(self, receive_interface: str, receive_port: int, send_interface: str, send_port: int):
+    def __init__(self, receive_interface: str, receive_port: int):
         self._listener = False
 
         # Listen
