@@ -20,21 +20,26 @@ class FlightGearMultiplayerPacket:
         linear_acceleration: tuple, angular_acceleration: tuple):
 
         """
-        |----------------------------------------------------------------------------------------------------------------------------------------------|
-        | From: https://wiki.flightgear.org/Multiplayer_protocol                                                                                       |
-        |--------------------|----------|--------------------------------------------------------------------------------------------------------------|                                                                                                                                             |
-        | Field              | Size     | Remarks                                                                                                      |
-        |--------------------|----------|--------------------------------------------------------------------------------------------------------------|
-        | Magic              | 4 bytes  | Always 0x46474653 ("FGFS")                                                                                   |
-        | Version            | 4 bytes  | Protocol version, currently 0x00010001 (1.1)                                                                 |
-        | MsgId              | 4 bytes  | Defines what data is appended to the header. Can be 0x00000001 for chat messages (deprecated) or             |
-        |                    |          | 0x00000007 for position data - all other values are outdated and ignored.                                    |
-        | MsgLen             | 4 bytes  | Length of the data. Caution: This is not in bytes, see the description of the STRING data type.              |
-        | RequestedRangeNm   | 4 bytes  | Requested visibility range in nm. The MP server can provide mp packets from any players within this          |
-        |                    |          | range; but never over it.                                                                                    |
-        | ReplyPort          | 4 bytes  | Deprecated and ignored                                                                                       |
-        | Callsign           | 8 bytes  | Zero terminated array of characters representing the user callsign in text format                            |
-        |--------------------|----------|--------------------------------------------------------------------------------------------------------------|
+        |------------------------------------------------------------------------------------|
+        | From: https://wiki.flightgear.org/Multiplayer_protocol                             |
+        |--------------------|----------|----------------------------------------------------|
+        | Field              | Size     | Remarks                                            |
+        |--------------------|----------|----------------------------------------------------|
+        | Magic              | 4 bytes  | Always 0x46474653 ("FGFS")                         |
+        | Version            | 4 bytes  | Protocol version, currently 0x00010001 (1.1)       |
+        | MsgId              | 4 bytes  | Defines what data is appended to the header. Can   |
+        |                    |          | be 0x00000001 for chat messages (deprecated) or    |
+        |                    |          | 0x00000007 for position data - all other values    |
+        |                    |          | are outdated and ignored.                          |
+        | MsgLen             | 4 bytes  | Length of the data. Caution: This is not in bytes, |
+        |                    |          | see the description of the STRING data type.       |
+        | RequestedRangeNm   | 4 bytes  | Requested visibility range in nm. The MP server    |
+        |                    |          | can provide mp packets from any players within     |
+        |                    |          | this range; but never over it.                     |
+        | ReplyPort          | 4 bytes  | Deprecated and ignored                             |
+        | Callsign           | 8 bytes  | Zero terminated array of characters representing   |
+        |                    |          | the user callsign in text format                   |
+        |--------------------|----------|----------------------------------------------------|
         """
         self.magic = magic
         self.version = version
