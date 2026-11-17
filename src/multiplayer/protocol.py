@@ -87,7 +87,7 @@ class FlightGearMultiplayerPacket:
         self.velocity = velocity
         self.angular_velocity = angular_velocity
         self.linear_acceleration = linear_acceleration
-        self.angular_accelleration = angular_acceleration
+        self.angular_acceleration = angular_acceleration
 
     def encode(self) -> bytes:
         header = struct.pack('!6I8s', self.magic, self.version, self.msg_id, self.msg_len, self.req_range_nm, self.reply_port, self.callsign) # '!6I8s' enforces max length of 32 bytes
