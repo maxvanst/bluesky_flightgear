@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "BlueSky Plugin Debugger",
+            "type": "debugpy",
+            "request": "launch",
+            "python": "${workspaceFolder}/.venv/bin/python",
+            "program": "${workspaceFolder}/BlueSky.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "subProcess": false,
+            "justMyCode": false,
+            "env": {
+                "QT_QPA_PLATFORM": "xcb",
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        },
+    ]
+}

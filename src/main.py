@@ -1,3 +1,5 @@
+# src/main.py
+
 """
 ============================================================
 |                BlueSky FlightGear plugin                 |
@@ -9,20 +11,28 @@
 |          M.J.vanStuijvenberg@student.tudelft.nl          |
 ============================================================
 """
-# General imports
-import numpy as np
 
 # BlueSky imports
-from bluesky import core, stack, settings, traf, sim
+from bluesky import stack, settings
 from bluesky.core import Entity
 
+# Import pyproject.toml and plugin version
+import tomllib
+from pathlib import Path
+
+pyproject = Path(__file__).parents[1] / "pyproject.toml"
+
+with pyproject.open("rb") as f:
+    config = tomllib.load(f)
+
 # Plugin imports
-from .interface.server import FlightGearMultiplayerServer
+from .multiplayer.server import FlightGearMultiplayerServer
 
 # Default Settings
-settings.set_variable_defaults(flightgear_recv_interface='localhost', flightgear_recv_port=5500)
+settings.set_variable_defaults(flightgear_recv_interface='localhost', flightgear_recv_port=5000)
 
 def init_plugin():
+    """Plugin initialisation - required by BlueSky plugin API"""
     plugin = FlightGearPlugin()
     config = {
         'plugin_name': 'FLIGHTGEAR',
@@ -31,119 +41,28 @@ def init_plugin():
     return config
 
 class FlightGearPlugin(Entity):
+    """Main Flightgear plugin entry point to the BlueSky simulation."""
     def __init__(self):
         super().__init__()
-        self.interface = FlightGearMultiplayerServer(settings.flightgear_recv_interface, settings.flightgear_recv_port)
+        # Project version
+        self.version = config["project"]["version"]
 
-        with self.settrafarrays():
-            self.is_flightgear = np.array([])
-            self.squawk = np.array([])
-            self.ident = np.array([])
+        # Setup of interface and ports for FlightGear Multiplayer Server e.g. localhost v.s. 0.0.0.0 and port 1-65535
+        self.server = FlightGearMultiplayerServer(
+            receive_interface=settings.flightgear_recv_interface,
+            receive_port=settings.flightgear_recv_port,
+            send_interface=settings.flightgear_send_interface,
+            send_port=settings.flightgear_send_port
+            )
 
-    def create(self, n=1):
-        super().create(n)
-        self.is_flightgear[-n:] = False
-        self.squawk[-n:] = 1200
-        self.ident[-n:] = False
-
-    @core.timed_function(name='FLIGHTGEAR_TRAFFIC_UPDATER', dt=0.0)
-    def update_traffic(self):
-        for address, aircraft in list(self.interface.listen_buffer.items()):
-            aircraft: dict
-            idx = traf.id2idx(aircraft.get('callsign'))
-            if idx < 0:
-                traf.cre(aircraft.get('callsign'), 
-                         aircraft.get('type'), 
-                         aircraft.get('latitude'), 
-                         aircraft.get('longitude'), 
-                         aircraft.get('true_heading'), 
-                         aircraft.get('altitude'), 
-                         aircraft.get('vtas'))
-                self.is_flightgear[idx] = True
-                stack.stack(f'ECHO FlightGear aircraft {aircraft.get('callsign')} [{aircraft.get('type')}] joined from [{address[0]}]')
-            else:
-                traf.move(idx, 
-                          aircraft.get('latitude'), 
-                          aircraft.get('longitude'), 
-                          aircraft.get('altitude'), 
-                          aircraft.get('true_heading'), 
-                          aircraft.get('vtas'), 
-                          aircraft.get('vs'))
-                traf.perf.bank[idx] = aircraft.get('roll_angle') # Set roll angle
-                self.squawk[idx] = aircraft.get('squawk')
-                self.ident[idx] = bool(aircraft.get('transponder_ident'))
-
-    @core.timed_function(name='FLIGHTGEAR_FLIGHTPLAN_UPDATER', dt=10.0)
-    def update_flightplan(self):
-        for address, aircraft in list(self.interface.listen_buffer.items()):
-            aircraft: dict
-            callsign = aircraft.get('callsign')
-            flightplan = self.interface.get_flightplan(callsign)
-
-            if len(flightplan) != 0 and len(flightplan[0]) == 4 and len(flightplan[-1]) == 4:
-                stack.stack(f'DELRTE {callsign}')
-                stack.stack(f"{callsign} ORIG {flightplan[0]}")
-                stack.stack(f"{callsign} DEST {flightplan[-1]}")
-
-                for wp in flightplan[1:-2]:
-                    stack.stack(f"{callsign} ADDWPT {wp}")
-            else:
-                pass
-
-    @core.timed_function(name='FLIGHTGEAR_CHECK_TRANSPONDER', dt=3.0)
-    def check_transponder(self):
-        for callsign in traf.id:
-            idx = traf.id2idx(callsign)
-            if self.squawk[idx] == 7500: # Hijack
-                stack.stack(f"COLOR {callsign},255,0,0")
-                stack.stack(f"ECHO HIJACK: {callsign} SQUAWK 7500")
-
-            elif self.squawk[idx] == 7600: # Radio failure
-                stack.stack(f"COLOR {callsign},255,0,0")
-                stack.stack(f"ECHO RADIO FAIL: {callsign} SQUAWK 7600")
-
-            elif self.squawk[idx] == 7700: # Emergency
-                stack.stack(f"COLOR {callsign},255,0,0")
-                stack.stack(f"ECHO EMERGENCY: {callsign} SQUAWK 7700")
-
-            elif self.ident[idx]:
-                stack.stack(f"COLOR {callsign},255,255,0")
-
-            else:
-                stack.stack(f"COLOR {callsign},0,255,0")
-
-    # ========================== BLUESKY COMMANDS ============================= #
-    @stack.command(name='FLIGHTGEAR', type='[onoff]', brief='FLIGHTGEAR [ON/OFF]', help='Switch FlightGear plugin [ON/OFF]')
-    def FLIGHTGEAR(self, flag):
-        if flag:
-            self.interface.is_running = True
-            stack.stack(f'ECHO Listening for FlightGear simulators on [{settings.flightgear_recv_interface}:{settings.flightgear_recv_port}]')
-            stack.stack('OP')
-
-    @stack.command(name='FLIGHTGEAR_SETTIME', brief='FLIGHTGEAR_SETTIME acid HH:MM:SS', help='Set FlightGear sim time')
-    def FLIGHTGEAR_SETTIME(self, acid='acid', time=''):
-        if self.is_flightgear[traf.id2idx(acid)]:
-            self.interface.set_time(acid, time)
+    @stack.command(name="FLIGHTGEAR", brief="FLIGHTGEAR [ON/OFF/VERSION/HELP]", help="Control the FlightGear interface")
+    def FLIGHTGEAR(self, flag: str) -> None:
+        """The function defines the commands available inside the BlueSky to simulation that allow interaction with the plugin."""
+        if flag == "ON":
+            self.server._listener = True
+        elif flag == "OFF":
+            self.server._listener  = False
+        elif flag == "HELP":
+            stack.stack(f"ECHO ON: START PLUGIN - OFF: STOP PLUGIN")
         else:
-            stack.stack(f'ECHO {acid} is not a FlightGear aircraft!')
-
-    @stack.command(name='FLIGHTGEAR_GETHOST', brief='FLIGHTGEAR_GETHOST acid', help='Show host IP of a FlightGear aircraft')
-    def FLIGHTGEAR_GETHOST(self, acid='acid'):
-        if self.is_flightgear[traf.id2idx(acid)]:
-            stack.stack(f'ECHO {acid} | HOST:{self.interface.get_ipaddr_and_aircraft_of_callsign(acid)[0]}')
-        else:
-            stack.stack(f'ECHO {acid} is not a FlightGear aircraft!')
-
-    @stack.command(name='FLIGHTGEAR_SENDCPDLC', brief='FLIGHTGEAR_CPDLC acid message', help='Send a CPDLC message')
-    def FLIGHTGEAR_SENDCPDLC(self, acid='acid', message=''):
-        if self.is_flightgear[traf.id2idx(acid)]:
-            self.interface.send_cpdlc(acid, message)
-        else:
-            stack.stack(f'ECHO {acid} is not a FlightGear aircraft!')
-
-    @stack.command(name='FLIGHTGEAR_SENDATC', brief='FLIGHTGEAR_SENDATC acid "message"', help='Send a ATC message')
-    def FLIGHTGEAR_SENDATC(self, acid='acid', message=str):
-        if self.is_flightgear[traf.id2idx(acid)]:
-            self.interface.send_atc_message(acid, message)
-        else:
-            stack.stack(f'ECHO {acid} is not a FlightGear aircraft!')
+            stack.stack(f"ECHO {flag} is not recognized as an FlightGear plugin command!")

@@ -1,0 +1,18 @@
+[project]
+name = "bluesky-flightgear"
+version = "0.0.0"
+description = "FlightGear plugin for BlueSky"
+requires-python = ">=3.14"
+dependencies = [
+    "bluesky >= 1.1.1",
+]
+
+authors = [
+  { name="Max van Stuijvenberg", email="m.j.vanstuijvenberg@student.tudelft.nl" },
+]
+
+[project.urls]
+Homepage = "https://github.com/maxvanst/bluesky_flightgear"
+
+readme = "README.md"
+license = {file = "LICENSE"}
