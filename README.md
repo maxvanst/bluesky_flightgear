@@ -54,7 +54,7 @@ This project is an extension plugin to <b>'BlueSky - The Open Air Traffic Simula
 Place the [launch.json](tools/debug/launch.json) inside .vscode to allow BlueSky plugin debug.
 
 ### Wireshark
-Place the [flightgear.lua](tools/wireshark/flightgear.lua) inside the plugin folder of Wireshark. This allows easier identification and filtering of the FlightGear Multiplayer Proctol
+Place the [flightgear.lua](tools/wireshark/flightgear.lua) inside the plugin folder of Wireshark. This allows easier identification and filtering of the FlightGear Multiplayer Protocol
 
 ## License
 Distributed under the MIT License. See `LICENSE` for more information.
